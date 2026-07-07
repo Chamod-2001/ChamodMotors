@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(powershell -NoProfile -Command \"\\(Get-Item 'src/assets/ChamodMotors.png'\\).Length\")",
+      "Bash(cd \"d:/MY DEV/mdms\" && cp \"src/assets/ChamodMotors.png\" \"public/logo.png\" && ls -la public/logo.png)",
+      "Bash(npx tsc *)",
+      "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3000,3002 -ErrorAction SilentlyContinue | ForEach-Object { \"$\\($_.LocalPort\\) -> pid $\\($_.OwningProcess\\) \\($\\(\\(Get-Process -Id $_.OwningProcess\\).ProcessName\\)\\)\" })",
+      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 30764 -Force\")",
+      "Read(//dev/**)",
+      "Bash(curl -s http://localhost:3002/dashboard -H \"Cookie: $\\(cat /dev/null\\)\" --max-time 5 -o /tmp_check.html -w \"status=%{http_code}\\\\n\")",
+      "Bash(npx eslint *)",
+      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 23080 -Force -ErrorAction SilentlyContinue\")",
+      "Bash(rm -rf .next)",
+      "Bash(powershell -NoProfile -Command \"Get-Process -Id 23080 -ErrorAction SilentlyContinue\")",
+      "Bash(powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -LocalPort 3002 -ErrorAction SilentlyContinue\")",
+      "Bash(PORT=3002 npm run dev)",
+      "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3002 -ErrorAction SilentlyContinue | ForEach-Object { $_.OwningProcess })",
+      "PowerShell(Stop-Process -Id 31880 -Force)",
+      "Bash(npx supabase *)",
+      "Bash(npx vitest *)",
+      "Bash(node check_search.mjs)",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); console.log\\(['Facebook','Instagram','Youtube','Twitter','Linkedin','Globe','Music2','Link2'].map\\(n => n + ': ' + \\(n in icons\\)\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); console.log\\(Object.keys\\(icons\\).filter\\(k => /facebook|instagram|youtube|twitter|linkedin|tiktok|globe|music|link/i.test\\(k\\)\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(npm view *)",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); console.log\\(['Landmark','Wallet','Banknote','HandCoins','CircleDollarSign'].map\\(n => n + ': ' + \\(n in icons\\)\\).join\\('\\\\n'\\)\\)\")",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(chromium-cli --help)",
+      "Bash(npm ls *)",
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(npx --no-install playwright --version)",
+      "Bash(grep -rn 'w-\\\\[[0-9]\\\\{3,\\\\}px\\\\]\\\\|min-w-\\\\[[0-9]\\\\{3,\\\\}px\\\\]' src --include=\"*.tsx\")",
+      "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3001,3002 -ErrorAction SilentlyContinue | ForEach-Object { \"$\\($_.LocalPort\\) -> pid $\\($_.OwningProcess\\)\" })",
+      "PowerShell(Get-Process -Id 28580,16304 -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Id 28580,16304 -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3001,3002 -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3000,3001,3002 -ErrorAction SilentlyContinue | ForEach-Object { \"$\\($_.LocalPort\\) -> pid $\\($_.OwningProcess\\)\" })",
+      "PowerShell(Get-Process -Id 30084,8072 -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Id 30084 -Force -ErrorAction SilentlyContinue; Get-NetTCPConnection -State Listen -LocalPort 3000,3002 -ErrorAction SilentlyContinue | ForEach-Object { \"$\\($_.LocalPort\\) -> pid $\\($_.OwningProcess\\)\" })"
+    ],
+    "additionalDirectories": [
+      "d:\\MY DEV\\mdms\\src\\assets"
+    ]
+  }
+}

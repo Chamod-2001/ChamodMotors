@@ -1,0 +1,13 @@
+{
+  "name": "Chamod Motors - Motorcycle Dealership Management System",
+  "short_name": "Chamod Motors",
+  "description": "Manage vehicles, customers, finance and reports for your dealership.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#f29525",
+  "icons": [
+    { "src": "/logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

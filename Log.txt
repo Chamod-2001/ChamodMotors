@@ -1,0 +1,26 @@
+run
+	npm run dev
+
+supabase db & login admin pw 
+	Chamod2001@**
+
+admin 
+	pw-admin123
+	un-admin
+
+user 
+	pw- chamod2001
+	un-chamod
+
+anon key
+	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54cm1namRlZHRoam9ka3ZoY3JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0MzA3MzIsImV4cCI6MjA5OTAwNjczMn0.hb-RImKA8r42li8X2dQvIQ4T_akQCfhGW8ZJsf9U5pQ
+
+api url
+	https://nxrmgjdedthjodkvhcrn.supabase.co
+
+SUPABASE_SECRET_KEY=
+	sb_publishable_6veIxHw3JkNMw8oBwDUKKA_0l8m0nng
+
+service roll
+
+	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54cm1namRlZHRoam9ka3ZoY3JuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MzQzMDczMiwiZXhwIjoyMDk5MDA2NzMyfQ.lQeuDkLzl1Lv2DS5AVxR8BHWQXWWsEyx_msF6dVtcA8
