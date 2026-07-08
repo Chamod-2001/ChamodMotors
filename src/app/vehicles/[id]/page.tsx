@@ -5,6 +5,7 @@ import { getVehicleImagePublicUrl } from '@/lib/storageUrls';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { listDocuments } from '@/lib/queries/documents';
 import { listReminders } from '@/lib/queries/reminders';
+import { getPendingRequestForVehicle } from '@/lib/queries/vehicleEditRequests';
 import { formatLKR } from '@/lib/format';
 import { getTranslator } from '@/lib/i18n/server';
 import { VehicleStatusBadge } from '@/components/vehicles/VehicleStatusBadge';
@@ -33,9 +34,10 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   const [vehicle, employee, t] = await Promise.all([getVehicle(id), getCurrentEmployee(), getTranslator()]);
   if (!vehicle) notFound();
   const isAdmin = employee?.role === 'admin';
-  const [documents, reminders] = await Promise.all([
+  const [documents, reminders, pendingRequest] = await Promise.all([
     listDocuments({ vehicleId: vehicle.id }),
     listReminders({ vehicleId: vehicle.id }),
+    getPendingRequestForVehicle(vehicle.id),
   ]);
 
   const specs: [string, string][] = [
@@ -56,16 +58,21 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           {t('back')}
         </Link>
         <div className="flex gap-2">
-          {isAdmin && (
-            <Link href={`/vehicles/${vehicle.id}/edit`}>
-              <Button variant="secondary" className="!py-2 !px-4 !min-h-0">
-                <Pencil size={16} /> {t('edit')}
-              </Button>
-            </Link>
-          )}
+          <Link href={`/vehicles/${vehicle.id}/edit`}>
+            <Button variant="secondary" className="!py-2 !px-4 !min-h-0">
+              <Pencil size={16} /> {t('edit')}
+            </Button>
+          </Link>
           {isAdmin && <DeleteVehicleButton vehicleId={vehicle.id} />}
         </div>
       </div>
+
+      {!isAdmin && pendingRequest && (
+        <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <p className="font-semibold">{t('edit_request_pending_title')}</p>
+          <p className="mt-1">{t('edit_request_pending_message')}</p>
+        </div>
+      )}
 
       {/* Photo gallery */}
       {vehicle.images.length > 0 ? (

@@ -10,6 +10,7 @@ export type VehicleType = 'motorcycle' | 'three_wheeler' | 'scooter' | 'other';
 export type FuelType = 'petrol' | 'diesel' | 'electric' | 'hybrid';
 export type DocumentType = 'shop_letter' | 'sale_letter' | 'nic' | 'electricity_bill' | 'other';
 export type ReminderStatus = 'pending' | 'done' | 'dismissed';
+export type EditRequestStatus = 'pending' | 'approved' | 'rejected';
 
 export interface Profile {
   id: string;
@@ -126,7 +127,10 @@ export type ActivityType =
   | 'finance_contact'
   | 'document_uploaded'
   | 'document_deleted'
-  | 'reminder_created';
+  | 'reminder_created'
+  | 'vehicle_edit_requested'
+  | 'vehicle_edit_approved'
+  | 'vehicle_edit_rejected';
 
 export interface ActivityLog {
   id: string;
@@ -188,6 +192,42 @@ export interface Reminder {
   created_at: string;
 }
 
+/** Fields a sales employee's vehicle edit request may propose — everything
+ * except buying_price/gross_profit (hidden from employees) and status
+ * (already changeable directly via VehicleStatusControls). */
+export type VehicleEditableField =
+  | 'brand'
+  | 'model'
+  | 'manufacturing_year'
+  | 'vehicle_type'
+  | 'registration_number'
+  | 'engine_number'
+  | 'chassis_number'
+  | 'mileage'
+  | 'fuel_type'
+  | 'color'
+  | 'selling_price'
+  | 'buying_date'
+  | 'notes';
+
+export interface VehicleFieldChange {
+  old: string | number | null;
+  new: string | number | null;
+}
+
+export type VehicleEditChanges = Partial<Record<VehicleEditableField, VehicleFieldChange>>;
+
+export interface VehicleEditRequest {
+  id: string;
+  vehicle_id: string;
+  requested_by: string | null;
+  status: EditRequestStatus;
+  changes: VehicleEditChanges;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+}
+
 // Supabase generic Database interface (for typed client).
 // Each table needs Row/Insert/Update/Relationships so the supabase-js
 // query builder can correctly infer types instead of falling back to `never`.
@@ -230,6 +270,7 @@ export interface Database {
       shop_social_links: TableDef<WidenEnums<ShopSocialLink, 'platform'>>;
       shop_locations: TableDef<Simplify<ShopLocation>>;
       reminders: TableDef<WidenEnums<Reminder, 'status'>>;
+      vehicle_edit_requests: TableDef<WidenEnums<VehicleEditRequest, 'status'>>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

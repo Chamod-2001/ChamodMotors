@@ -26,7 +26,7 @@ export default async function DashboardPage() {
 
         <div className="grid gap-4 md:grid-cols-2">
           <Suspense fallback={<CardSkeleton />}>
-            <RecentSalesSection t={t} />
+            <RecentSalesSection t={t} isAdmin={isAdmin} />
           </Suspense>
           <Suspense fallback={<CardSkeleton />}>
             <EmployeePerformanceSection t={t} />

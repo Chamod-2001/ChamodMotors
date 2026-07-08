@@ -5,6 +5,8 @@ import { AppShell } from '@/components/layout/AppShell';
 import { Card } from '@/components/ui/Card';
 import { AddEmployeeForm } from '@/components/employees/AddEmployeeForm';
 import { EmployeeActiveToggle } from '@/components/employees/EmployeeActiveToggle';
+import { CollapsibleSection } from '@/components/ui/CollapsibleSection';
+import { UserPlus } from 'lucide-react';
 
 export default async function EmployeesPage() {
   await requireAdmin();
@@ -14,11 +16,6 @@ export default async function EmployeesPage() {
     <AppShell title={t('employees')}>
       <div className="mx-auto max-w-2xl space-y-4 p-4">
         <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{t('employees')}</h1>
-
-        <Card>
-          <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-slate-100">{t('add_employee')}</h2>
-          <AddEmployeeForm />
-        </Card>
 
         <div>
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -49,6 +46,12 @@ export default async function EmployeesPage() {
             ))}
           </div>
         </div>
+
+        <CollapsibleSection label={t('add_employee')} icon={UserPlus}>
+          <Card>
+            <AddEmployeeForm />
+          </Card>
+        </CollapsibleSection>
       </div>
     </AppShell>
   );

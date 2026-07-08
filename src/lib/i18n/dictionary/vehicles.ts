@@ -58,4 +58,28 @@ export const vehiclesText = {
   diesel: { english: 'Diesel', sinhala: 'ඩීසල්', mixed: 'Diesel' },
   electric: { english: 'Electric', sinhala: 'විදුලි', mixed: 'Electric' },
   hybrid: { english: 'Hybrid', sinhala: 'හයිබ්‍රිඩ්', mixed: 'Hybrid' },
+  submit_for_approval: { english: 'Submit for Approval', sinhala: 'අනුමැතියට යවන්න', mixed: 'Approval සඳහා යවන්න' },
+  edit_request_notice: {
+    english: 'Your changes will be sent to an admin for approval before they take effect.',
+    sinhala: 'ඔබේ වෙනස්කම් සිදුවීමට පෙර admin අනුමැතිය සඳහා යවනු ලැබේ.',
+    mixed: 'ඔබේ changes apply වෙන්න කලින් admin approval සඳහා යවනු ලැබේ.',
+  },
+  edit_request_pending_title: {
+    english: 'Edit request pending approval',
+    sinhala: 'සංස්කරණ ඉල්ලීම අනුමැතිය එනතුරු ඉන්නවා',
+    mixed: 'Edit request එකක් admin approval එනතුරු ඉන්නවා',
+  },
+  edit_request_pending_message: {
+    english: 'You already submitted changes for this vehicle. Wait for an admin to approve or reject before submitting again.',
+    sinhala: 'ඔබ දැනටමත් මේ වාහනයට වෙනස්කම් යවා ඇත. Admin අනුමත කරන තුරු හෝ ප්‍රතික්ෂේප කරන තුරු ඉන්න.',
+    mixed: 'ඔබ දැනටමත් මේ vehicle එකට changes යවා ඇත. Admin approve/reject කරන තුරු ඉන්න.',
+  },
+  no_pending_approvals: { english: 'No pending edit requests.', sinhala: 'අනුමැතිය එනතුරු ඉල්ලීම් නැත.', mixed: 'Pending edit requests නැත.' },
+  approve: { english: 'Approve', sinhala: 'අනුමත කරන්න', mixed: 'Approve' },
+  reject: { english: 'Reject', sinhala: 'ප්‍රතික්ෂේප කරන්න', mixed: 'Reject' },
+  reject_request_confirm: {
+    english: 'Reject this edit request? The employee will need to submit a new one if this was a mistake.',
+    sinhala: 'මේ edit request එක reject කරන්නද? මේක වැරදි නම් සේවකයාට අලුතින් request කරන්න වෙනවා.',
+    mixed: 'මේ edit request එක reject කරන්නද? වැරදි නම් employee ට අලුතින් request කරන්න වෙනවා.',
+  },
 } as const;

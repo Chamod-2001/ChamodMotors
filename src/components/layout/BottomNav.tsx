@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Bike, Users, Landmark, CalendarDays, Building2, BarChart3, UserCog, History, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Bike, Users, Landmark, CalendarDays, Building2, BarChart3, UserCog, History, ClipboardCheck, Menu, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { TranslationKey } from '@/lib/i18n/translations';
@@ -24,6 +24,7 @@ const MORE_ADMIN_TABS: { href: string; labelKey: TranslationKey; icon: typeof La
   { href: '/reports', labelKey: 'reports', icon: BarChart3 },
   { href: '/employees', labelKey: 'employees', icon: UserCog },
   { href: '/activity', labelKey: 'activity', icon: History },
+  { href: '/vehicles/approvals', labelKey: 'pending_approvals', icon: ClipboardCheck },
 ];
 
 // Mobile only — tablet/desktop use Sidebar instead (see AppShell). A bottom

@@ -21,6 +21,21 @@ export const activityText = {
   activity_uploaded_document: { english: 'Uploaded a document', sinhala: 'ලේඛනයක් උඩුගත කළා', mixed: 'Document upload කළා' },
   activity_deleted_document: { english: 'Deleted a document', sinhala: 'ලේඛනයක් මකා දැමුවා', mixed: 'Document delete කළා' },
   activity_added_reminder: { english: 'Added a reminder', sinhala: 'මතක් කිරීමක් එකතු කළා', mixed: 'Reminder එකතු කළා' },
+  activity_vehicle_edit_requested: {
+    english: 'Requested a vehicle edit',
+    sinhala: 'වාහන සංස්කරණයක් ඉල්ලුවා',
+    mixed: 'Vehicle edit request කළා',
+  },
+  activity_vehicle_edit_approved: {
+    english: 'Approved a vehicle edit',
+    sinhala: 'වාහන සංස්කරණයක් අනුමත කළා',
+    mixed: 'Vehicle edit approve කළා',
+  },
+  activity_vehicle_edit_rejected: {
+    english: 'Rejected a vehicle edit',
+    sinhala: 'වාහන සංස්කරණයක් ප්‍රතික්ෂේප කළා',
+    mixed: 'Vehicle edit reject කළා',
+  },
   before_tracking_began: { english: 'Before tracking began', sinhala: 'Track කිරීමට පෙර', mixed: 'Track කරන්න කලින්' },
   ongoing: { english: 'Ongoing', sinhala: 'සිදුවෙමින්', mixed: 'Ongoing' },
 } as const;

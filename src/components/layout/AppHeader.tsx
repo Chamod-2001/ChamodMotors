@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bell, CalendarClock } from 'lucide-react';
+import { Bell, CalendarClock, ClipboardCheck } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { LogoutButton } from './LogoutButton';
@@ -38,6 +38,7 @@ export function AppHeader({
   isAdmin,
   unreadActivityCount,
   dueReminderCount,
+  pendingApprovalCount,
 }: {
   title: string;
   employeeName: string;
@@ -45,6 +46,7 @@ export function AppHeader({
   isAdmin: boolean;
   unreadActivityCount: number;
   dueReminderCount: number;
+  pendingApprovalCount: number;
 }) {
   return (
     <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
@@ -57,6 +59,14 @@ export function AppHeader({
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <NotificationLink href="/calendar" label="Reminders" count={dueReminderCount} icon={CalendarClock} />
+          {isAdmin && (
+            <NotificationLink
+              href="/vehicles/approvals"
+              label="Pending Approvals"
+              count={pendingApprovalCount}
+              icon={ClipboardCheck}
+            />
+          )}
           {isAdmin && <NotificationLink href="/activity" label="Activity" count={unreadActivityCount} icon={Bell} />}
           <ThemeToggle />
           <LanguageSwitcher />

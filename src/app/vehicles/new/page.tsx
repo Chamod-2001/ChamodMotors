@@ -8,7 +8,7 @@ export default async function NewVehiclePage() {
   return (
     <div className="mx-auto max-w-2xl p-4 pb-10">
       <h1 className="mb-4 text-xl font-bold text-slate-900">{t('add_vehicle')}</h1>
-      <VehicleForm />
+      <VehicleForm isAdmin />
     </div>
   );
 }

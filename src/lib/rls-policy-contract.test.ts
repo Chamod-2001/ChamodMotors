@@ -22,21 +22,36 @@ const ALL_TABLES = [
   'finance_communications',
   'documents',
   'reminders',
+  'vehicle_edit_requests',
 ];
 
 // Tables where DELETE must be admin-only per the spec (sales employees can
 // create/read/update day-to-day records, but shouldn't be able to permanently
 // remove them).
-const ADMIN_ONLY_DELETE_TABLES = ['profiles', 'vehicles', 'customers', 'sales', 'documents', 'reminders'];
+const ADMIN_ONLY_DELETE_TABLES = [
+  'profiles',
+  'vehicles',
+  'customers',
+  'sales',
+  'documents',
+  'reminders',
+  'vehicle_edit_requests',
+];
 
 let rlsSql: string;
 
 beforeAll(() => {
-  // "reminders" was added after the initial RLS migration, in its own file —
-  // concatenate so both are covered by the same checks.
+  // Tables added after the initial RLS migration live in their own files —
+  // concatenate so they're all covered by the same checks.
   const rlsPath = path.resolve(__dirname, '../../supabase/migrations/0002_rls_policies.sql');
   const remindersRlsPath = path.resolve(__dirname, '../../supabase/migrations/0012_reminders.sql');
-  rlsSql = readFileSync(rlsPath, 'utf-8') + '\n' + readFileSync(remindersRlsPath, 'utf-8');
+  const editRequestsRlsPath = path.resolve(__dirname, '../../supabase/migrations/0014_vehicle_edit_requests.sql');
+  rlsSql =
+    readFileSync(rlsPath, 'utf-8') +
+    '\n' +
+    readFileSync(remindersRlsPath, 'utf-8') +
+    '\n' +
+    readFileSync(editRequestsRlsPath, 'utf-8');
 });
 
 describe('RLS migration: every table has row-level security enabled', () => {

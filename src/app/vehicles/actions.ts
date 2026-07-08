@@ -10,6 +10,8 @@ import type {
   VehicleType,
   FuelType,
   VehicleStatus,
+  VehicleEditableField,
+  VehicleEditChanges,
 } from '../../../types/database.types';
 
 export interface VehicleFormResult {
@@ -229,4 +231,119 @@ export async function deleteVehicleAction(vehicleId: string) {
 
   revalidatePath('/vehicles');
   redirect('/vehicles');
+}
+
+// ------------------------------------------------------------
+// Sales-employee edit requests: nothing here applies directly to
+// the vehicle — it just records a proposed change for an admin to
+// approve or reject (see /vehicles/approvals).
+// ------------------------------------------------------------
+interface VehicleEditRequestFormInput {
+  brand: string;
+  model: string;
+  manufacturing_year: string;
+  vehicle_type: VehicleType;
+  registration_number: string;
+  engine_number: string;
+  chassis_number: string;
+  mileage: string;
+  fuel_type: FuelType | '';
+  color: string;
+  selling_price: string;
+  buying_date: string;
+  notes: string;
+}
+
+function parseEditRequestInput(formData: FormData): VehicleEditRequestFormInput {
+  return {
+    brand: String(formData.get('brand') || '').trim(),
+    model: String(formData.get('model') || '').trim(),
+    manufacturing_year: String(formData.get('manufacturing_year') || ''),
+    vehicle_type: (String(formData.get('vehicle_type') || 'motorcycle')) as VehicleType,
+    registration_number: String(formData.get('registration_number') || '').trim(),
+    engine_number: String(formData.get('engine_number') || '').trim(),
+    chassis_number: String(formData.get('chassis_number') || '').trim(),
+    mileage: String(formData.get('mileage') || ''),
+    fuel_type: (String(formData.get('fuel_type') || '')) as FuelType | '',
+    color: String(formData.get('color') || '').trim(),
+    selling_price: String(formData.get('selling_price') || '0'),
+    buying_date: String(formData.get('buying_date') || new Date().toISOString().slice(0, 10)),
+    notes: String(formData.get('notes') || '').trim(),
+  };
+}
+
+// Deliberately excludes buying_price/status — buying_price is hidden from
+// employees entirely, and status already has its own unrestricted quick-toggle
+// (VehicleStatusControls) since marking a bike sold/reserved is routine work.
+export async function submitVehicleEditRequestAction(vehicleId: string, formData: FormData): Promise<VehicleFormResult> {
+  const input = parseEditRequestInput(formData);
+
+  const validationError = validateVehicleInput(input);
+  if (validationError) return { error: validationError };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: existingPending } = await supabase
+    .from('vehicle_edit_requests')
+    .select('id')
+    .eq('vehicle_id', vehicleId)
+    .eq('status', 'pending')
+    .maybeSingle();
+
+  if (existingPending) {
+    return { error: 'මේ වාහනයට දැනටමත් admin approve කරන්න ඉතිරි request එකක් තියෙනවා.' };
+  }
+
+  const { data: vehicle } = await supabase.from('vehicles').select('*').eq('id', vehicleId).single();
+  if (!vehicle) return { error: 'වාහනය හමු නොවීය.' };
+
+  const proposed: Record<VehicleEditableField, string | number | null> = {
+    brand: input.brand,
+    model: input.model,
+    manufacturing_year: input.manufacturing_year ? Number(input.manufacturing_year) : null,
+    vehicle_type: input.vehicle_type,
+    registration_number: input.registration_number || null,
+    engine_number: input.engine_number || null,
+    chassis_number: input.chassis_number || null,
+    mileage: input.mileage ? Number(input.mileage) : null,
+    fuel_type: input.fuel_type || null,
+    color: input.color || null,
+    selling_price: Number(input.selling_price) || 0,
+    buying_date: input.buying_date,
+    notes: input.notes || null,
+  };
+
+  const vehicleRecord = vehicle as unknown as Record<VehicleEditableField, string | number | null>;
+  const changes: VehicleEditChanges = {};
+  for (const key of Object.keys(proposed) as VehicleEditableField[]) {
+    const oldValue = vehicleRecord[key];
+    const newValue = proposed[key];
+    if (oldValue !== newValue) {
+      changes[key] = { old: oldValue, new: newValue };
+    }
+  }
+
+  if (Object.keys(changes).length === 0) {
+    return { error: 'කිසිම වෙනසක් කර නැත. / No changes to submit.' };
+  }
+
+  const { error } = await supabase.from('vehicle_edit_requests').insert({
+    vehicle_id: vehicleId,
+    requested_by: user?.id ?? null,
+    changes,
+  });
+
+  if (error) {
+    return { error: 'Request save කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
+  }
+
+  await logActivity(user?.id ?? null, 'vehicle_edit_requested', `${vehicle.brand} ${vehicle.model}`);
+
+  revalidatePath(`/vehicles/${vehicleId}`);
+  revalidatePath(`/vehicles/${vehicleId}/edit`);
+  revalidatePath('/vehicles/approvals');
+  redirect(`/vehicles/${vehicleId}`);
 }

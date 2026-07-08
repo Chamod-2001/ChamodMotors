@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, CalendarDays, Bike, Users, Landmark, BarChart3, UserCog, History, Building2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, Bike, Users, Landmark, BarChart3, UserCog, History, Building2, ClipboardCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useSidebar } from './SidebarContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -23,6 +23,7 @@ const ADMIN_TABS: { href: string; labelKey: TranslationKey; icon: typeof LayoutD
   { href: '/reports', labelKey: 'reports', icon: BarChart3 },
   { href: '/employees', labelKey: 'employees', icon: UserCog },
   { href: '/activity', labelKey: 'activity', icon: History },
+  { href: '/vehicles/approvals', labelKey: 'pending_approvals', icon: ClipboardCheck },
 ];
 
 // Tablet/desktop only — mobile uses BottomNav instead (see AppShell).
