@@ -4,7 +4,7 @@ import { formatLKR } from '@/lib/format';
 import { getTranslator } from '@/lib/i18n/server';
 import type { PurchaseHistoryItem } from '@/lib/queries/customers';
 
-export async function PurchaseHistoryList({ history }: { history: PurchaseHistoryItem[] }) {
+export async function PurchaseHistoryList({ history, isAdmin }: { history: PurchaseHistoryItem[]; isAdmin: boolean }) {
   const t = await getTranslator();
 
   return (
@@ -20,7 +20,7 @@ export async function PurchaseHistoryList({ history }: { history: PurchaseHistor
                 <span className="block truncate">{item.vehicleLabel}</span>
               </Link>
               <div className="shrink-0 text-right">
-                <p className="font-semibold text-slate-900">{formatLKR(item.salePrice)}</p>
+                {isAdmin && <p className="font-semibold text-slate-900">{formatLKR(item.salePrice)}</p>}
                 <p className="text-xs text-slate-400">
                   {new Date(item.purchaseDate).toLocaleDateString('en-LK', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </p>

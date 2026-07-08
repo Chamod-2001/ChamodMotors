@@ -79,7 +79,7 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
 
       <RecordSaleSection customerId={customer.id} sellableVehicles={sellableVehicles} />
 
-      <PurchaseHistoryList history={history} />
+      <PurchaseHistoryList history={history} isAdmin={isAdmin} />
 
       {reminders.length > 0 && (
         <Card>
