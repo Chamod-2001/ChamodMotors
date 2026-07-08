@@ -28,7 +28,7 @@ export function CalendarBoard({
     <div className="space-y-4">
       <MonthCalendar reminders={reminders} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
 
-      <CollapsibleSection label={t('add_reminder')} icon={CalendarPlus}>
+      <CollapsibleSection label={t('add_reminder')} icon={<CalendarPlus size={16} />}>
         <ReminderForm vehicles={vehicles} customers={customers} officers={officers} defaultDate={selectedDate} />
       </CollapsibleSection>
     </div>

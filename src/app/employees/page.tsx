@@ -47,7 +47,7 @@ export default async function EmployeesPage() {
           </div>
         </div>
 
-        <CollapsibleSection label={t('add_employee')} icon={UserPlus}>
+        <CollapsibleSection label={t('add_employee')} icon={<UserPlus size={16} />}>
           <Card>
             <AddEmployeeForm />
           </Card>
