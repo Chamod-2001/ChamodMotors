@@ -7,31 +7,34 @@ import { MessageCircle, FileText, Zap, Paperclip } from 'lucide-react';
 interface WhatsAppQuickActionsProps {
   phone: string;
   officerName: string;
-  customerName?: string;
+  businessName: string;
 }
 
-export function WhatsAppQuickActions({ phone, officerName, customerName }: WhatsAppQuickActionsProps) {
+function buildDocumentMessage(officerName: string, documentLabel: string, businessName: string) {
+  return `Hi ${officerName},\n\nසුභ දවසක්!\n\n${documentLabel} එක attach කර ඇත. කරුණාකර එය check කරලා update එකක් ලබා දෙන්න.\n\nThank you.\n\n${businessName}`;
+}
+
+export function WhatsAppQuickActions({ phone, officerName, businessName }: WhatsAppQuickActionsProps) {
   const { t } = useLanguage();
-  const who = customerName ? ` ${customerName}ගේ` : '';
 
   const actions = [
     { label: t('open_chat'), icon: MessageCircle, message: undefined, tone: 'bg-emerald-600 text-white' },
     {
       label: t('send_nic'),
       icon: FileText,
-      message: `Hi ${officerName},${who} NIC copy එක attach කරලා යවනවා.`,
+      message: buildDocumentMessage(officerName, 'NIC copy', businessName),
       tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
     },
     {
       label: t('electricity_bill'),
       icon: Zap,
-      message: `Hi ${officerName},${who} electricity bill එක attach කරලා යවනවා.`,
+      message: buildDocumentMessage(officerName, 'Electricity bill', businessName),
       tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
     },
     {
       label: t('other_document'),
       icon: Paperclip,
-      message: `Hi ${officerName}, මේ document එකත් බලන්න.`,
+      message: buildDocumentMessage(officerName, 'Document', businessName),
       tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
     },
   ];

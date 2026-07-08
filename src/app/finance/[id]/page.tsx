@@ -8,6 +8,7 @@ import {
 } from '@/lib/queries/finance';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { listReminders } from '@/lib/queries/reminders';
+import { getShopBusinessName } from '@/lib/queries/shop';
 import { getTranslator } from '@/lib/i18n/server';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -21,13 +22,14 @@ import { Pencil, Building2 } from 'lucide-react';
 
 export default async function FinanceOfficerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [officer, communications, customers, vehicles, reminders, employee, t] = await Promise.all([
+  const [officer, communications, customers, vehicles, reminders, employee, businessName, t] = await Promise.all([
     getFinanceOfficer(id),
     listFinanceCommunications(id),
     listCustomersForFinancePicker(),
     listVehiclesForFinancePicker(),
     listReminders({ financeOfficerId: id }),
     getCurrentEmployee(),
+    getShopBusinessName(),
     getTranslator(),
   ]);
   if (!officer) notFound();
@@ -66,7 +68,7 @@ export default async function FinanceOfficerDetailPage({ params }: { params: Pro
       {contactNumber ? (
         <Card>
           <h2 className="mb-3 text-lg font-semibold text-slate-900">WhatsApp</h2>
-          <WhatsAppQuickActions phone={contactNumber} officerName={officer.officer_name} />
+          <WhatsAppQuickActions phone={contactNumber} officerName={officer.officer_name} businessName={businessName} />
         </Card>
       ) : (
         <Card>

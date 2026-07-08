@@ -37,3 +37,11 @@ export async function getShopProfile(): Promise<ShopProfileData> {
     locations: (locations as ShopLocation[]) ?? [],
   };
 }
+
+/** Just the business name — for places (like WhatsApp message templates) that
+ * don't need the full profile/photos/locations fetch. */
+export async function getShopBusinessName(): Promise<string> {
+  const supabase = await createClient();
+  const { data } = await supabase.from('shop_profile').select('business_name').eq('id', true).single();
+  return data?.business_name ?? 'Chamod Motors';
+}
