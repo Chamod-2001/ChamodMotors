@@ -76,7 +76,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
       {/* Photo gallery */}
       {vehicle.images.length > 0 ? (
-        <div className="flex gap-2 overflow-x-auto">
+        <div className="flex w-full min-w-0 gap-2 overflow-x-auto">
           {vehicle.images.map((img) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
