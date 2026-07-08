@@ -9,6 +9,7 @@ export type VehicleStatus = 'available' | 'reserved' | 'sold';
 export type VehicleType = 'motorcycle' | 'three_wheeler' | 'scooter' | 'other';
 export type FuelType = 'petrol' | 'diesel' | 'electric' | 'hybrid';
 export type DocumentType = 'shop_letter' | 'sale_letter' | 'nic' | 'electricity_bill' | 'other';
+export type ReminderStatus = 'pending' | 'done' | 'dismissed';
 
 export interface Profile {
   id: string;
@@ -122,7 +123,10 @@ export type ActivityType =
   | 'vehicle_created'
   | 'vehicle_sold'
   | 'customer_created'
-  | 'finance_contact';
+  | 'finance_contact'
+  | 'document_uploaded'
+  | 'document_deleted'
+  | 'reminder_created';
 
 export interface ActivityLog {
   id: string;
@@ -171,6 +175,19 @@ export interface ShopLocation {
   created_at: string;
 }
 
+export interface Reminder {
+  id: string;
+  title: string;
+  note: string | null;
+  due_at: string;
+  status: ReminderStatus;
+  vehicle_id: string | null;
+  customer_id: string | null;
+  finance_officer_id: string | null;
+  created_by: string | null;
+  created_at: string;
+}
+
 // Supabase generic Database interface (for typed client).
 // Each table needs Row/Insert/Update/Relationships so the supabase-js
 // query builder can correctly infer types instead of falling back to `never`.
@@ -212,6 +229,7 @@ export interface Database {
       shop_photos: TableDef<Simplify<ShopPhoto>>;
       shop_social_links: TableDef<WidenEnums<ShopSocialLink, 'platform'>>;
       shop_locations: TableDef<Simplify<ShopLocation>>;
+      reminders: TableDef<WidenEnums<Reminder, 'status'>>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

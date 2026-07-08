@@ -13,7 +13,6 @@ import logo from '@/assets/ChamodMotors.png';
 
 export function LoginForm() {
   const { t } = useLanguage();
-  const [role, setRole] = useState<'admin' | 'sales'>('sales');
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
 
@@ -42,29 +41,7 @@ export function LoginForm() {
             {t('tagline')}
           </p>
 
-          {/* Role tabs */}
-          <div className="mb-6 grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1">
-            <button
-              type="button"
-              onClick={() => setRole('admin')}
-              className={`rounded-lg py-3 text-base font-semibold transition ${
-                role === 'admin' ? 'bg-white shadow text-brand' : 'text-slate-500'
-              }`}
-            >
-              {t('admin_login')}
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('sales')}
-              className={`rounded-lg py-3 text-base font-semibold transition ${
-                role === 'sales' ? 'bg-white shadow text-brand' : 'text-slate-500'
-              }`}
-            >
-              {t('employee_login')}
-            </button>
-          </div>
-
-          <form action={handleSubmit} className="space-y-4">
+          <form action={handleSubmit} className="mt-6 space-y-4">
             <Input
               id="username"
               name="username"

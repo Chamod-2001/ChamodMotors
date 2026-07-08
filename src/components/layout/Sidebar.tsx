@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Bike, Users, Landmark, BarChart3, UserCog, History, Building2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, Bike, Users, Landmark, BarChart3, UserCog, History, Building2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useSidebar } from './SidebarContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -12,6 +12,7 @@ import type { TranslationKey } from '@/lib/i18n/translations';
 
 const TABS: { href: string; labelKey: TranslationKey; icon: typeof LayoutDashboard }[] = [
   { href: '/dashboard', labelKey: 'dashboard', icon: LayoutDashboard },
+  { href: '/calendar', labelKey: 'calendar', icon: CalendarDays },
   { href: '/vehicles', labelKey: 'vehicles', icon: Bike },
   { href: '/customers', labelKey: 'customers', icon: Users },
   { href: '/finance', labelKey: 'finance', icon: Landmark },

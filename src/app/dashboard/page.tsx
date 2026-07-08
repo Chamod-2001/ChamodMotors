@@ -44,7 +44,7 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        <QuickActions />
+        <QuickActions isAdmin={isAdmin} />
 
         <div className="grid gap-4 md:grid-cols-2">
           <RecentSalesList sales={recentSales} title={t('recent_sales')} />

@@ -4,7 +4,7 @@ import { getTranslator } from '@/lib/i18n/server';
 import { AppShell } from '@/components/layout/AppShell';
 import { Card } from '@/components/ui/Card';
 import { MarkActivityReadOnMount } from '@/components/activity/MarkActivityReadOnMount';
-import { LogIn, LogOut, Bike, CheckCircle2, UserPlus, MessageCircle, type LucideIcon } from 'lucide-react';
+import { LogIn, LogOut, Bike, CheckCircle2, UserPlus, MessageCircle, FileUp, FileX, CalendarPlus, type LucideIcon } from 'lucide-react';
 import type { ActivityType } from '../../../types/database.types';
 import type { TranslationKey } from '@/lib/i18n/translations';
 
@@ -15,6 +15,9 @@ const ACTIVITY_ICONS: Record<ActivityType, LucideIcon> = {
   vehicle_sold: CheckCircle2,
   customer_created: UserPlus,
   finance_contact: MessageCircle,
+  document_uploaded: FileUp,
+  document_deleted: FileX,
+  reminder_created: CalendarPlus,
 };
 
 const ACTIVITY_LABEL_KEYS: Record<ActivityType, TranslationKey> = {
@@ -24,6 +27,9 @@ const ACTIVITY_LABEL_KEYS: Record<ActivityType, TranslationKey> = {
   vehicle_sold: 'activity_marked_vehicle_sold',
   customer_created: 'activity_added_customer',
   finance_contact: 'activity_contacted_finance_officer',
+  document_uploaded: 'activity_uploaded_document',
+  document_deleted: 'activity_deleted_document',
+  reminder_created: 'activity_added_reminder',
 };
 
 function formatTime(value: string) {
@@ -96,12 +102,7 @@ export default async function ActivityPage() {
                                 <span className="text-sm text-slate-500 dark:text-slate-400"> — {item.description}</span>
                               )}
                             </div>
-                            <span className="shrink-0 text-xs text-slate-400">
-                              {new Date(item.createdAt).toLocaleTimeString('en-LK', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </span>
+                            <span className="shrink-0 text-xs text-slate-400">{formatTime(item.createdAt)}</span>
                           </li>
                         );
                       })}

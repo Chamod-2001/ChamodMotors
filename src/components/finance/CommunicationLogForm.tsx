@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from 'react';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { logFinanceCommunicationAction } from '@/app/finance/actions';
+import { enqueueOfflineAction } from '@/lib/offlineQueue';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { SimpleCustomer, SimpleVehicle } from '@/lib/queries/finance';
 
@@ -17,12 +18,28 @@ export function CommunicationLogForm({
   vehicles: SimpleVehicle[];
 }) {
   const [error, setError] = useState<string | undefined>();
+  const [offlineSaved, setOfflineSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
   const { t } = useLanguage();
 
   async function handleSubmit(formData: FormData) {
     setError(undefined);
+    setOfflineSaved(false);
+
+    if (!navigator.onLine) {
+      enqueueOfflineAction({
+        type: 'finance_note',
+        officerId,
+        note: String(formData.get('note') || ''),
+        customer_id: String(formData.get('customer_id') || ''),
+        vehicle_id: String(formData.get('vehicle_id') || ''),
+      });
+      setOfflineSaved(true);
+      formRef.current?.reset();
+      return;
+    }
+
     startTransition(async () => {
       const result = await logFinanceCommunicationAction(officerId, formData);
       if (result?.error) setError(result.error);
@@ -60,6 +77,7 @@ export function CommunicationLogForm({
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
+      {offlineSaved && <p className="text-sm text-amber-600">{t('saved_offline_message')}</p>}
 
       <Button type="submit" fullWidth disabled={isPending} className="!min-h-[48px]">
         {isPending ? t('saving') : t('add_note')}

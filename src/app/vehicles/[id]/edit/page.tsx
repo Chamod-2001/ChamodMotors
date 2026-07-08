@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation';
 import { getVehicle } from '@/lib/queries/vehicles';
 import { VehicleForm } from '@/components/vehicles/VehicleForm';
+import { requireAdmin } from '@/lib/queries/session';
 import { getTranslator } from '@/lib/i18n/server';
 
 export default async function EditVehiclePage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin();
   const { id } = await params;
   const vehicle = await getVehicle(id);
   if (!vehicle) notFound();

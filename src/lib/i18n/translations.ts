@@ -1,374 +1,47 @@
 // ============================================================
 // MDMS — Language Dictionary
 // Three modes: english | sinhala | mixed (default)
+//
+// Text lives in one file per feature under ./dictionary/*, merged
+// below into a single `translations` object — everything else in
+// the app keeps importing `translations`/`TranslationKey` from this
+// file exactly as before, so splitting the source didn't change any
+// other file. Add new keys to the relevant dictionary file (or
+// dictionary/common.ts for anything shared across 2+ features).
 // ============================================================
+
+import { authText } from './dictionary/auth';
+import { dashboardText } from './dictionary/dashboard';
+import { vehiclesText } from './dictionary/vehicles';
+import { customersText } from './dictionary/customers';
+import { financeText } from './dictionary/finance';
+import { documentsText } from './dictionary/documents';
+import { reportsText } from './dictionary/reports';
+import { profileText } from './dictionary/profile';
+import { employeesText } from './dictionary/employees';
+import { activityText } from './dictionary/activity';
+import { searchText } from './dictionary/search';
+import { calendarText } from './dictionary/calendar';
+import { navText } from './dictionary/nav';
+import { commonText } from './dictionary/common';
 
 export type LanguageMode = 'english' | 'sinhala' | 'mixed';
 
 export const translations = {
-  // Auth
-  admin_login: { english: 'Admin Login', sinhala: 'පරිපාලක පිවිසුම', mixed: 'Admin Login' },
-  employee_login: { english: 'Employee Login', sinhala: 'සේවක පිවිසුම', mixed: 'Employee Login' },
-  email: { english: 'Email', sinhala: 'විද්‍යුත් තැපෑල', mixed: 'Email' },
-  username: { english: 'Username', sinhala: 'පරිශීලක නාමය', mixed: 'Username' },
-  password: { english: 'Password', sinhala: 'මුරපදය', mixed: 'Password' },
-  login: { english: 'Login', sinhala: 'පිවිසෙන්න', mixed: 'Login' },
-  forgot_password: { english: 'Forgot Password?', sinhala: 'මුරපදය අමතකද?', mixed: 'Forgot Password?' },
-  keep_logged_in: { english: 'Keep me logged in', sinhala: 'මාව login කර තබන්න', mixed: 'Keep me logged in' },
-  reset_password: { english: 'Reset Password', sinhala: 'මුරපදය නැවත සකසන්න', mixed: 'Reset Password' },
-  send_reset_link: { english: 'Send Reset Link', sinhala: 'නැවත සැකසුම් සබැඳිය යවන්න', mixed: 'Send Reset Link' },
-  back_to_login: { english: 'Back to Login', sinhala: 'පිවිසුමට ආපසු', mixed: 'Back to Login' },
-  back: { english: '← Back', sinhala: '← ආපසු', mixed: '← ආපසු' },
-  tagline: {
-    english: 'Motorcycle Dealership Management System',
-    sinhala: 'මෝටර් සයිකල් ඩීලර්ෂිප් කළමනාකරණ පද්ධතිය',
-    mixed: 'Motorcycle Dealership Management System',
-  },
-  set_new_password_title: { english: 'Set a new password', sinhala: 'අලුත් Password එකක් සකසන්න', mixed: 'අලුත් Password එකක් සකසන්න' },
-  new_password: { english: 'New Password', sinhala: 'අලුත් මුරපදය', mixed: 'New Password' },
-  confirm_password: { english: 'Confirm Password', sinhala: 'මුරපදය තහවුරු කරන්න', mixed: 'Confirm Password' },
-  save_new_password: { english: 'Save New Password', sinhala: 'අලුත් මුරපදය සුරකින්න', mixed: 'New Password සුරකින්න' },
-  no_sellable_vehicles: {
-    english: 'No available or reserved vehicles to sell right now.',
-    sinhala: 'දැනට විකිණීමට available හෝ reserved වාහන නැත.',
-    mixed: 'දැනට sell කරන්න available හෝ reserved vehicles නැත.',
-  },
-  sale_price: { english: 'Sale Price (LKR)', sinhala: 'විකුණුම් මිල (LKR)', mixed: 'Sale Price (LKR)' },
-  purchase_date_label: { english: 'Purchase Date', sinhala: 'මිලදී ගත් දිනය', mixed: 'Purchase Date' },
-  vehicle_photos: { english: 'Vehicle Photos', sinhala: 'වාහන ඡායාරූප', mixed: 'Vehicle Photos' },
-  camera: { english: 'Camera', sinhala: 'කැමරාව', mixed: 'Camera' },
-  gallery: { english: 'Gallery', sinhala: 'ගැලරිය', mixed: 'Gallery' },
-  main_photo_badge: { english: 'Main', sinhala: 'ප්‍රධාන', mixed: 'Main' },
-  photos_compressed_hint: {
-    english: 'Photos are compressed automatically to save storage.',
-    sinhala: 'ගබඩාව ඉතිරි කිරීමට ඡායාරූප ස්වයංක්‍රීයව compress කෙරේ.',
-    mixed: 'Storage save කරන්න photos auto compress වේ.',
-  },
-
-  // Dashboard
-  dashboard: { english: 'Dashboard', sinhala: 'ප්‍රධාන පිටුව', mixed: 'Dashboard' },
-  available_vehicles: { english: 'Available Vehicles', sinhala: 'තියෙන වාහන', mixed: 'Available වාහන' },
-  reserved_vehicles: { english: 'Reserved Vehicles', sinhala: 'වෙන් කළ වාහන', mixed: 'Reserved වාහන' },
-  sold_vehicles: { english: 'Sold Vehicles', sinhala: 'විකුණූ වාහන', mixed: 'Sold වාහන' },
-  monthly_sales: { english: 'Monthly Sales', sinhala: 'මාසික විකුණුම්', mixed: 'Monthly Sales' },
-  monthly_profit: { english: 'Monthly Profit', sinhala: 'මාසික ලාභය', mixed: 'Monthly Profit' },
-  todays_sales: { english: "Today's Sales", sinhala: 'අද විකුණුම්', mixed: "Today's Sales" },
-  todays_profit: { english: "Today's Profit", sinhala: 'අද ලාභය', mixed: "Today's Profit" },
-  employee_performance: { english: 'Employee Performance', sinhala: 'සේවක කාර්ය සාධනය', mixed: 'Employee Performance' },
-  recent_sales: { english: 'Recent Sales', sinhala: 'මෑත විකුණුම්', mixed: 'Recent Sales' },
-  quick_actions: { english: 'Quick Actions', sinhala: 'ඉක්මන් ක්‍රියා', mixed: 'Quick Actions' },
-  add_vehicle: { english: 'Add Vehicle', sinhala: 'වාහනයක් එකතු කරන්න', mixed: 'Add වාහන' },
-  add_customer: { english: 'Add Customer', sinhala: 'පාරිභෝගිකයෙක් එකතු කරන්න', mixed: 'Add Customer' },
-  open_finance_whatsapp: { english: 'Open Finance WhatsApp', sinhala: 'Finance WhatsApp විවෘත කරන්න', mixed: 'Finance WhatsApp' },
-  search_vehicle: { english: 'Search Vehicle', sinhala: 'වාහනය සොයන්න', mixed: 'Search වාහන' },
-  no_sales_yet: { english: 'No sales yet', sinhala: 'තවම විකුණුම් නැත', mixed: 'තවම sales නැත' },
-  no_sales_this_month_yet: { english: 'No sales this month yet', sinhala: 'මේ මාසේ තවම විකුණුම් නැත', mixed: 'මේ මාසේ තවම sales නැත' },
-  sale_count_suffix: { english: 'sale(s)', sinhala: 'විකුණුම්', mixed: 'sale(s)' },
-
-  // Vehicles
-  vehicles: { english: 'Vehicles', sinhala: 'වාහන', mixed: 'වාහන' },
-  vehicle: { english: 'Vehicle', sinhala: 'වාහනය', mixed: 'වාහනය' },
-  brand: { english: 'Brand', sinhala: 'වෙළඳ නාමය', mixed: 'Brand' },
-  model: { english: 'Model', sinhala: 'මාදිලිය', mixed: 'Model' },
-  manufacturing_year: { english: 'Manufacturing Year', sinhala: 'නිෂ්පාදන වර්ෂය', mixed: 'Manufacturing Year' },
-  vehicle_type: { english: 'Vehicle Type', sinhala: 'වාහන වර්ගය', mixed: 'Vehicle Type' },
-  registration_number: { english: 'Registration Number', sinhala: 'ලියාපදිංචි අංකය', mixed: 'Registration No' },
-  engine_number: { english: 'Engine Number', sinhala: 'එන්ජින් අංකය', mixed: 'Engine No' },
-  chassis_number: { english: 'Chassis Number', sinhala: 'චැසි අංකය', mixed: 'Chassis No' },
-  mileage: { english: 'Mileage', sinhala: 'ධාවනය', mixed: 'Mileage' },
-  fuel_type: { english: 'Fuel Type', sinhala: 'ඉන්ධන වර්ගය', mixed: 'Fuel Type' },
-  color: { english: 'Color', sinhala: 'වර්ණය', mixed: 'Color' },
-  buying_price: { english: 'Buying Price', sinhala: 'මිලදී ගත් මිල', mixed: 'Buying Price' },
-  selling_price: { english: 'Selling Price', sinhala: 'විකුණුම් මිල', mixed: 'Selling Price' },
-  gross_profit: { english: 'Gross Profit', sinhala: 'දළ ලාභය', mixed: 'Profit' },
-  status: { english: 'Status', sinhala: 'තත්ත්වය', mixed: 'Status' },
-  available: { english: 'Available', sinhala: 'තියෙනවා', mixed: 'Available' },
-  reserved: { english: 'Reserved', sinhala: 'වෙන් කර ඇත', mixed: 'Reserved' },
-  sold: { english: 'Sold', sinhala: 'විකුණා ඇත', mixed: 'Sold' },
-  notes: { english: 'Notes', sinhala: 'සටහන්', mixed: 'Notes' },
-  all: { english: 'All', sinhala: 'සියල්ල', mixed: 'All' },
-  vehicle_details: { english: 'Vehicle Details', sinhala: 'වාහන විස්තර', mixed: 'Vehicle විස්තර' },
-  no_vehicles_found: { english: 'No vehicles found.', sinhala: 'වාහන හමු නොවීය.', mixed: 'වාහන හමු නොවුණා.' },
-  search_vehicles_placeholder: {
-    english: 'Search brand, model, reg. number...',
-    sinhala: 'වෙළඳ නාමය, මාදිලිය, ලියාපදිංචි අංකය සොයන්න...',
-    mixed: 'Brand, Model, Reg. Number සොයන්න...',
-  },
-  buying_date: { english: 'Buying Date', sinhala: 'මිලදී ගත් දිනය', mixed: 'Buying Date' },
-  reserved_date: { english: 'Reserved Date', sinhala: 'වෙන් කළ දිනය', mixed: 'Reserved Date' },
-  sold_date: { english: 'Sold Date', sinhala: 'විකුණූ දිනය', mixed: 'Sold Date' },
-  gross_profit_auto: {
-    english: 'Gross Profit (auto-calculated)',
-    sinhala: 'දළ ලාභය (ස්වයංක්‍රීයව ගණනය කෙරේ)',
-    mixed: 'Gross Profit (auto-calculated)',
-  },
-  bought: { english: 'Bought', sinhala: 'මිලදී ගත්තා', mixed: 'Bought' },
-  no_reg_number: { english: 'No reg. number', sinhala: 'ලියාපදිංචි අංකයක් නැත', mixed: 'Reg. number නැත' },
-  motorcycle: { english: 'Motorcycle', sinhala: 'මෝටර් සයිකලය', mixed: 'Motorcycle' },
-  three_wheeler: { english: 'Three Wheeler', sinhala: 'ත්‍රීරෝද රථය', mixed: 'Three Wheeler' },
-  scooter: { english: 'Scooter', sinhala: 'ස්කූටරය', mixed: 'Scooter' },
-  other_vehicle_type: { english: 'Other', sinhala: 'වෙනත්', mixed: 'Other' },
-  petrol: { english: 'Petrol', sinhala: 'පෙට්‍රල්', mixed: 'Petrol' },
-  diesel: { english: 'Diesel', sinhala: 'ඩීසල්', mixed: 'Diesel' },
-  electric: { english: 'Electric', sinhala: 'විදුලි', mixed: 'Electric' },
-  hybrid: { english: 'Hybrid', sinhala: 'හයිබ්‍රිඩ්', mixed: 'Hybrid' },
-
-  // Customers
-  customer: { english: 'Customer', sinhala: 'පාරිභෝගිකයා', mixed: 'Customer' },
-  customers: { english: 'Customers', sinhala: 'පාරිභෝගිකයන්', mixed: 'Customers' },
-  full_name: { english: 'Full Name', sinhala: 'සම්පූර්ණ නම', mixed: 'Full Name' },
-  nic_number: { english: 'NIC Number', sinhala: 'ජා.හැ. අංකය', mixed: 'NIC' },
-  phone_number: { english: 'Phone Number', sinhala: 'දුරකථන අංකය', mixed: 'Phone No' },
-  address: { english: 'Address', sinhala: 'ලිපිනය', mixed: 'Address' },
-  occupation: { english: 'Occupation', sinhala: 'රැකියාව', mixed: 'Occupation' },
-  purchase_history: { english: 'Purchase History', sinhala: 'මිලදී ගැනීම් ඉතිහාසය', mixed: 'Purchase History' },
-  customer_details: { english: 'Customer Details', sinhala: 'පාරිභෝගික විස්තර', mixed: 'Customer විස්තර' },
-  no_customers_found: { english: 'No customers found.', sinhala: 'පාරිභෝගිකයන් හමු නොවීය.', mixed: 'Customers හමු නොවුණා.' },
-  search_customers_placeholder: {
-    english: 'Search name, phone, NIC...',
-    sinhala: 'නම, දුරකථනය, ජා.හැ. සොයන්න...',
-    mixed: 'Name, Phone, NIC සොයන්න...',
-  },
-  purchased_suffix: { english: 'purchased', sinhala: 'මිලදී ගෙන ඇත', mixed: 'purchased' },
-  no_purchases_yet: { english: 'No purchases yet', sinhala: 'තවම මිලදී ගැනීම් නැත', mixed: 'තවම purchases නැත' },
-  record_vehicle_purchase: {
-    english: 'Record Vehicle Purchase',
-    sinhala: 'වාහන මිලදී ගැනීමක් සටහන් කරන්න',
-    mixed: 'Vehicle Purchase සටහන් කරන්න',
-  },
-  record_purchase: { english: 'Record Purchase', sinhala: 'මිලදී ගැනීම සටහන් කරන්න', mixed: 'Record Purchase' },
-  nic_label: { english: 'NIC', sinhala: 'ජා.හැ.', mixed: 'NIC' },
-
-  // Finance
-  finance: { english: 'Finance', sinhala: 'මූල්‍ය', mixed: 'Finance' },
-  finance_company: { english: 'Finance Company', sinhala: 'මූල්‍ය සමාගම', mixed: 'Finance Company' },
-  officer_name: { english: 'Officer Name', sinhala: 'නිලධාරියාගේ නම', mixed: 'Officer Name' },
-  whatsapp_number: { english: 'WhatsApp Number', sinhala: 'WhatsApp අංකය', mixed: 'WhatsApp No' },
-  insurance: { english: 'Insurance', sinhala: 'රක්ෂණය', mixed: 'Insurance' },
-  add_officer: { english: 'Add Officer', sinhala: 'නිලධාරියෙක් එකතු කරන්න', mixed: 'Officer එකතු කරන්න' },
-  finance_officer: { english: 'Finance Officer', sinhala: 'මූල්‍ය නිලධාරී', mixed: 'Finance Officer' },
-  add_note: { english: 'Add Note', sinhala: 'සටහනක් එකතු කරන්න', mixed: 'Note එකතු කරන්න' },
-  communication_history: { english: 'Communication History', sinhala: 'සන්නිවේදන ඉතිහාසය', mixed: 'Communication History' },
-  no_officer_contact: {
-    english: 'No phone or WhatsApp number on file for this officer.',
-    sinhala: 'මේ නිලධාරියාට දුරකථන හෝ WhatsApp අංකයක් සටහන් වී නැත.',
-    mixed: 'මේ officer ට phone හෝ WhatsApp number නැත.',
-  },
-  no_companies_yet: {
-    english: 'No finance companies yet.',
-    sinhala: 'තවම මූල්‍ය සමාගම් නැත.',
-    mixed: 'තවම Finance Companies නැත.',
-  },
-  ask_admin_add_company: {
-    english: 'Ask an admin to add one.',
-    sinhala: 'එකක් එකතු කරන්න admin කෙනෙකුගෙන් ඉල්ලන්න.',
-    mixed: 'Admin කෙනෙකුගෙන් add කරන්න ඉල්ලන්න.',
-  },
-  no_officers_yet: { english: 'No officers added yet.', sinhala: 'තවම නිලධාරීන් එකතු කර නැත.', mixed: 'තවම officers නැත.' },
-  add_one_to_start: {
-    english: 'Add one above to get started.',
-    sinhala: 'ආරම්භ කිරීමට ඉහත එකක් එකතු කරන්න.',
-    mixed: 'ආරම්භ කරන්න ඉහත එකක් add කරන්න.',
-  },
-  add_finance_company: {
-    english: 'Add Finance Company',
-    sinhala: 'මූල්‍ය සමාගමක් එකතු කරන්න',
-    mixed: 'Finance Company එකතු කරන්න',
-  },
-  customer_optional: { english: 'Customer (optional)', sinhala: 'පාරිභෝගිකයා (විකල්ප)', mixed: 'Customer (optional)' },
-  vehicle_optional: { english: 'Vehicle (optional)', sinhala: 'වාහනය (විකල්ප)', mixed: 'Vehicle (optional)' },
-  no_notes_yet: { english: 'No notes recorded yet', sinhala: 'තවම සටහන් නැත', mixed: 'තවම notes නැත' },
-  by_prefix: { english: 'by', sinhala: 'විසින්', mixed: 'by' },
-  open_chat: { english: 'Open Chat', sinhala: 'Chat විවෘත කරන්න', mixed: 'Chat විවෘත කරන්න' },
-  send_nic: { english: 'Send NIC', sinhala: 'ජා.හැ. යවන්න', mixed: 'NIC යවන්න' },
-  electricity_bill: { english: 'Electricity Bill', sinhala: 'විදුලි බිල', mixed: 'Electricity Bill' },
-  other_document: { english: 'Other Document', sinhala: 'වෙනත් ලේඛනය', mixed: 'Other Document' },
-  select_company: { english: 'Select company...', sinhala: 'සමාගමක් තෝරන්න...', mixed: 'Company එකක් තෝරන්න...' },
-  add_finance_company_first: {
-    english: 'Add a finance company first from the Finance page.',
-    sinhala: 'මුලින්ම Finance පිටුවෙන් මූල්‍ය සමාගමක් එකතු කරන්න.',
-    mixed: 'මුලින්ම Finance පිටුවෙන් Finance Company එකක් add කරන්න.',
-  },
-
-  // Reports
-  reports: { english: 'Reports', sinhala: 'වාර්තා', mixed: 'Reports' },
-  monthly_report: { english: 'Monthly Report', sinhala: 'මාසික වාර්තාව', mixed: 'Monthly Report' },
-  monthly_sales_report: { english: 'Monthly Sales Report', sinhala: 'මාසික විකුණුම් වාර්තාව', mixed: 'Monthly Sales Report' },
-  monthly_profit_report: { english: 'Monthly Profit Report', sinhala: 'මාසික ලාභ වාර්තාව', mixed: 'Monthly Profit Report' },
-  vehicle_inventory_report: {
-    english: 'Vehicle Inventory Report',
-    sinhala: 'වාහන තොග වාර්තාව',
-    mixed: 'Vehicle Inventory Report',
-  },
-  customer_purchase_report: {
-    english: 'Customer Purchase Report',
-    sinhala: 'පාරිභෝගික මිලදී ගැනීම් වාර්තාව',
-    mixed: 'Customer Purchase Report',
-  },
-  employee_sales_report: {
-    english: 'Employee Sales Report',
-    sinhala: 'සේවක විකුණුම් වාර්තාව',
-    mixed: 'Employee Sales Report',
-  },
-  total_sales: { english: 'Total Sales', sinhala: 'මුළු විකුණුම්', mixed: 'Total Sales' },
-  total_revenue: { english: 'Total Revenue', sinhala: 'මුළු ආදායම', mixed: 'Total Revenue' },
-  no_sales_in_month: { english: 'No sales in this month.', sinhala: 'මේ මාසේ විකුණුම් නැත.', mixed: 'මේ මාසේ sales නැත.' },
-  sold_by_prefix: { english: 'sold by', sinhala: 'විකුණුවේ', mixed: 'sold by' },
-  total_gross_profit: { english: 'Total Gross Profit', sinhala: 'මුළු දළ ලාභය', mixed: 'Total Gross Profit' },
-  total_vehicles: { english: 'Total Vehicles', sinhala: 'මුළු වාහන ගණන', mixed: 'Total Vehicles' },
-  total_selling_value: { english: 'Total Selling Value', sinhala: 'මුළු විකුණුම් වටිනාකම', mixed: 'Total Selling Value' },
-  total_buying_value: { english: 'Total Buying Value', sinhala: 'මුළු මිලදී ගැනීම් වටිනාකම', mixed: 'Total Buying Value' },
-  vehicle_count_suffix: { english: 'vehicle(s)', sinhala: 'වාහන', mixed: 'vehicle(s)' },
-  no_purchases_recorded_yet: {
-    english: 'No purchases recorded yet.',
-    sinhala: 'තවම මිලදී ගැනීම් සටහන් වී නැත.',
-    mixed: 'තවම purchases නැත.',
-  },
-  purchased_vehicles_suffix: { english: 'vehicle(s) purchased', sinhala: 'වාහන මිලදී ගෙන ඇත', mixed: 'vehicle(s) purchased' },
-  no_sales_recorded_this_month: {
-    english: 'No sales recorded this month.',
-    sinhala: 'මේ මාසේ විකුණුම් සටහන් වී නැත.',
-    mixed: 'මේ මාසේ sales record වී නැත.',
-  },
-  profit_prefix: { english: 'profit', sinhala: 'ලාභය', mixed: 'profit' },
-  go: { english: 'Go', sinhala: 'යන්න', mixed: 'Go' },
-
-  // Profile / business card
-  business_name: { english: 'Business Name', sinhala: 'ව්‍යාපාරයේ නම', mixed: 'Business Name' },
-  call: { english: 'Call', sinhala: 'අමතන්න', mixed: 'Call' },
-  description: { english: 'Description', sinhala: 'විස්තරය', mixed: 'Description' },
-  describe_shop_placeholder: {
-    english: 'Tell customers what your shop offers...',
-    sinhala: 'ඔබේ සාප්පුව ලබා දෙන දේ පාරිභෝගිකයන්ට කියන්න...',
-    mixed: 'ඔබේ shop එක ලබා දෙන දේ customers ට කියන්න...',
-  },
-  leave_blank_use_phone: {
-    english: 'Leave blank to use Phone Number',
-    sinhala: 'දුරකථන අංකයම භාවිතා කිරීමට හිස්ව තබන්න',
-    mixed: 'Phone Number එකම use කරන්න හිස්ව තබන්න',
-  },
-  saved_confirmation: { english: 'Saved.', sinhala: 'සුරකින ලදී.', mixed: 'Saved.' },
-  save_profile: { english: 'Save Profile', sinhala: 'පැතිකඩ සුරකින්න', mixed: 'Profile සුරකින්න' },
-  get_directions_prefix: { english: 'Get directions —', sinhala: 'මාර්ග ලබාගන්න —', mixed: 'Get directions —' },
-  photos: { english: 'Photos', sinhala: 'ඡායාරූප', mixed: 'Photos' },
-  save_contact: { english: 'Save Contact', sinhala: 'සම්බන්ධතාවය සුරකින්න', mixed: 'Contact සුරකින්න' },
-  share_profile: { english: 'Share Profile', sinhala: 'පැතිකඩ බෙදාගන්න', mixed: 'Profile Share කරන්න' },
-  edit_profile: { english: 'Edit Profile', sinhala: 'පැතිකඩ සංස්කරණය කරන්න', mixed: 'Profile Edit කරන්න' },
-  hide_edit_options: { english: 'Hide Edit Options', sinhala: 'සංස්කරණ විකල්ප සඟවන්න', mixed: 'Edit Options Hide කරන්න' },
-  scan_to_share: { english: 'Scan to Share', sinhala: 'Share කිරීමට Scan කරන්න', mixed: 'Scan to Share' },
-  download_qr: { english: 'Download QR', sinhala: 'QR බාගන්න', mixed: 'QR Download කරන්න' },
-  cover_photo: { english: 'Cover Photo', sinhala: 'කවර ඡායාරූපය', mixed: 'Cover Photo' },
-  gallery_photos: { english: 'Gallery Photos', sinhala: 'ගැලරි ඡායාරූප', mixed: 'Gallery Photos' },
-  upload_cover_photo: { english: 'Upload cover photo', sinhala: 'කවර ඡායාරූපය උඩුගත කරන්න', mixed: 'Cover photo upload කරන්න' },
-  crop_hint: {
-    english: 'You can drag/zoom to choose what area shows before uploading.',
-    sinhala: 'උඩුගත කිරීමට පෙර පෙන්වන ප්‍රදේශය තෝරාගැනීමට drag/zoom කරන්න.',
-    mixed: 'Upload කරන්න කලින් පෙන්වන area එක drag/zoom කරලා තෝරන්න.',
-  },
-  remove_photo: { english: 'Remove photo', sinhala: 'ඡායාරූපය ඉවත් කරන්න', mixed: 'Photo ඉවත් කරන්න' },
-  city_branch_placeholder: {
-    english: 'City / branch name, e.g. Batapola',
-    sinhala: 'නගරය / ශාඛාවේ නම, උදා. බටපොල',
-    mixed: 'City / Branch name, e.g. Batapola',
-  },
-  address_optional_placeholder: { english: 'Address (optional)', sinhala: 'ලිපිනය (විකල්ප)', mixed: 'Address (optional)' },
-  maps_link_optional_placeholder: {
-    english: 'Google Maps link (optional)',
-    sinhala: 'Google Maps සබැඳිය (විකල්ප)',
-    mixed: 'Google Maps link (optional)',
-  },
-  adding: { english: 'Adding...', sinhala: 'එකතු කරමින්...', mixed: 'Adding...' },
-  add_location: { english: '+ Add Location', sinhala: '+ ස්ථානය එකතු කරන්න', mixed: '+ Location එකතු කරන්න' },
-  remove_location: { english: 'Remove location', sinhala: 'ස්ථානය ඉවත් කරන්න', mixed: 'Location ඉවත් කරන්න' },
-  remove_link: { english: 'Remove link', sinhala: 'සබැඳිය ඉවත් කරන්න', mixed: 'Link ඉවත් කරන්න' },
-  edit_business_profile: {
-    english: 'Edit Business Profile',
-    sinhala: 'ව්‍යාපාරයේ පැතිකඩ සංස්කරණය කරන්න',
-    mixed: 'Business Profile Edit කරන්න',
-  },
-  locations_label: { english: 'Locations', sinhala: 'ස්ථාන', mixed: 'Locations' },
-  social_media_label: { english: 'Social Media', sinhala: 'සමාජ මාධ්‍ය', mixed: 'Social Media' },
-  powered_by: { english: 'Powered by', sinhala: 'මගින් powered', mixed: 'Powered by' },
-
-  // Employees
-  add_employee: { english: 'Add Employee', sinhala: 'සේවකයෙක් එකතු කරන්න', mixed: 'Employee එකතු කරන්න' },
-  staff_label: { english: 'Staff', sinhala: 'කාර්ය මණ්ඩලය', mixed: 'Staff' },
-  active_label: { english: 'Active', sinhala: 'ක්‍රියාකාරී', mixed: 'Active' },
-  inactive_label: { english: 'Inactive', sinhala: 'අක්‍රීය', mixed: 'Inactive' },
-  sales_employee: { english: 'Sales Employee', sinhala: 'විකුණුම් සේවකයා', mixed: 'Sales Employee' },
-  admin_role: { english: 'Admin', sinhala: 'පරිපාලක', mixed: 'Admin' },
-  creating: { english: 'Creating...', sinhala: 'සාදමින්...', mixed: 'Creating...' },
-  username_pattern_hint: {
-    english: 'Lowercase letters, numbers, dots and underscores only',
-    sinhala: 'කුඩා අකුරු, ඉලක්කම්, තිත් සහ යටි ඉරි පමණි',
-    mixed: 'Lowercase letters, numbers, dots and underscores only',
-  },
-  min_6_chars: { english: 'Min. 6 characters', sinhala: 'අවම වශයෙන් අකුරු 6ක්', mixed: 'Min. 6 characters' },
-  deactivate: { english: 'Deactivate', sinhala: 'අක්‍රිය කරන්න', mixed: 'Deactivate' },
-  activate: { english: 'Activate', sinhala: 'ක්‍රියාකාරී කරන්න', mixed: 'Activate' },
-  role_label: { english: 'Role', sinhala: 'තනතුර', mixed: 'Role' },
-
-  // Activity
-  no_activity_recorded_yet: {
-    english: 'No activity recorded yet.',
-    sinhala: 'තවම ක්‍රියාකාරකම් සටහන් වී නැත.',
-    mixed: 'තවම activity නැත.',
-  },
-  activity_logged_in: { english: 'Logged in', sinhala: 'පිවිසුණා', mixed: 'Logged in' },
-  activity_logged_out: { english: 'Logged out', sinhala: 'ඉවත් වුණා', mixed: 'Logged out' },
-  activity_added_vehicle: { english: 'Added vehicle', sinhala: 'වාහනයක් එකතු කළා', mixed: 'Vehicle එකතු කළා' },
-  activity_marked_vehicle_sold: {
-    english: 'Marked vehicle sold',
-    sinhala: 'වාහනය විකුණූ බව සලකුණු කළා',
-    mixed: 'Vehicle sold කරලා සලකුණු කළා',
-  },
-  activity_added_customer: { english: 'Added customer', sinhala: 'පාරිභෝගිකයෙක් එකතු කළා', mixed: 'Customer එකතු කළා' },
-  activity_contacted_finance_officer: {
-    english: 'Contacted finance officer',
-    sinhala: 'මූල්‍ය නිලධාරියා සම්බන්ධ කරගත්තා',
-    mixed: 'Finance officer contact කළා',
-  },
-  before_tracking_began: { english: 'Before tracking began', sinhala: 'Track කිරීමට පෙර', mixed: 'Track කරන්න කලින්' },
-  ongoing: { english: 'Ongoing', sinhala: 'සිදුවෙමින්', mixed: 'Ongoing' },
-
-  // Search
-  search_global_placeholder: {
-    english: 'Search vehicle, registration, customer, phone...',
-    sinhala: 'වාහනය, ලියාපදිංචි අංකය, පාරිභෝගිකයා, දුරකථනය සොයන්න...',
-    mixed: 'Vehicle, Registration, Customer, Phone සොයන්න...',
-  },
-  search_hint: {
-    english: 'Type a vehicle model, registration number, customer name, or phone number.',
-    sinhala: 'වාහන මාදිලියක්, ලියාපදිංචි අංකයක්, පාරිභෝගික නමක් හෝ දුරකථන අංකයක් type කරන්න.',
-    mixed: 'Vehicle model, Registration number, Customer name, හෝ Phone number type කරන්න.',
-  },
-  no_results_message: {
-    english: 'No results for "{{query}}".',
-    sinhala: '"{{query}}" සඳහා ප්‍රතිඵල හමු නොවීය.',
-    mixed: '"{{query}}" සඳහා results හමු නොවුණා.',
-  },
-
-  // Nav
-  profile: { english: 'Profile', sinhala: 'පැතිකඩ', mixed: 'Profile' },
-  employees: { english: 'Employees', sinhala: 'සේවකයින්', mixed: 'Employees' },
-  activity: { english: 'Activity', sinhala: 'ක්‍රියාකාරකම්', mixed: 'Activity' },
-  collapse: { english: 'Collapse', sinhala: 'හකුළන්න', mixed: 'Collapse' },
-  expand_sidebar: { english: 'Expand sidebar', sinhala: 'Sidebar විහිදන්න', mixed: 'Sidebar විහිදන්න' },
-  collapse_sidebar: { english: 'Collapse sidebar', sinhala: 'Sidebar හකුළන්න', mixed: 'Sidebar හකුළන්න' },
-
-  // Common
-  save: { english: 'Save', sinhala: 'සුරකින්න', mixed: 'Save' },
-  cancel: { english: 'Cancel', sinhala: 'අවලංගු කරන්න', mixed: 'Cancel' },
-  search: { english: 'Search', sinhala: 'සොයන්න', mixed: 'Search' },
-  edit: { english: 'Edit', sinhala: 'සංස්කරණය කරන්න', mixed: 'Edit' },
-  delete: { english: 'Delete', sinhala: 'මකන්න', mixed: 'Delete' },
-  loading: { english: 'Loading...', sinhala: 'පූරණය වෙමින්...', mixed: 'Loading...' },
-  logout: { english: 'Logout', sinhala: 'ඉවත් වන්න', mixed: 'Logout' },
-  settings: { english: 'Settings', sinhala: 'සැකසුම්', mixed: 'Settings' },
-  language: { english: 'Language', sinhala: 'භාෂාව', mixed: 'Language' },
-  add: { english: 'Add', sinhala: 'එකතු කරන්න', mixed: 'Add' },
-  saving: { english: 'Saving...', sinhala: 'සුරකිමින්...', mixed: 'Saving...' },
-  save_changes: { english: 'Save Changes', sinhala: 'වෙනස්කම් සුරකින්න', mixed: 'Save Changes' },
+  ...authText,
+  ...dashboardText,
+  ...vehiclesText,
+  ...customersText,
+  ...financeText,
+  ...documentsText,
+  ...reportsText,
+  ...profileText,
+  ...employeesText,
+  ...activityText,
+  ...searchText,
+  ...calendarText,
+  ...navText,
+  ...commonText,
 } as const;
 
 export type TranslationKey = keyof typeof translations;

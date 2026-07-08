@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { validateFinanceOfficerInput } from '@/lib/validation';
 import { logActivity } from '@/lib/activity';
+import { requireAdmin } from '@/lib/queries/session';
 
 export interface FinanceActionResult {
   error?: string;
@@ -14,6 +15,7 @@ export interface FinanceActionResult {
 // Finance Companies (admin manages)
 // ------------------------------------------------------------
 export async function createFinanceCompanyAction(formData: FormData): Promise<FinanceActionResult> {
+  await requireAdmin();
   const name = String(formData.get('name') || '').trim();
   if (!name) return { error: 'සමාගමේ නම ඕන / Company name is required' };
 
@@ -27,6 +29,7 @@ export async function createFinanceCompanyAction(formData: FormData): Promise<Fi
 }
 
 export async function deleteFinanceCompanyAction(companyId: string) {
+  await requireAdmin();
   const supabase = await createClient();
   await supabase.from('finance_companies').delete().eq('id', companyId);
   revalidatePath('/finance');
@@ -36,6 +39,7 @@ export async function deleteFinanceCompanyAction(companyId: string) {
 // Finance Officers (admin manages)
 // ------------------------------------------------------------
 export async function createFinanceOfficerAction(formData: FormData): Promise<FinanceActionResult> {
+  await requireAdmin();
   const finance_company_id = String(formData.get('finance_company_id') || '');
   const officer_name = String(formData.get('officer_name') || '').trim();
   const phone_number = String(formData.get('phone_number') || '').trim();
@@ -61,6 +65,7 @@ export async function createFinanceOfficerAction(formData: FormData): Promise<Fi
 }
 
 export async function updateFinanceOfficerAction(officerId: string, formData: FormData): Promise<FinanceActionResult> {
+  await requireAdmin();
   const officer_name = String(formData.get('officer_name') || '').trim();
   const phone_number = String(formData.get('phone_number') || '').trim();
   const whatsapp_number = String(formData.get('whatsapp_number') || '').trim();
@@ -87,6 +92,7 @@ export async function updateFinanceOfficerAction(officerId: string, formData: Fo
 }
 
 export async function deleteFinanceOfficerAction(officerId: string) {
+  await requireAdmin();
   const supabase = await createClient();
   await supabase.from('finance_officers').delete().eq('id', officerId);
   revalidatePath('/finance');

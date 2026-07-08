@@ -19,3 +19,32 @@ export async function listEmployees(): Promise<EmployeeRow[]> {
 
   return (data ?? []) as EmployeeRow[];
 }
+
+/**
+ * "Online" here means: this employee's most recent login/logout event is a
+ * login with no logout after it. There's no real-time presence/heartbeat in
+ * this app, so a browser closed without an explicit logout will still show
+ * as online until their next login — an approximation, not a live socket.
+ */
+export async function listOnlineEmployeeIds(): Promise<Set<string>> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('activity_log')
+    .select('employee_id, activity_type, created_at')
+    .in('activity_type', ['login', 'logout'])
+    .not('employee_id', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(1000);
+
+  const seen = new Set<string>();
+  const online = new Set<string>();
+
+  for (const row of data ?? []) {
+    const employeeId = row.employee_id as string;
+    if (seen.has(employeeId)) continue;
+    seen.add(employeeId);
+    if (row.activity_type === 'login') online.add(employeeId);
+  }
+
+  return online;
+}

@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCustomer, getCustomerPurchaseHistory, listSellableVehicles } from '@/lib/queries/customers';
 import { getCurrentEmployee } from '@/lib/queries/session';
+import { listDocuments } from '@/lib/queries/documents';
+import { listReminders } from '@/lib/queries/reminders';
 import { getTranslator } from '@/lib/i18n/server';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -9,6 +11,9 @@ import { AppShell } from '@/components/layout/AppShell';
 import { DeleteCustomerButton } from '@/components/customers/DeleteCustomerButton';
 import { PurchaseHistoryList } from '@/components/customers/PurchaseHistoryList';
 import { RecordSaleSection } from '@/components/customers/RecordSaleSection';
+import { DocumentUploadForm } from '@/components/documents/DocumentUploadForm';
+import { DocumentList } from '@/components/documents/DocumentList';
+import { ReminderList } from '@/components/calendar/ReminderList';
 import { User, Pencil, Phone, MapPin, Briefcase } from 'lucide-react';
 
 export default async function CustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -22,6 +27,10 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
   ]);
   if (!customer) notFound();
   const isAdmin = employee?.role === 'admin';
+  const [documents, reminders] = await Promise.all([
+    listDocuments({ customerId: customer.id }),
+    listReminders({ customerId: customer.id }),
+  ]);
 
   return (
     <AppShell title={t('customer_details')}>
@@ -71,6 +80,25 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
       <RecordSaleSection customerId={customer.id} sellableVehicles={sellableVehicles} />
 
       <PurchaseHistoryList history={history} />
+
+      {reminders.length > 0 && (
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('reminders_label')}</h2>
+          <ReminderList items={reminders} isAdmin={isAdmin} revalidatePaths={[`/customers/${customer.id}`, '/calendar']} />
+        </Card>
+      )}
+
+      <Card>
+        <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('documents_label')}</h2>
+        <DocumentUploadForm
+          customerId={customer.id}
+          vehicleOptions={history.map((h) => ({ id: h.vehicleId, label: h.vehicleLabel })).filter((v) => v.id)}
+          revalidatePaths={[`/customers/${customer.id}`]}
+        />
+        <div className="mt-4">
+          <DocumentList items={documents} isAdmin={isAdmin} revalidatePaths={[`/customers/${customer.id}`]} />
+        </div>
+      </Card>
     </div>
     </AppShell>
   );

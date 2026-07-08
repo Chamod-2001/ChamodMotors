@@ -1,5 +1,5 @@
 import { requireAdmin } from '@/lib/queries/session';
-import { listEmployees } from '@/lib/queries/employees';
+import { listEmployees, listOnlineEmployeeIds } from '@/lib/queries/employees';
 import { getTranslator } from '@/lib/i18n/server';
 import { AppShell } from '@/components/layout/AppShell';
 import { Card } from '@/components/ui/Card';
@@ -8,8 +8,7 @@ import { EmployeeActiveToggle } from '@/components/employees/EmployeeActiveToggl
 
 export default async function EmployeesPage() {
   await requireAdmin();
-  const employees = await listEmployees();
-  const t = await getTranslator();
+  const [employees, onlineIds, t] = await Promise.all([listEmployees(), listOnlineEmployeeIds(), getTranslator()]);
 
   return (
     <AppShell title={t('employees')}>
@@ -29,7 +28,14 @@ export default async function EmployeesPage() {
             {employees.map((employee) => (
               <Card key={employee.id} className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-semibold text-slate-900 dark:text-slate-100">{employee.full_name}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="truncate font-semibold text-slate-900 dark:text-slate-100">{employee.full_name}</p>
+                    {onlineIds.has(employee.id) && (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-600 dark:bg-green-950 dark:text-green-400">
+                        <span className="h-1.5 w-1.5 rounded-full bg-green-500" /> {t('online_now')}
+                      </span>
+                    )}
+                  </div>
                   <p className="truncate text-xs text-slate-500 dark:text-slate-400">
                     @{employee.username}
                     {' · '}

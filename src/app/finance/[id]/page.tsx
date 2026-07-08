@@ -7,6 +7,7 @@ import {
   listVehiclesForFinancePicker,
 } from '@/lib/queries/finance';
 import { getCurrentEmployee } from '@/lib/queries/session';
+import { listReminders } from '@/lib/queries/reminders';
 import { getTranslator } from '@/lib/i18n/server';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -15,15 +16,17 @@ import { WhatsAppQuickActions } from '@/components/finance/WhatsAppQuickActions'
 import { CommunicationLogForm } from '@/components/finance/CommunicationLogForm';
 import { CommunicationLogList } from '@/components/finance/CommunicationLogList';
 import { DeleteFinanceOfficerButton } from '@/components/finance/DeleteFinanceOfficerButton';
+import { ReminderList } from '@/components/calendar/ReminderList';
 import { Pencil, Building2 } from 'lucide-react';
 
 export default async function FinanceOfficerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [officer, communications, customers, vehicles, employee, t] = await Promise.all([
+  const [officer, communications, customers, vehicles, reminders, employee, t] = await Promise.all([
     getFinanceOfficer(id),
     listFinanceCommunications(id),
     listCustomersForFinancePicker(),
     listVehiclesForFinancePicker(),
+    listReminders({ financeOfficerId: id }),
     getCurrentEmployee(),
     getTranslator(),
   ]);
@@ -68,6 +71,13 @@ export default async function FinanceOfficerDetailPage({ params }: { params: Pro
       ) : (
         <Card>
           <p className="text-sm text-slate-400">{t('no_officer_contact')}</p>
+        </Card>
+      )}
+
+      {reminders.length > 0 && (
+        <Card>
+          <h2 className="mb-3 text-lg font-semibold text-slate-900">{t('reminders_label')}</h2>
+          <ReminderList items={reminders} isAdmin={isAdmin} revalidatePaths={[`/finance/${officer.id}`, '/calendar']} />
         </Card>
       )}
 

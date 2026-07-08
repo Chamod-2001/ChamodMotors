@@ -21,18 +21,22 @@ const ALL_TABLES = [
   'finance_officers',
   'finance_communications',
   'documents',
+  'reminders',
 ];
 
 // Tables where DELETE must be admin-only per the spec (sales employees can
 // create/read/update day-to-day records, but shouldn't be able to permanently
 // remove them).
-const ADMIN_ONLY_DELETE_TABLES = ['profiles', 'vehicles', 'customers', 'sales', 'documents'];
+const ADMIN_ONLY_DELETE_TABLES = ['profiles', 'vehicles', 'customers', 'sales', 'documents', 'reminders'];
 
 let rlsSql: string;
 
 beforeAll(() => {
+  // "reminders" was added after the initial RLS migration, in its own file —
+  // concatenate so both are covered by the same checks.
   const rlsPath = path.resolve(__dirname, '../../supabase/migrations/0002_rls_policies.sql');
-  rlsSql = readFileSync(rlsPath, 'utf-8');
+  const remindersRlsPath = path.resolve(__dirname, '../../supabase/migrations/0012_reminders.sql');
+  rlsSql = readFileSync(rlsPath, 'utf-8') + '\n' + readFileSync(remindersRlsPath, 'utf-8');
 });
 
 describe('RLS migration: every table has row-level security enabled', () => {

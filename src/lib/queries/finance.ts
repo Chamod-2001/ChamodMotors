@@ -168,3 +168,24 @@ export async function listVehiclesForFinancePicker(): Promise<SimpleVehicle[]> {
     label: `${v.brand} ${v.model}${v.registration_number ? ` — ${v.registration_number}` : ''}`,
   }));
 }
+
+export interface SimpleFinanceOfficer {
+  id: string;
+  label: string;
+}
+
+export async function listFinanceOfficersForPicker(): Promise<SimpleFinanceOfficer[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('finance_officers')
+    .select('id, officer_name, finance_companies(name)')
+    .order('officer_name', { ascending: true });
+
+  type Row = { id: string; officer_name: string; finance_companies: { name: string } | { name: string }[] | null };
+  const one = <T,>(v: T | T[] | null): T | null => (Array.isArray(v) ? v[0] ?? null : v);
+
+  return ((data ?? []) as unknown as Row[]).map((row) => {
+    const company = one(row.finance_companies);
+    return { id: row.id, label: company ? `${row.officer_name} — ${company.name}` : row.officer_name };
+  });
+}

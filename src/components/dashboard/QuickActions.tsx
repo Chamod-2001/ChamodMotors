@@ -5,11 +5,11 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Card } from '@/components/ui/Card';
 import { PlusCircle, UserPlus, MessageCircle, Search } from 'lucide-react';
 
-export function QuickActions() {
+export function QuickActions({ isAdmin }: { isAdmin: boolean }) {
   const { t } = useLanguage();
 
   const actions = [
-    { href: '/vehicles/new', label: t('add_vehicle'), icon: PlusCircle, tone: 'text-brand bg-brand-light' },
+    ...(isAdmin ? [{ href: '/vehicles/new', label: t('add_vehicle'), icon: PlusCircle, tone: 'text-brand bg-brand-light' }] : []),
     { href: '/customers/new', label: t('add_customer'), icon: UserPlus, tone: 'text-green-600 bg-green-50' },
     { href: '/finance', label: t('open_finance_whatsapp'), icon: MessageCircle, tone: 'text-emerald-600 bg-emerald-50' },
     { href: '/search', label: t('search_vehicle'), icon: Search, tone: 'text-amber-600 bg-amber-50' },

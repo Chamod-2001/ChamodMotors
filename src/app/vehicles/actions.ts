@@ -121,6 +121,7 @@ export async function createVehicleAction(formData: FormData): Promise<VehicleFo
 }
 
 export async function updateVehicleAction(vehicleId: string, formData: FormData): Promise<VehicleFormResult> {
+  await requireAdmin();
   const input = parseFormInput(formData);
 
   const validationError = validateVehicleInput(input);
@@ -208,6 +209,7 @@ export async function deleteVehicleImageAction(imageId: string, storagePath: str
 }
 
 export async function deleteVehicleAction(vehicleId: string) {
+  await requireAdmin();
   const supabase = await createClient();
 
   // Clean up storage files first (admin-only per RLS policy)

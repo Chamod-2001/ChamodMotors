@@ -25,7 +25,7 @@ export default async function FinancePage() {
           {isAdmin && (
             <Link href="/finance/officers/new">
               <Button className="!py-2 !px-4 !min-h-0">
-                <UserPlus size={18} /> {t('add_officer')}
+                <UserPlus size={18} /> Officer
               </Button>
             </Link>
           )}

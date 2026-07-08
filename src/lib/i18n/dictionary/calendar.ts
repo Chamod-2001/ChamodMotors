@@ -1,0 +1,27 @@
+export const calendarText = {
+  calendar: { english: 'Calendar', sinhala: 'දින දර්ශනය', mixed: 'Calendar' },
+  add_reminder: { english: 'Add Reminder', sinhala: 'මතක් කිරීමක් එකතු කරන්න', mixed: 'Reminder එකතු කරන්න' },
+  reminder_title_placeholder: {
+    english: 'e.g. Renew insurance, Call back customer...',
+    sinhala: 'උදා. රක්ෂණය අලුත් කරන්න, පාරිභෝගිකයාට call කරන්න...',
+    mixed: 'e.g. Insurance renew කරන්න, Customer ට call කරන්න...',
+  },
+  due_date_time: { english: 'Due Date & Time', sinhala: 'නියමිත දිනය සහ වේලාව', mixed: 'Due Date & Time' },
+  officer_optional: { english: 'Finance Officer (optional)', sinhala: 'මූල්‍ය නිලධාරී (විකල්ප)', mixed: 'Finance Officer (optional)' },
+  upcoming_reminders: { english: 'Upcoming Reminders', sinhala: 'ඉදිරි මතක් කිරීම්', mixed: 'Upcoming Reminders' },
+  no_reminders_yet: { english: 'No reminders yet.', sinhala: 'තවම මතක් කිරීම් නැත.', mixed: 'තවම reminders නැත.' },
+  mark_done: { english: 'Done', sinhala: 'නිමයි', mixed: 'Done' },
+  dismiss: { english: 'Dismiss', sinhala: 'ඉවත් කරන්න', mixed: 'Dismiss' },
+  overdue_label: { english: 'Overdue', sinhala: 'කල් ඉකුත්', mixed: 'Overdue' },
+  due_today_label: { english: 'Due Today', sinhala: 'අද නියමිතයි', mixed: 'Due Today' },
+  reminders_label: { english: 'Reminders', sinhala: 'මතක් කිරීම්', mixed: 'Reminders' },
+  reminder_delete_confirm: {
+    english: 'Delete this reminder? This cannot be undone.',
+    sinhala: 'මේ මතක් කිරීම මකන්නද? මේක undo කරන්න බෑ.',
+    mixed: 'මේ reminder එක delete කරන්නද? මේක undo කරන්න බෑ.',
+  },
+  holiday_label: { english: 'Holiday', sinhala: 'නිවාඩු දිනය', mixed: 'Holiday' },
+  due_date_label: { english: 'Due Date', sinhala: 'නියමිත දිනය', mixed: 'Due Date' },
+  due_time_label: { english: 'Due Time', sinhala: 'නියමිත වේලාව', mixed: 'Due Time' },
+  hide_add_reminder: { english: 'Hide', sinhala: 'සඟවන්න', mixed: 'Hide' },
+} as const;

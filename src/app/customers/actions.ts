@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { validateCustomerInput, validateSaleInput } from '@/lib/validation';
 import { logActivity } from '@/lib/activity';
+import { requireAdmin } from '@/lib/queries/session';
 
 export interface CustomerFormResult {
   error?: string;
@@ -88,6 +89,7 @@ export async function updateCustomerAction(customerId: string, formData: FormDat
 }
 
 export async function deleteCustomerAction(customerId: string) {
+  await requireAdmin();
   const supabase = await createClient();
   const { error } = await supabase.from('customers').delete().eq('id', customerId);
   if (error) {

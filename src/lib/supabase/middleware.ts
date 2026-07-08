@@ -30,7 +30,10 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isPublicPath = PUBLIC_PATHS.some((p) => path.startsWith(p));
+  // Exact match or a real sub-path only — a plain startsWith would also match
+  // e.g. "/profile" against the public "/p" prefix, exposing an authed-only
+  // page to logged-out visitors.
+  const isPublicPath = PUBLIC_PATHS.some((p) => path === p || path.startsWith(`${p}/`));
 
   // Not logged in and trying to access a protected page -> send to login
   if (!user && !isPublicPath && !path.startsWith('/_next') && path !== '/manifest.json') {

@@ -1,0 +1,20 @@
+export const authText = {
+  email: { english: 'Email', sinhala: 'විද්‍යුත් තැපෑල', mixed: 'Email' },
+  username: { english: 'Username', sinhala: 'පරිශීලක නාමය', mixed: 'Username' },
+  password: { english: 'Password', sinhala: 'මුරපදය', mixed: 'Password' },
+  login: { english: 'Login', sinhala: 'පිවිසෙන්න', mixed: 'Login' },
+  forgot_password: { english: 'Forgot Password?', sinhala: 'මුරපදය අමතකද?', mixed: 'Forgot Password?' },
+  keep_logged_in: { english: 'Keep me logged in', sinhala: 'මාව login කර තබන්න', mixed: 'Keep me logged in' },
+  reset_password: { english: 'Reset Password', sinhala: 'මුරපදය නැවත සකසන්න', mixed: 'Reset Password' },
+  send_reset_link: { english: 'Send Reset Link', sinhala: 'නැවත සැකසුම් සබැඳිය යවන්න', mixed: 'Send Reset Link' },
+  back_to_login: { english: 'Back to Login', sinhala: 'පිවිසුමට ආපසු', mixed: 'Back to Login' },
+  tagline: {
+    english: 'Motorcycle Dealership Management System',
+    sinhala: 'මෝටර් සයිකල් ඩීලර්ෂිප් කළමනාකරණ පද්ධතිය',
+    mixed: 'Motorcycle Dealership Management System',
+  },
+  set_new_password_title: { english: 'Set a new password', sinhala: 'අලුත් Password එකක් සකසන්න', mixed: 'අලුත් Password එකක් සකසන්න' },
+  new_password: { english: 'New Password', sinhala: 'අලුත් මුරපදය', mixed: 'New Password' },
+  confirm_password: { english: 'Confirm Password', sinhala: 'මුරපදය තහවුරු කරන්න', mixed: 'Confirm Password' },
+  save_new_password: { english: 'Save New Password', sinhala: 'අලුත් මුරපදය සුරකින්න', mixed: 'New Password සුරකින්න' },
+} as const;

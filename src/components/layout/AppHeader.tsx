@@ -1,8 +1,35 @@
 import Link from 'next/link';
-import { Bell } from 'lucide-react';
+import { Bell, CalendarClock } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { LogoutButton } from './LogoutButton';
+
+function NotificationLink({
+  href,
+  label,
+  count,
+  icon: Icon,
+}: {
+  href: string;
+  label: string;
+  count: number;
+  icon: typeof Bell;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-label={label}
+      className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+    >
+      <Icon size={16} />
+      {count > 0 && (
+        <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white">
+          {count > 99 ? '99+' : count}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 export function AppHeader({
   title,
@@ -10,12 +37,14 @@ export function AppHeader({
   employeeRole,
   isAdmin,
   unreadActivityCount,
+  dueReminderCount,
 }: {
   title: string;
   employeeName: string;
   employeeRole: string;
   isAdmin: boolean;
   unreadActivityCount: number;
+  dueReminderCount: number;
 }) {
   return (
     <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
@@ -27,20 +56,8 @@ export function AppHeader({
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          {isAdmin && (
-            <Link
-              href="/activity"
-              aria-label="Activity"
-              className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
-            >
-              <Bell size={16} />
-              {unreadActivityCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white">
-                  {unreadActivityCount > 99 ? '99+' : unreadActivityCount}
-                </span>
-              )}
-            </Link>
-          )}
+          <NotificationLink href="/calendar" label="Reminders" count={dueReminderCount} icon={CalendarClock} />
+          {isAdmin && <NotificationLink href="/activity" label="Activity" count={unreadActivityCount} icon={Bell} />}
           <ThemeToggle />
           <LanguageSwitcher />
           <LogoutButton />

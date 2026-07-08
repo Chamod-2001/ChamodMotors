@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getVehicle } from '@/lib/queries/vehicles';
 import { getVehicleImagePublicUrl } from '@/lib/storageUrls';
 import { getCurrentEmployee } from '@/lib/queries/session';
+import { listDocuments } from '@/lib/queries/documents';
+import { listReminders } from '@/lib/queries/reminders';
 import { formatLKR } from '@/lib/format';
 import { getTranslator } from '@/lib/i18n/server';
 import { VehicleStatusBadge } from '@/components/vehicles/VehicleStatusBadge';
@@ -11,6 +13,8 @@ import { Button } from '@/components/ui/Button';
 import { AppShell } from '@/components/layout/AppShell';
 import { VehicleStatusControls } from '@/components/vehicles/VehicleStatusControls';
 import { DeleteVehicleButton } from '@/components/vehicles/DeleteVehicleButton';
+import { DocumentList } from '@/components/documents/DocumentList';
+import { ReminderList } from '@/components/calendar/ReminderList';
 import { Bike, Pencil } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n/translations';
 
@@ -29,6 +33,10 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   const [vehicle, employee, t] = await Promise.all([getVehicle(id), getCurrentEmployee(), getTranslator()]);
   if (!vehicle) notFound();
   const isAdmin = employee?.role === 'admin';
+  const [documents, reminders] = await Promise.all([
+    listDocuments({ vehicleId: vehicle.id }),
+    listReminders({ vehicleId: vehicle.id }),
+  ]);
 
   const specs: [string, string][] = [
     ['vehicle_type', vehicle.vehicle_type],
@@ -48,11 +56,13 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           {t('back')}
         </Link>
         <div className="flex gap-2">
-          <Link href={`/vehicles/${vehicle.id}/edit`}>
-            <Button variant="secondary" className="!py-2 !px-4 !min-h-0">
-              <Pencil size={16} /> {t('edit')}
-            </Button>
-          </Link>
+          {isAdmin && (
+            <Link href={`/vehicles/${vehicle.id}/edit`}>
+              <Button variant="secondary" className="!py-2 !px-4 !min-h-0">
+                <Pencil size={16} /> {t('edit')}
+              </Button>
+            </Link>
+          )}
           {isAdmin && <DeleteVehicleButton vehicleId={vehicle.id} />}
         </div>
       </div>
@@ -151,6 +161,18 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           <p className="text-slate-700">{vehicle.notes}</p>
         </Card>
       )}
+
+      {reminders.length > 0 && (
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('reminders_label')}</h2>
+          <ReminderList items={reminders} isAdmin={isAdmin} revalidatePaths={[`/vehicles/${vehicle.id}`, '/calendar']} />
+        </Card>
+      )}
+
+      <Card>
+        <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('documents_label')}</h2>
+        <DocumentList items={documents} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+      </Card>
     </div>
     </AppShell>
   );

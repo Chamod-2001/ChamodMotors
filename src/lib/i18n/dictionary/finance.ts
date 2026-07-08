@@ -1,0 +1,48 @@
+export const financeText = {
+  finance: { english: 'Finance', sinhala: 'මූල්‍ය', mixed: 'Finance' },
+  finance_company: { english: 'Finance Company', sinhala: 'මූල්‍ය සමාගම', mixed: 'Finance Company' },
+  officer_name: { english: 'Officer Name', sinhala: 'නිලධාරියාගේ නම', mixed: 'Officer Name' },
+  whatsapp_number: { english: 'WhatsApp Number', sinhala: 'WhatsApp අංකය', mixed: 'WhatsApp No' },
+  insurance: { english: 'Insurance', sinhala: 'රක්ෂණය', mixed: 'Insurance' },
+  add_officer: { english: 'Add Officer', sinhala: 'නිලධාරියෙක් එකතු කරන්න', mixed: 'Officer එකතු කරන්න' },
+  finance_officer: { english: 'Finance Officer', sinhala: 'මූල්‍ය නිලධාරී', mixed: 'Finance Officer' },
+  add_note: { english: 'Add Note', sinhala: 'සටහනක් එකතු කරන්න', mixed: 'Note එකතු කරන්න' },
+  communication_history: { english: 'Communication History', sinhala: 'සන්නිවේදන ඉතිහාසය', mixed: 'Communication History' },
+  no_officer_contact: {
+    english: 'No phone or WhatsApp number on file for this officer.',
+    sinhala: 'මේ නිලධාරියාට දුරකථන හෝ WhatsApp අංකයක් සටහන් වී නැත.',
+    mixed: 'මේ officer ට phone හෝ WhatsApp number නැත.',
+  },
+  no_companies_yet: {
+    english: 'No finance companies yet.',
+    sinhala: 'තවම මූල්‍ය සමාගම් නැත.',
+    mixed: 'තවම Finance Companies නැත.',
+  },
+  ask_admin_add_company: {
+    english: 'Ask an admin to add one.',
+    sinhala: 'එකක් එකතු කරන්න admin කෙනෙකුගෙන් ඉල්ලන්න.',
+    mixed: 'Admin කෙනෙකුගෙන් add කරන්න ඉල්ලන්න.',
+  },
+  no_officers_yet: { english: 'No officers added yet.', sinhala: 'තවම නිලධාරීන් එකතු කර නැත.', mixed: 'තවම officers නැත.' },
+  add_one_to_start: {
+    english: 'Add one above to get started.',
+    sinhala: 'ආරම්භ කිරීමට ඉහත එකක් එකතු කරන්න.',
+    mixed: 'ආරම්භ කරන්න ඉහත එකක් add කරන්න.',
+  },
+  add_finance_company: {
+    english: 'Add Finance Company',
+    sinhala: 'මූල්‍ය සමාගමක් එකතු කරන්න',
+    mixed: 'Finance Company එකතු කරන්න',
+  },
+  no_notes_yet: { english: 'No notes recorded yet', sinhala: 'තවම සටහන් නැත', mixed: 'තවම notes නැත' },
+  open_chat: { english: 'Open Chat', sinhala: 'Chat විවෘත කරන්න', mixed: 'Chat විවෘත කරන්න' },
+  send_nic: { english: 'Send NIC', sinhala: 'ජා.හැ. යවන්න', mixed: 'NIC යවන්න' },
+  electricity_bill: { english: 'Electricity Bill', sinhala: 'විදුලි බිල', mixed: 'Electricity Bill' },
+  other_document: { english: 'Other Document', sinhala: 'වෙනත් ලේඛනය', mixed: 'Other Document' },
+  select_company: { english: 'Select company...', sinhala: 'සමාගමක් තෝරන්න...', mixed: 'Company එකක් තෝරන්න...' },
+  add_finance_company_first: {
+    english: 'Add a finance company first from the Finance page.',
+    sinhala: 'මුලින්ම Finance පිටුවෙන් මූල්‍ය සමාගමක් එකතු කරන්න.',
+    mixed: 'මුලින්ම Finance පිටුවෙන් Finance Company එකක් add කරන්න.',
+  },
+} as const;

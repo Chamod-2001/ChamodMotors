@@ -1,0 +1,43 @@
+export const reportsText = {
+  reports: { english: 'Reports', sinhala: 'වාර්තා', mixed: 'Reports' },
+  monthly_report: { english: 'Monthly Report', sinhala: 'මාසික වාර්තාව', mixed: 'Monthly Report' },
+  monthly_sales_report: { english: 'Monthly Sales Report', sinhala: 'මාසික විකුණුම් වාර්තාව', mixed: 'Monthly Sales Report' },
+  monthly_profit_report: { english: 'Monthly Profit Report', sinhala: 'මාසික ලාභ වාර්තාව', mixed: 'Monthly Profit Report' },
+  vehicle_inventory_report: {
+    english: 'Vehicle Inventory Report',
+    sinhala: 'වාහන තොග වාර්තාව',
+    mixed: 'Vehicle Inventory Report',
+  },
+  customer_purchase_report: {
+    english: 'Customer Purchase Report',
+    sinhala: 'පාරිභෝගික මිලදී ගැනීම් වාර්තාව',
+    mixed: 'Customer Purchase Report',
+  },
+  employee_sales_report: {
+    english: 'Employee Sales Report',
+    sinhala: 'සේවක විකුණුම් වාර්තාව',
+    mixed: 'Employee Sales Report',
+  },
+  total_sales: { english: 'Total Sales', sinhala: 'මුළු විකුණුම්', mixed: 'Total Sales' },
+  total_revenue: { english: 'Total Revenue', sinhala: 'මුළු ආදායම', mixed: 'Total Revenue' },
+  no_sales_in_month: { english: 'No sales in this month.', sinhala: 'මේ මාසේ විකුණුම් නැත.', mixed: 'මේ මාසේ sales නැත.' },
+  sold_by_prefix: { english: 'sold by', sinhala: 'විකුණුවේ', mixed: 'sold by' },
+  total_gross_profit: { english: 'Total Gross Profit', sinhala: 'මුළු දළ ලාභය', mixed: 'Total Gross Profit' },
+  total_vehicles: { english: 'Total Vehicles', sinhala: 'මුළු වාහන ගණන', mixed: 'Total Vehicles' },
+  total_selling_value: { english: 'Total Selling Value', sinhala: 'මුළු විකුණුම් වටිනාකම', mixed: 'Total Selling Value' },
+  total_buying_value: { english: 'Total Buying Value', sinhala: 'මුළු මිලදී ගැනීම් වටිනාකම', mixed: 'Total Buying Value' },
+  vehicle_count_suffix: { english: 'vehicle(s)', sinhala: 'වාහන', mixed: 'vehicle(s)' },
+  no_purchases_recorded_yet: {
+    english: 'No purchases recorded yet.',
+    sinhala: 'තවම මිලදී ගැනීම් සටහන් වී නැත.',
+    mixed: 'තවම purchases නැත.',
+  },
+  purchased_vehicles_suffix: { english: 'vehicle(s) purchased', sinhala: 'වාහන මිලදී ගෙන ඇත', mixed: 'vehicle(s) purchased' },
+  no_sales_recorded_this_month: {
+    english: 'No sales recorded this month.',
+    sinhala: 'මේ මාසේ විකුණුම් සටහන් වී නැත.',
+    mixed: 'මේ මාසේ sales record වී නැත.',
+  },
+  profit_prefix: { english: 'profit', sinhala: 'ලාභය', mixed: 'profit' },
+  go: { english: 'Go', sinhala: 'යන්න', mixed: 'Go' },
+} as const;

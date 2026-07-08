@@ -2,13 +2,18 @@ import { AppHeader } from './AppHeader';
 import { Sidebar } from './Sidebar';
 import { SidebarContent } from './SidebarContent';
 import { SidebarProvider } from './SidebarContext';
+import { OfflineSyncManager } from './OfflineSyncManager';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { getUnreadActivityCount } from '@/lib/queries/activity';
+import { countPendingReminders } from '@/lib/queries/reminders';
 
 export async function AppShell({ title, children }: { title: string; children: React.ReactNode }) {
   const employee = await getCurrentEmployee();
   const isAdmin = employee?.role === 'admin';
-  const unreadActivityCount = isAdmin ? await getUnreadActivityCount() : 0;
+  const [unreadActivityCount, dueReminderCount] = await Promise.all([
+    isAdmin ? getUnreadActivityCount() : Promise.resolve(0),
+    countPendingReminders(),
+  ]);
 
   return (
     <SidebarProvider>
@@ -21,10 +26,12 @@ export async function AppShell({ title, children }: { title: string; children: R
             employeeRole={employee?.role ?? 'sales'}
             isAdmin={isAdmin}
             unreadActivityCount={unreadActivityCount}
+            dueReminderCount={dueReminderCount}
           />
           {children}
         </SidebarContent>
       </div>
+      <OfflineSyncManager />
     </SidebarProvider>
   );
 }

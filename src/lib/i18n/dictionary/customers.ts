@@ -1,0 +1,26 @@
+export const customersText = {
+  customer: { english: 'Customer', sinhala: 'පාරිභෝගිකයා', mixed: 'Customer' },
+  customers: { english: 'Customers', sinhala: 'පාරිභෝගිකයන්', mixed: 'Customers' },
+  full_name: { english: 'Full Name', sinhala: 'සම්පූර්ණ නම', mixed: 'Full Name' },
+  nic_number: { english: 'NIC Number', sinhala: 'ජා.හැ. අංකය', mixed: 'NIC' },
+  phone_number: { english: 'Phone Number', sinhala: 'දුරකථන අංකය', mixed: 'Phone No' },
+  address: { english: 'Address', sinhala: 'ලිපිනය', mixed: 'Address' },
+  occupation: { english: 'Occupation', sinhala: 'රැකියාව', mixed: 'Occupation' },
+  purchase_history: { english: 'Purchase History', sinhala: 'මිලදී ගැනීම් ඉතිහාසය', mixed: 'Purchase History' },
+  customer_details: { english: 'Customer Details', sinhala: 'පාරිභෝගික විස්තර', mixed: 'Customer විස්තර' },
+  no_customers_found: { english: 'No customers found.', sinhala: 'පාරිභෝගිකයන් හමු නොවීය.', mixed: 'Customers හමු නොවුණා.' },
+  search_customers_placeholder: {
+    english: 'Search name, phone, NIC...',
+    sinhala: 'නම, දුරකථනය, ජා.හැ. සොයන්න...',
+    mixed: 'Name, Phone, NIC සොයන්න...',
+  },
+  purchased_suffix: { english: 'purchased', sinhala: 'මිලදී ගෙන ඇත', mixed: 'purchased' },
+  no_purchases_yet: { english: 'No purchases yet', sinhala: 'තවම මිලදී ගැනීම් නැත', mixed: 'තවම purchases නැත' },
+  record_vehicle_purchase: {
+    english: 'Record Vehicle Purchase',
+    sinhala: 'වාහන මිලදී ගැනීමක් සටහන් කරන්න',
+    mixed: 'Vehicle Purchase සටහන් කරන්න',
+  },
+  record_purchase: { english: 'Record Purchase', sinhala: 'මිලදී ගැනීම සටහන් කරන්න', mixed: 'Record Purchase' },
+  nic_label: { english: 'NIC', sinhala: 'ජා.හැ.', mixed: 'NIC' },
+} as const;

@@ -37,7 +37,16 @@
       "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3001,3002 -ErrorAction SilentlyContinue)",
       "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3000,3001,3002 -ErrorAction SilentlyContinue | ForEach-Object { \"$\\($_.LocalPort\\) -> pid $\\($_.OwningProcess\\)\" })",
       "PowerShell(Get-Process -Id 30084,8072 -ErrorAction SilentlyContinue)",
-      "PowerShell(Stop-Process -Id 30084 -Force -ErrorAction SilentlyContinue; Get-NetTCPConnection -State Listen -LocalPort 3000,3002 -ErrorAction SilentlyContinue | ForEach-Object { \"$\\($_.LocalPort\\) -> pid $\\($_.OwningProcess\\)\" })"
+      "PowerShell(Stop-Process -Id 30084 -Force -ErrorAction SilentlyContinue; Get-NetTCPConnection -State Listen -LocalPort 3000,3002 -ErrorAction SilentlyContinue | ForEach-Object { \"$\\($_.LocalPort\\) -> pid $\\($_.OwningProcess\\)\" })",
+      "Bash(find src/app/employees -type f)",
+      "Bash(find src/lib/queries -iname \"*employ*\")",
+      "Bash(find src/components/layout -type f)",
+      "Bash(find src *)",
+      "WebSearch",
+      "WebFetch(domain:www.cbsl.gov.lk)",
+      "Bash(find public *)",
+      "Bash(find . -maxdepth 2 -iname \"manifest*.json\" -not -path \"*/node_modules/*\")",
+      "Bash(git add *)"
     ],
     "additionalDirectories": [
       "d:\\MY DEV\\mdms\\src\\assets"
