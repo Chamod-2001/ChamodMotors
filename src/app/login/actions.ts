@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
+import { after } from 'next/server';
 import { logActivity } from '@/lib/activity';
 
 export interface AuthResult {
@@ -39,7 +40,9 @@ export async function loginAction(formData: FormData): Promise<AuthResult> {
     return { error: INVALID_CREDENTIALS_ERROR };
   }
 
-  await logActivity(profile.id, 'login', `@${username} logged in`);
+  // Logging doesn't need to block the redirect — after() lets it finish
+  // in the background instead of adding a 4th sequential round-trip.
+  after(() => logActivity(profile.id, 'login', `@${username} logged in`));
 
   // "Keep me logged in" -> extend session lifetime via a long-lived cookie flag.
   // Supabase's default session already persists via cookies; when unchecked we
@@ -59,7 +62,7 @@ export async function logoutAction() {
   } = await supabase.auth.getUser();
 
   if (user) {
-    await logActivity(user.id, 'logout', `${user.email ?? 'User'} logged out`);
+    after(() => logActivity(user.id, 'logout', `${user.email ?? 'User'} logged out`));
   }
 
   await supabase.auth.signOut();

@@ -1,5 +1,6 @@
 import { AppHeader } from './AppHeader';
 import { Sidebar } from './Sidebar';
+import { BottomNav } from './BottomNav';
 import { SidebarContent } from './SidebarContent';
 import { SidebarProvider } from './SidebarContext';
 import { OfflineSyncManager } from './OfflineSyncManager';
@@ -31,6 +32,7 @@ export async function AppShell({ title, children }: { title: string; children: R
           {children}
         </SidebarContent>
       </div>
+      <BottomNav isAdmin={isAdmin} />
       <OfflineSyncManager />
     </SidebarProvider>
   );

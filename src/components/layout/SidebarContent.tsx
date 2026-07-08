@@ -9,7 +9,9 @@ export function SidebarContent({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={clsx(
-        'flex min-h-screen flex-col pl-[72px] transition-[padding] duration-200',
+        // Mobile: no left offset (Sidebar is hidden, BottomNav is used instead),
+        // but leave room at the bottom for the fixed BottomNav bar.
+        'flex min-h-screen flex-col pb-16 transition-[padding] duration-200 md:pb-0 md:pl-[72px]',
         !collapsed && 'md:pl-60'
       )}
     >
