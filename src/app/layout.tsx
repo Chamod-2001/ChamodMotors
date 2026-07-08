@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { ThemeProvider } from "@/lib/theme/ThemeContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export default function RootLayout({
         <ThemeProvider>
           <LanguageProvider>{children}</LanguageProvider>
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

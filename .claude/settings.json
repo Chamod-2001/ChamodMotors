@@ -46,7 +46,10 @@
       "WebFetch(domain:www.cbsl.gov.lk)",
       "Bash(find public *)",
       "Bash(find . -maxdepth 2 -iname \"manifest*.json\" -not -path \"*/node_modules/*\")",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(xargs grep -l \"\\\\.css\")"
     ],
     "additionalDirectories": [
       "d:\\MY DEV\\mdms\\src\\assets"
