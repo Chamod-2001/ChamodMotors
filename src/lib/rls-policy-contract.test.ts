@@ -23,6 +23,7 @@ const ALL_TABLES = [
   'documents',
   'reminders',
   'vehicle_edit_requests',
+  'shop_reviews',
 ];
 
 // Tables where DELETE must be admin-only per the spec (sales employees can
@@ -36,6 +37,7 @@ const ADMIN_ONLY_DELETE_TABLES = [
   'documents',
   'reminders',
   'vehicle_edit_requests',
+  'shop_reviews',
 ];
 
 let rlsSql: string;
@@ -46,12 +48,15 @@ beforeAll(() => {
   const rlsPath = path.resolve(__dirname, '../../supabase/migrations/0002_rls_policies.sql');
   const remindersRlsPath = path.resolve(__dirname, '../../supabase/migrations/0012_reminders.sql');
   const editRequestsRlsPath = path.resolve(__dirname, '../../supabase/migrations/0014_vehicle_edit_requests.sql');
+  const reviewsRlsPath = path.resolve(__dirname, '../../supabase/migrations/0016_shop_reviews.sql');
   rlsSql =
     readFileSync(rlsPath, 'utf-8') +
     '\n' +
     readFileSync(remindersRlsPath, 'utf-8') +
     '\n' +
-    readFileSync(editRequestsRlsPath, 'utf-8');
+    readFileSync(editRequestsRlsPath, 'utf-8') +
+    '\n' +
+    readFileSync(reviewsRlsPath, 'utf-8');
 });
 
 describe('RLS migration: every table has row-level security enabled', () => {

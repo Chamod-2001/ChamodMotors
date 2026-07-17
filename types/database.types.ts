@@ -11,6 +11,7 @@ export type FuelType = 'petrol' | 'diesel' | 'electric' | 'hybrid';
 export type DocumentType = 'shop_letter' | 'sale_letter' | 'nic' | 'electricity_bill' | 'other';
 export type ReminderStatus = 'pending' | 'done' | 'dismissed';
 export type EditRequestStatus = 'pending' | 'approved' | 'rejected';
+export type ReviewStatus = 'pending' | 'approved';
 
 export interface Profile {
   id: string;
@@ -130,7 +131,10 @@ export type ActivityType =
   | 'reminder_created'
   | 'vehicle_edit_requested'
   | 'vehicle_edit_approved'
-  | 'vehicle_edit_rejected';
+  | 'vehicle_edit_rejected'
+  | 'shop_review_submitted'
+  | 'shop_review_approved'
+  | 'shop_review_deleted';
 
 export interface ActivityLog {
   id: string;
@@ -229,6 +233,18 @@ export interface VehicleEditRequest {
   created_at: string;
 }
 
+export interface ShopReview {
+  id: string;
+  reviewer_name: string;
+  rating: number;
+  description: string;
+  photo_path: string | null;
+  status: ReviewStatus;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+}
+
 // Supabase generic Database interface (for typed client).
 // Each table needs Row/Insert/Update/Relationships so the supabase-js
 // query builder can correctly infer types instead of falling back to `never`.
@@ -272,6 +288,7 @@ export interface Database {
       shop_locations: TableDef<Simplify<ShopLocation>>;
       reminders: TableDef<WidenEnums<Reminder, 'status'>>;
       vehicle_edit_requests: TableDef<WidenEnums<VehicleEditRequest, 'status'>>;
+      shop_reviews: TableDef<WidenEnums<ShopReview, 'status'>>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

@@ -8,8 +8,11 @@ import { Card } from '@/components/ui/Card';
 import { SaveContactButton } from './SaveContactButton';
 import { ShareProfileButton } from './ShareProfileButton';
 import { PhotoGallery } from './PhotoGallery';
+import { ReviewList } from './ReviewList';
+import { ReviewForm } from './ReviewForm';
 import logo from '@/assets/ChamodMotors.png';
 import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation } from '../../../types/database.types';
+import type { ShopReviewItem } from '@/lib/queries/shopReviews';
 
 function locationHref(location: ShopLocation) {
   return location.map_url || (location.address ? `https://maps.google.com/?q=${encodeURIComponent(location.address)}` : null);
@@ -20,12 +23,14 @@ export async function ShopProfileView({
   photos,
   socialLinks = [],
   locations = [],
+  reviews = [],
   showShare = false,
 }: {
   profile: ShopProfile;
   photos: ShopPhoto[];
   socialLinks?: ShopSocialLink[];
   locations?: ShopLocation[];
+  reviews?: ShopReviewItem[];
   showShare?: boolean;
 }) {
   const t = await getTranslator();
@@ -158,6 +163,9 @@ export async function ShopProfileView({
       )}
 
       {photos.length > 0 && <PhotoGallery photos={photos} title={t('photos')} />}
+
+      <ReviewList reviews={reviews} />
+      <ReviewForm />
 
       {showShare && (
         <div className="flex justify-center">

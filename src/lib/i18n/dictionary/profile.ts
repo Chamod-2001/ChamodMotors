@@ -60,4 +60,32 @@ export const profileText = {
   locations_label: { english: 'Locations', sinhala: 'ස්ථාන', mixed: 'Locations' },
   social_media_label: { english: 'Social Media', sinhala: 'සමාජ මාධ්‍ය', mixed: 'Social Media' },
   powered_by: { english: 'Powered by', sinhala: 'මගින් powered', mixed: 'Powered by' },
+  reviews_label: { english: 'Reviews', sinhala: 'සමාලෝචන', mixed: 'Reviews' },
+  write_a_review: { english: 'Write a Review', sinhala: 'Review එකක් ලියන්න', mixed: 'Review එකක් ලියන්න' },
+  your_name_placeholder: { english: 'Your name', sinhala: 'ඔබේ නම', mixed: 'ඔබේ නම' },
+  review_experience_placeholder: {
+    english: 'Tell us about your experience...',
+    sinhala: 'ඔබේ අත්දැකීම අපිට කියන්න...',
+    mixed: 'ඔබේ experience එක කියන්න...',
+  },
+  add_photo_optional: { english: 'Add Photo (optional)', sinhala: 'ඡායාරූපයක් එකතු කරන්න (විකල්ප)', mixed: 'Photo එකක් Add කරන්න (optional)' },
+  submit_review: { english: 'Submit Review', sinhala: 'Review එක යවන්න', mixed: 'Review එක Submit කරන්න' },
+  review_submitted_thanks: {
+    english: 'Thank you! Your review will appear here once approved.',
+    sinhala: 'ස්තූතියි! Approve වූ පසු ඔබේ review එක මෙහි පෙන්වයි.',
+    mixed: 'ස්තූතියි! Admin approve කළාට පස්සේ ඔබේ review එක මෙතන පෙන්නයි.',
+  },
+  review_rating_required: { english: 'Please pick a star rating', sinhala: 'Star rating එකක් තෝරන්න', mixed: 'Star rating එකක් තෝරන්න' },
+  review_photo_upload_failed: {
+    english: 'Photo upload failed. Please try again.',
+    sinhala: 'ඡායාරූපය upload කිරීම අසාර්ථක විය. නැවත උත්සාහ කරන්න.',
+    mixed: 'Photo upload fail වුණා. නැවත උත්සාහ කරන්න.',
+  },
+  no_pending_reviews: { english: 'No reviews waiting for approval.', sinhala: 'Approve කිරීමට reviews නැත.', mixed: 'Approve කරන්න reviews නැත.' },
+  pending_reviews_label: { english: 'Pending Reviews', sinhala: 'Approve නොකළ Reviews', mixed: 'Pending Reviews' },
+  review_delete_confirm: {
+    english: 'Delete this review? This cannot be undone.',
+    sinhala: 'මේ review එක delete කරන්නද? මේක undo කරන්න බෑ.',
+    mixed: 'මේ review එක delete කරන්නද? මේක undo කරන්න බෑ.',
+  },
 } as const;

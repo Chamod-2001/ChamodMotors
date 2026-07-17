@@ -4,7 +4,7 @@ import { getTranslator } from '@/lib/i18n/server';
 import { AppShell } from '@/components/layout/AppShell';
 import { Card } from '@/components/ui/Card';
 import { MarkActivityReadOnMount } from '@/components/activity/MarkActivityReadOnMount';
-import { LogIn, LogOut, Bike, CheckCircle2, UserPlus, MessageCircle, FileUp, FileX, CalendarPlus, ClipboardEdit, ClipboardCheck, ClipboardX, type LucideIcon } from 'lucide-react';
+import { LogIn, LogOut, Bike, CheckCircle2, UserPlus, MessageCircle, FileUp, FileX, CalendarPlus, ClipboardEdit, ClipboardCheck, ClipboardX, Star, StarOff, type LucideIcon } from 'lucide-react';
 import type { ActivityType } from '../../../types/database.types';
 import type { TranslationKey } from '@/lib/i18n/translations';
 
@@ -21,6 +21,9 @@ const ACTIVITY_ICONS: Record<ActivityType, LucideIcon> = {
   vehicle_edit_requested: ClipboardEdit,
   vehicle_edit_approved: ClipboardCheck,
   vehicle_edit_rejected: ClipboardX,
+  shop_review_submitted: Star,
+  shop_review_approved: CheckCircle2,
+  shop_review_deleted: StarOff,
 };
 
 const ACTIVITY_LABEL_KEYS: Record<ActivityType, TranslationKey> = {
@@ -36,6 +39,9 @@ const ACTIVITY_LABEL_KEYS: Record<ActivityType, TranslationKey> = {
   vehicle_edit_requested: 'activity_vehicle_edit_requested',
   vehicle_edit_approved: 'activity_vehicle_edit_approved',
   vehicle_edit_rejected: 'activity_vehicle_edit_rejected',
+  shop_review_submitted: 'activity_shop_review_submitted',
+  shop_review_approved: 'activity_shop_review_approved',
+  shop_review_deleted: 'activity_shop_review_deleted',
 };
 
 function formatTime(value: string) {
