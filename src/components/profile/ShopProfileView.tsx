@@ -7,6 +7,7 @@ import { getTranslator } from '@/lib/i18n/server';
 import { Card } from '@/components/ui/Card';
 import { SaveContactButton } from './SaveContactButton';
 import { ShareProfileButton } from './ShareProfileButton';
+import { PhotoGallery } from './PhotoGallery';
 import logo from '@/assets/ChamodMotors.png';
 import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation } from '../../../types/database.types';
 
@@ -144,22 +145,7 @@ export async function ShopProfileView({
         </div>
       )}
 
-      {photos.length > 0 && (
-        <div>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">{t('photos')}</h2>
-          <div className="grid grid-cols-3 gap-2">
-            {photos.map((photo) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={photo.id}
-                src={getShopImagePublicUrl(photo.storage_path)}
-                alt=""
-                className="aspect-square w-full rounded-xl object-cover"
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {photos.length > 0 && <PhotoGallery photos={photos} title={t('photos')} />}
 
       {showShare && (
         <div className="flex justify-center">
