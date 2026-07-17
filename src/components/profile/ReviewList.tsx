@@ -1,6 +1,7 @@
 import { Star } from 'lucide-react';
 import { getTranslator } from '@/lib/i18n/server';
 import { getReviewImagePublicUrl } from '@/lib/storageUrls';
+import { ReviewPhotoThumbnail } from './ReviewPhotoThumbnail';
 import type { ShopReviewItem } from '@/lib/queries/shopReviews';
 
 export async function ReviewList({ reviews }: { reviews: ShopReviewItem[] }) {
@@ -39,14 +40,7 @@ export async function ReviewList({ reviews }: { reviews: ShopReviewItem[] }) {
               </div>
             </div>
             <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">{review.description}</p>
-            {review.photoPath && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={getReviewImagePublicUrl(review.photoPath)}
-                alt=""
-                className="mt-3 h-24 w-24 rounded-xl object-cover"
-              />
-            )}
+            {review.photoPath && <ReviewPhotoThumbnail url={getReviewImagePublicUrl(review.photoPath)} />}
           </div>
         ))}
       </div>

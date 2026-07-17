@@ -10,6 +10,8 @@ import { ShareProfileButton } from './ShareProfileButton';
 import { PhotoGallery } from './PhotoGallery';
 import { ReviewList } from './ReviewList';
 import { ReviewFormLauncher } from './ReviewFormLauncher';
+import { ImageLightboxProvider } from './ImageLightbox';
+import { CoverImageThumbnail } from './CoverImageThumbnail';
 import logo from '@/assets/ChamodMotors.png';
 import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation } from '../../../types/database.types';
 import type { ShopReviewItem } from '@/lib/queries/shopReviews';
@@ -36,16 +38,12 @@ export async function ShopProfileView({
   const t = await getTranslator();
 
   return (
+    <ImageLightboxProvider>
     <div className="space-y-4">
       <Card className="overflow-hidden !p-0">
         <div className="h-44 w-full bg-slate-100 dark:bg-slate-800">
           {profile.cover_photo_path ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={getShopImagePublicUrl(profile.cover_photo_path)}
-              alt={profile.business_name}
-              className="h-full w-full object-cover"
-            />
+            <CoverImageThumbnail url={getShopImagePublicUrl(profile.cover_photo_path)} alt={profile.business_name} />
           ) : (
             <div className="flex h-full items-center justify-center text-slate-300">
               <Bike size={40} />
@@ -173,5 +171,6 @@ export async function ShopProfileView({
         </div>
       )}
     </div>
+    </ImageLightboxProvider>
   );
 }
