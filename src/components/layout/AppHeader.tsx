@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bell, CalendarClock, ClipboardCheck } from 'lucide-react';
+import { Bell, CalendarClock, ClipboardCheck, Star } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { LogoutButton } from './LogoutButton';
@@ -39,6 +39,7 @@ export function AppHeader({
   unreadActivityCount,
   dueReminderCount,
   pendingApprovalCount,
+  pendingReviewCount,
 }: {
   title: string;
   employeeName: string;
@@ -47,6 +48,7 @@ export function AppHeader({
   unreadActivityCount: number;
   dueReminderCount: number;
   pendingApprovalCount: number;
+  pendingReviewCount: number;
 }) {
   return (
     <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
@@ -65,6 +67,14 @@ export function AppHeader({
               label="Pending Approvals"
               count={pendingApprovalCount}
               icon={ClipboardCheck}
+            />
+          )}
+          {isAdmin && (
+            <NotificationLink
+              href="/profile#pending-reviews"
+              label="Pending Reviews"
+              count={pendingReviewCount}
+              icon={Star}
             />
           )}
           {isAdmin && <NotificationLink href="/activity" label="Activity" count={unreadActivityCount} icon={Bell} />}

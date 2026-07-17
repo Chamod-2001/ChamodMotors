@@ -44,7 +44,7 @@ export async function ReviewList({ reviews }: { reviews: ShopReviewItem[] }) {
               <img
                 src={getReviewImagePublicUrl(review.photoPath)}
                 alt=""
-                className="mt-3 h-40 w-full rounded-xl object-cover"
+                className="mt-3 h-24 w-24 rounded-xl object-cover"
               />
             )}
           </div>

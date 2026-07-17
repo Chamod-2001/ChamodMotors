@@ -83,6 +83,8 @@ export const profileText = {
   },
   no_pending_reviews: { english: 'No reviews waiting for approval.', sinhala: 'Approve කිරීමට reviews නැත.', mixed: 'Approve කරන්න reviews නැත.' },
   pending_reviews_label: { english: 'Pending Reviews', sinhala: 'Approve නොකළ Reviews', mixed: 'Pending Reviews' },
+  published_reviews_label: { english: 'Published Reviews', sinhala: 'Publish කළ Reviews', mixed: 'Published Reviews' },
+  no_published_reviews: { english: 'No published reviews yet.', sinhala: 'තවම publish කළ reviews නැත.', mixed: 'තවම published reviews නැත.' },
   review_delete_confirm: {
     english: 'Delete this review? This cannot be undone.',
     sinhala: 'මේ review එක delete කරන්නද? මේක undo කරන්න බෑ.',

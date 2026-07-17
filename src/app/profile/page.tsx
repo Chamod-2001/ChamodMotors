@@ -38,6 +38,22 @@ export default async function ProfilePage() {
         <ProfileQRCode />
 
         {isAdmin && (
+          <Card id="pending-reviews">
+            <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {t('pending_reviews_label')} ({pendingReviews.length})
+            </h2>
+            <ReviewModerationList reviews={pendingReviews} showApprove emptyMessage={t('no_pending_reviews')} />
+          </Card>
+        )}
+
+        {isAdmin && approvedReviews.length > 0 && (
+          <Card>
+            <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-slate-100">{t('published_reviews_label')}</h2>
+            <ReviewModerationList reviews={approvedReviews} showApprove={false} emptyMessage={t('no_published_reviews')} />
+          </Card>
+        )}
+
+        {isAdmin && (
           <AdminEditSection>
             <Card>
               <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-slate-100">{t('edit_business_profile')}</h2>
@@ -57,13 +73,6 @@ export default async function ProfilePage() {
             <Card>
               <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-slate-100">{t('social_media_label')}</h2>
               <SocialLinksManager links={socialLinks} />
-            </Card>
-
-            <Card>
-              <h2 className="mb-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                {t('pending_reviews_label')} ({pendingReviews.length})
-              </h2>
-              <ReviewModerationList reviews={pendingReviews} />
             </Card>
           </AdminEditSection>
         )}

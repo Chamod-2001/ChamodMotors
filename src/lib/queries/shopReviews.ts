@@ -58,3 +58,13 @@ export async function listPendingShopReviews(): Promise<ShopReviewItem[]> {
 
   return ((data ?? []) as Row[]).map(mapRow);
 }
+
+/** Count of pending reviews — drives the header notification badge. */
+export async function countPendingShopReviews(): Promise<number> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from('shop_reviews')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pending');
+  return count ?? 0;
+}
