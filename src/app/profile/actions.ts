@@ -122,6 +122,7 @@ export async function addShopLocationAction(formData: FormData): Promise<Profile
   const label = String(formData.get('label') || '').trim();
   const address = String(formData.get('address') || '').trim();
   const map_url = String(formData.get('map_url') || '').trim();
+  const google_review_url = String(formData.get('google_review_url') || '').trim();
 
   if (!label) return { error: 'City/branch name is required' };
   if (!address && !map_url) return { error: 'Add an address or a Google Maps link' };
@@ -133,6 +134,7 @@ export async function addShopLocationAction(formData: FormData): Promise<Profile
     label,
     address: address || null,
     map_url: map_url || null,
+    google_review_url: google_review_url || null,
     sort_order: count ?? 0,
   });
 

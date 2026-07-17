@@ -90,36 +90,48 @@ export async function ShopProfileView({
       {locations.length > 0 && (
         <div className="space-y-2">
           {locations.map((location) => {
-            const href = locationHref(location);
-            const content = (
-              <>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-light text-brand">
-                  <MapPin size={20} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-slate-900 dark:text-slate-100">{location.label}</p>
-                  <p className="truncate text-sm text-slate-500 dark:text-slate-400">
-                    {href ? `${t('get_directions_prefix')} ${profile.business_name} ${location.label}` : location.address}
-                  </p>
-                </div>
-              </>
-            );
-            return href ? (
-              <a
-                key={location.id}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
-              >
-                {content}
-              </a>
-            ) : (
+            const directionsHref = locationHref(location);
+            return (
               <div
                 key={location.id}
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
+                className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
               >
-                {content}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-light text-brand">
+                    <MapPin size={20} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">{location.label}</p>
+                    {location.address && (
+                      <p className="truncate text-sm text-slate-500 dark:text-slate-400">{location.address}</p>
+                    )}
+                  </div>
+                </div>
+
+                {(directionsHref || location.google_review_url) && (
+                  <div className="mt-3 flex gap-2">
+                    {directionsHref && (
+                      <a
+                        href={directionsHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 rounded-xl bg-brand-light py-2 text-center text-xs font-semibold text-brand-dark transition hover:brightness-95"
+                      >
+                        {t('get_directions')}
+                      </a>
+                    )}
+                    {location.google_review_url && (
+                      <a
+                        href={location.google_review_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 rounded-xl bg-amber-50 py-2 text-center text-xs font-semibold text-amber-700 transition hover:brightness-95"
+                      >
+                        {t('leave_review')}
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}

@@ -62,6 +62,7 @@ export function ShopLocationsManager({ locations }: { locations: ShopLocation[] 
         <Input name="label" placeholder={t('city_branch_placeholder')} required />
         <Input name="address" placeholder={t('address_optional_placeholder')} />
         <Input name="map_url" type="url" placeholder={t('maps_link_optional_placeholder')} />
+        <Input name="google_review_url" type="url" placeholder={t('google_review_link_optional_placeholder')} />
         <Button type="submit" fullWidth disabled={isPending} className="!min-h-0 !py-3">
           {isPending ? t('adding') : t('add_location')}
         </Button>

@@ -175,6 +175,7 @@ export interface ShopLocation {
   label: string;
   address: string | null;
   map_url: string | null;
+  google_review_url: string | null;
   sort_order: number;
   created_at: string;
 }
