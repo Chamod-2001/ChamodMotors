@@ -46,7 +46,7 @@ export const profileText = {
     sinhala: 'Google Review සබැඳිය (විකල්ප)',
     mixed: 'Google Review link (optional)',
   },
-  leave_review: { english: 'Leave a Review', sinhala: 'Review එකක් දෙන්න', mixed: 'Review එකක් දෙන්න' },
+  leave_review: { english: 'Google Reviews', sinhala: 'Google Reviews', mixed: 'Google Reviews' },
   get_directions: { english: 'Get Directions', sinhala: 'මාර්ග ලබාගන්න', mixed: 'Get Directions' },
   adding: { english: 'Adding...', sinhala: 'එකතු කරමින්...', mixed: 'Adding...' },
   add_location: { english: '+ Add Location', sinhala: '+ ස්ථානය එකතු කරන්න', mixed: '+ Location එකතු කරන්න' },

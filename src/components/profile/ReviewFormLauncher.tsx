@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageSquarePlus, X } from 'lucide-react';
+import { Star, X } from 'lucide-react';
 import { ReviewForm } from './ReviewForm';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
@@ -21,7 +21,7 @@ export function ReviewFormLauncher() {
         aria-label={t('write_a_review')}
         className="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-lg transition hover:brightness-95 md:bottom-6"
       >
-        <MessageSquarePlus size={24} />
+        <Star size={24} />
       </button>
 
       {open && (
