@@ -194,9 +194,20 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
               <dd className="font-medium text-slate-800">{vehicle.seller_phone_number || t('not_provided')}</dd>
             </div>
           </dl>
-          <p className="mt-2 text-xs text-slate-400">
-            {t('buying_price')}: <span className="font-semibold text-slate-700">{formatLKR(vehicle.buying_price)}</span>
-          </p>
+
+          <div className="mt-3 rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800/60">
+            <p className="text-xs text-slate-400">{t('buying_price')} (LKR)</p>
+            <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{formatLKR(vehicle.buying_price)}</p>
+          </div>
+
+          {sellerDocs.length > 0 && (
+            <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {t('seller_documents_section')}
+              </p>
+              <DocumentList items={sellerDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+            </div>
+          )}
         </Card>
       )}
 
@@ -217,15 +228,25 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
               <dd className="font-medium text-slate-800">{saleInfo.customerPhone}</dd>
             </div>
           </dl>
-          <p className="mt-2 text-xs text-slate-400">
-            {t('sale_price')}: <span className="font-semibold text-slate-700">{formatLKR(saleInfo.salePrice)}</span>
+
+          <div className="mt-3 rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800/60">
+            <p className="text-xs text-slate-400">{t('sale_price')} (LKR)</p>
+            <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{formatLKR(saleInfo.salePrice)}</p>
             {saleInfo.soldByName && (
-              <>
-                {' '}
-                · {t('sold_by_prefix')} {saleInfo.soldByName}
-              </>
+              <p className="mt-1 text-xs text-slate-400">
+                {t('sold_by_prefix')} {saleInfo.soldByName}
+              </p>
             )}
-          </p>
+          </div>
+
+          {buyerDocs.length > 0 && (
+            <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {t('buyer_documents_section')}
+              </p>
+              <DocumentList items={buyerDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+            </div>
+          )}
         </Card>
       )}
 
@@ -257,41 +278,12 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
         </Card>
       )}
 
-      <Card>
-        <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('documents_label')}</h2>
-        {documents.length === 0 ? (
-          <DocumentList items={[]} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
-        ) : (
-          <div className="space-y-4">
-            {sellerDocs.length > 0 && (
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  {t('seller_documents_section')}
-                </p>
-                <DocumentList items={sellerDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
-              </div>
-            )}
-            {buyerDocs.length > 0 && (
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  {t('buyer_documents_section')}
-                </p>
-                <DocumentList items={buyerDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
-              </div>
-            )}
-            {otherDocs.length > 0 && (
-              <div>
-                {(sellerDocs.length > 0 || buyerDocs.length > 0) && (
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                    {t('other_documents_section')}
-                  </p>
-                )}
-                <DocumentList items={otherDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
-              </div>
-            )}
-          </div>
-        )}
-      </Card>
+      {otherDocs.length > 0 && (
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('documents_label')}</h2>
+          <DocumentList items={otherDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+        </Card>
+      )}
     </div>
     </AppShell>
   );
