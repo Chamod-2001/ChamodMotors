@@ -108,6 +108,8 @@ export async function recordSaleAction(customerId: string, formData: FormData): 
   const vehicleId = String(formData.get('vehicle_id') || '');
   const salePrice = Number(formData.get('sale_price') || 0);
   const purchaseDate = String(formData.get('purchase_date') || new Date().toISOString().slice(0, 10));
+  const buyerDocTypes = formData.getAll('buyerDocTypes').map(String);
+  const buyerDocPaths = formData.getAll('buyerDocPaths').map(String);
 
   const validationError = validateSaleInput({ vehicleId, salePrice });
   if (validationError) return { error: validationError };
@@ -127,6 +129,18 @@ export async function recordSaleAction(customerId: string, formData: FormData): 
 
   if (saleError) {
     return { error: 'Sale record කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
+  }
+
+  if (buyerDocPaths.length > 0) {
+    const docRows = buyerDocPaths.map((path, index) => ({
+      document_type: buyerDocTypes[index] || 'other',
+      storage_path: path,
+      vehicle_id: vehicleId,
+      customer_id: customerId,
+      party_role: 'buyer' as const,
+      uploaded_by: user?.id ?? null,
+    }));
+    await supabase.from('documents').insert(docRows);
   }
 
   const { data: vehicle } = await supabase

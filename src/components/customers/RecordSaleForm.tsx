@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { PartyDocumentPicker } from '@/components/documents/PartyDocumentPicker';
 import { recordSaleAction } from '@/app/customers/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { SellableVehicle } from '@/lib/queries/customers';
@@ -70,6 +71,13 @@ export function RecordSaleForm({
         type="date"
         required
         defaultValue={new Date().toISOString().slice(0, 10)}
+      />
+
+      <PartyDocumentPicker
+        namePrefix="buyer"
+        title={t('buyer_documents_title')}
+        letterDocumentType="sale_letter"
+        letterLabel={t('selling_letter_label')}
       />
 
       {error && <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}

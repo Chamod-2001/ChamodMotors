@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { VehicleImagePicker, type PickedImage } from './VehicleImagePicker';
+import { BrandModelFields } from './BrandModelFields';
+import { PartyDocumentPicker } from '@/components/documents/PartyDocumentPicker';
 import { formatLKR } from '@/lib/format';
 import {
   createVehicleAction,
@@ -15,15 +17,17 @@ import {
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { VehicleDetail } from '@/lib/queries/vehicles';
 import type { VehicleEditRequestItem } from '@/lib/queries/vehicleEditRequests';
+import type { VehicleCatalogEntry } from '../../../types/database.types';
 
 interface VehicleFormProps {
   vehicle?: VehicleDetail | null;
   isAdmin: boolean;
   /** An already-pending request for this vehicle, if the employee already submitted one. */
   pendingRequest?: VehicleEditRequestItem | null;
+  catalog?: VehicleCatalogEntry[];
 }
 
-export function VehicleForm({ vehicle, isAdmin, pendingRequest }: VehicleFormProps) {
+export function VehicleForm({ vehicle, isAdmin, pendingRequest, catalog = [] }: VehicleFormProps) {
   const { t } = useLanguage();
   const isEdit = Boolean(vehicle);
   // Non-admins editing an existing vehicle go through the request/approval
@@ -77,8 +81,12 @@ export function VehicleForm({ vehicle, isAdmin, pendingRequest }: VehicleFormPro
       />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Input name="brand" label={t('brand')} required defaultValue={vehicle?.brand} placeholder="e.g. Bajaj" />
-        <Input name="model" label={t('model')} required defaultValue={vehicle?.model} placeholder="e.g. Pulsar 150" />
+        <BrandModelFields
+          catalog={catalog}
+          defaultVehicleType={(vehicle?.vehicle_type as VehicleCatalogEntry['vehicle_type']) ?? 'motorcycle'}
+          defaultBrand={vehicle?.brand}
+          defaultModel={vehicle?.model}
+        />
         <Input
           name="manufacturing_year"
           label={t('manufacturing_year')}
@@ -86,12 +94,6 @@ export function VehicleForm({ vehicle, isAdmin, pendingRequest }: VehicleFormPro
           defaultValue={vehicle?.manufacturing_year ?? ''}
           placeholder="2023"
         />
-        <Select name="vehicle_type" label={t('vehicle_type')} defaultValue={vehicle?.vehicle_type ?? 'motorcycle'}>
-          <option value="motorcycle">{t('motorcycle')}</option>
-          <option value="three_wheeler">{t('three_wheeler')}</option>
-          <option value="scooter">{t('scooter')}</option>
-          <option value="other">{t('other_vehicle_type')}</option>
-        </Select>
         <Input
           name="registration_number"
           label={t('registration_number')}
@@ -148,6 +150,34 @@ export function VehicleForm({ vehicle, isAdmin, pendingRequest }: VehicleFormPro
             <option value="reserved">{t('reserved')}</option>
             <option value="sold">{t('sold')}</option>
           </Select>
+
+          <div className="rounded-xl border-2 border-slate-100 p-4 dark:border-slate-800">
+            <p className="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-300">{t('seller_details_label')}</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input name="seller_name" label={t('seller_name_label')} defaultValue={vehicle?.seller_name ?? ''} />
+              <Input
+                name="seller_nic_number"
+                label={t('seller_nic_label')}
+                defaultValue={vehicle?.seller_nic_number ?? ''}
+              />
+              <Input
+                name="seller_phone_number"
+                label={t('seller_phone_label')}
+                defaultValue={vehicle?.seller_phone_number ?? ''}
+              />
+            </div>
+
+            {!vehicle && (
+              <div className="mt-4">
+                <PartyDocumentPicker
+                  namePrefix="seller"
+                  title={t('seller_documents_title')}
+                  letterDocumentType="shop_letter"
+                  letterLabel={t('buying_letter_label')}
+                />
+              </div>
+            )}
+          </div>
         </>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">

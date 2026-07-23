@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import type { DocumentType } from '../../../types/database.types';
+import type { DocumentType, PartyRole } from '../../../types/database.types';
 
 export interface DocumentItem {
   id: string;
@@ -8,6 +8,7 @@ export interface DocumentItem {
   createdAt: string;
   uploadedByName: string | null;
   signedUrl: string | null;
+  partyRole: PartyRole | null;
 }
 
 type Row = {
@@ -15,6 +16,7 @@ type Row = {
   document_type: DocumentType;
   storage_path: string;
   created_at: string;
+  party_role: PartyRole | null;
   profiles: { full_name: string } | { full_name: string }[] | null;
 };
 
@@ -32,7 +34,7 @@ export async function listDocuments({
   const supabase = await createClient();
   let query = supabase
     .from('documents')
-    .select('id, document_type, storage_path, created_at, profiles(full_name)')
+    .select('id, document_type, storage_path, created_at, party_role, profiles(full_name)')
     .order('created_at', { ascending: false });
 
   if (vehicleId) query = query.eq('vehicle_id', vehicleId);
@@ -52,5 +54,6 @@ export async function listDocuments({
     createdAt: row.created_at,
     uploadedByName: one(row.profiles)?.full_name ?? null,
     signedUrl: signedUrls[i].data?.signedUrl ?? null,
+    partyRole: row.party_role,
   }));
 }

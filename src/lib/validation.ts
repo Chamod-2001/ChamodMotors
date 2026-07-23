@@ -54,6 +54,17 @@ export function validateSaleInput(input: SaleInput): string | null {
   return null;
 }
 
+export interface VehicleExpenseInput {
+  amount: number | string;
+}
+
+export function validateVehicleExpenseInput(input: VehicleExpenseInput): string | null {
+  if (!input.amount || Number(input.amount) <= 0) {
+    return 'මුදල 0ට වඩා වැඩි විය යුතුයි / Amount must be greater than 0';
+  }
+  return null;
+}
+
 export interface FinanceOfficerInput {
   finance_company_id: string;
   officer_name: string;

@@ -42,7 +42,12 @@ export interface VehicleFormInput {
   status: VehicleStatus;
   notes: string;
   buying_date: string;
+  seller_name: string;
+  seller_nic_number: string;
+  seller_phone_number: string;
   imagePaths: string[]; // already-uploaded storage paths, first one is primary
+  sellerDocTypes: string[];
+  sellerDocPaths: string[]; // parallel to sellerDocTypes
 }
 
 function parseFormInput(formData: FormData): VehicleFormInput {
@@ -62,8 +67,26 @@ function parseFormInput(formData: FormData): VehicleFormInput {
     status: (String(formData.get('status') || 'available')) as VehicleStatus,
     notes: String(formData.get('notes') || '').trim(),
     buying_date: String(formData.get('buying_date') || new Date().toISOString().slice(0, 10)),
+    seller_name: String(formData.get('seller_name') || '').trim(),
+    seller_nic_number: String(formData.get('seller_nic_number') || '').trim(),
+    seller_phone_number: String(formData.get('seller_phone_number') || '').trim(),
     imagePaths: formData.getAll('imagePaths').map(String).filter(Boolean),
+    sellerDocTypes: formData.getAll('sellerDocTypes').map(String),
+    sellerDocPaths: formData.getAll('sellerDocPaths').map(String),
   };
+}
+
+/** Adds a brand/model/type combo to the shared suggestion catalog the first
+ * time it's used, so the Add Vehicle form's dropdowns grow on their own. */
+async function recordCatalogEntry(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  vehicle_type: VehicleType,
+  brand: string,
+  model: string
+) {
+  await supabase
+    .from('vehicle_catalog')
+    .upsert({ vehicle_type, brand, model }, { onConflict: 'vehicle_type,brand,model', ignoreDuplicates: true });
 }
 
 export async function createVehicleAction(formData: FormData): Promise<VehicleFormResult> {
@@ -96,6 +119,9 @@ export async function createVehicleAction(formData: FormData): Promise<VehicleFo
       status: input.status,
       notes: input.notes || null,
       buying_date: input.buying_date,
+      seller_name: input.seller_name || null,
+      seller_nic_number: input.seller_nic_number || null,
+      seller_phone_number: input.seller_phone_number || null,
       ...statusTimestamps(input.status),
       created_by: user?.id ?? null,
     })
@@ -115,6 +141,19 @@ export async function createVehicleAction(formData: FormData): Promise<VehicleFo
     }));
     await supabase.from('vehicle_images').insert(imageRows);
   }
+
+  if (input.sellerDocPaths.length > 0) {
+    const docRows = input.sellerDocPaths.map((path, index) => ({
+      document_type: input.sellerDocTypes[index] || 'other',
+      storage_path: path,
+      vehicle_id: vehicle.id,
+      party_role: 'seller' as const,
+      uploaded_by: user?.id ?? null,
+    }));
+    await supabase.from('documents').insert(docRows);
+  }
+
+  await recordCatalogEntry(supabase, input.vehicle_type, input.brand, input.model);
 
   await logActivity(user?.id ?? null, 'vehicle_created', `${input.brand} ${input.model}`);
 
@@ -152,6 +191,9 @@ export async function updateVehicleAction(vehicleId: string, formData: FormData)
       status: input.status,
       notes: input.notes || null,
       buying_date: input.buying_date,
+      seller_name: input.seller_name || null,
+      seller_nic_number: input.seller_nic_number || null,
+      seller_phone_number: input.seller_phone_number || null,
       ...(statusChanged ? statusTimestamps(input.status) : {}),
     })
     .eq('id', vehicleId);
@@ -159,6 +201,8 @@ export async function updateVehicleAction(vehicleId: string, formData: FormData)
   if (error) {
     return { error: 'වාහනය update කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
   }
+
+  await recordCatalogEntry(supabase, input.vehicle_type, input.brand, input.model);
 
   // Newly added images (existing ones are managed separately via deleteVehicleImageAction)
   if (input.imagePaths.length > 0) {

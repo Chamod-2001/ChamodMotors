@@ -42,18 +42,24 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     vehicleCount('sold'),
     supabase
       .from('sales')
-      .select('sale_price, vehicles(buying_price)')
+      .select('sale_price, vehicles(buying_price, total_expenses)')
       .gte('purchase_date', monthStart)
       .lt('purchase_date', monthEnd),
     supabase
       .from('sales')
-      .select('sale_price, vehicles(buying_price)')
+      .select('sale_price, vehicles(buying_price, total_expenses)')
       .gte('purchase_date', todayStart)
       .lt('purchase_date', todayEnd),
-    supabase.from('sales').select('sale_price, vehicles(buying_price)'),
+    supabase.from('sales').select('sale_price, vehicles(buying_price, total_expenses)'),
   ]);
 
-  type SaleRow = { sale_price: number; vehicles: { buying_price: number } | { buying_price: number }[] | null };
+  type SaleRow = {
+    sale_price: number;
+    vehicles:
+      | { buying_price: number; total_expenses: number }
+      | { buying_price: number; total_expenses: number }[]
+      | null;
+  };
   const monthlySaleRows = (monthlySales.data ?? []) as SaleRow[];
   const todaysSaleRows = (todaysSales.data ?? []) as SaleRow[];
   const allSaleRows = (allSales.data ?? []) as SaleRow[];
@@ -61,7 +67,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const sumProfit = (rows: SaleRow[]) =>
     rows.reduce((sum, row) => {
       const vehicle = Array.isArray(row.vehicles) ? row.vehicles[0] : row.vehicles;
-      return sum + calculateGrossProfit(row.sale_price, vehicle?.buying_price ?? 0);
+      const totalCost = (vehicle?.buying_price ?? 0) + (vehicle?.total_expenses ?? 0);
+      return sum + calculateGrossProfit(row.sale_price, totalCost);
     }, 0);
 
   const totalRevenue = allSaleRows.reduce((sum, row) => sum + Number(row.sale_price), 0);

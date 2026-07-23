@@ -43,6 +43,11 @@ export const activityText = {
   },
   activity_shop_review_approved: { english: 'Approved a review', sinhala: 'Review එකක් අනුමත කළා', mixed: 'Review එකක් approve කළා' },
   activity_shop_review_deleted: { english: 'Deleted a review', sinhala: 'Review එකක් මකා දැමුවා', mixed: 'Review එකක් delete කළා' },
+  activity_vehicle_expense_added: {
+    english: 'Logged a vehicle expense',
+    sinhala: 'වාහන වියදමක් සටහන් කළා',
+    mixed: 'Vehicle expense එකක් log කළා',
+  },
   before_tracking_began: { english: 'Before tracking began', sinhala: 'Track කිරීමට පෙර', mixed: 'Track කරන්න කලින්' },
   ongoing: { english: 'Ongoing', sinhala: 'සිදුවෙමින්', mixed: 'Ongoing' },
 } as const;

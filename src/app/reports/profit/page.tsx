@@ -43,7 +43,10 @@ export default async function ProfitReportPage({
                 <div className="min-w-0">
                   <p className="truncate font-medium text-slate-900">{row.vehicle_label}</p>
                   <p className="text-xs text-slate-400">
-                    {t('buying_price')} {formatLKR(row.buying_price)} → {t('selling_price')} {formatLKR(row.sale_price)}
+                    {t('buying_price')} {formatLKR(row.buying_price)}
+                    {row.total_expenses > 0 && ` + ${t('total_expenses_label')} ${formatLKR(row.total_expenses)}`}
+                    {' → '}
+                    {t('selling_price')} {formatLKR(row.sale_price)}
                   </p>
                 </div>
                 <p className="shrink-0 font-semibold text-green-600">{formatLKR(row.profit)}</p>

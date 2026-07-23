@@ -87,12 +87,16 @@ export interface VehicleDetail {
   color: string | null;
   buying_price: number;
   selling_price: number;
+  total_expenses: number;
   gross_profit: number;
   status: VehicleStatus;
   notes: string | null;
   buying_date: string;
   reserved_at: string | null;
   sold_at: string | null;
+  seller_name: string | null;
+  seller_nic_number: string | null;
+  seller_phone_number: string | null;
   images: { id: string; storage_path: string; is_primary: boolean }[];
 }
 
@@ -102,7 +106,7 @@ export async function getVehicle(id: string): Promise<VehicleDetail | null> {
   const { data, error } = await supabase
     .from('vehicles')
     .select(
-      'id, brand, model, manufacturing_year, vehicle_type, registration_number, engine_number, chassis_number, mileage, fuel_type, color, buying_price, selling_price, gross_profit, status, notes, buying_date, reserved_at, sold_at, vehicle_images(id, storage_path, is_primary, sort_order)'
+      'id, brand, model, manufacturing_year, vehicle_type, registration_number, engine_number, chassis_number, mileage, fuel_type, color, buying_price, selling_price, total_expenses, gross_profit, status, notes, buying_date, reserved_at, sold_at, seller_name, seller_nic_number, seller_phone_number, vehicle_images(id, storage_path, is_primary, sort_order)'
     )
     .eq('id', id)
     .single();
@@ -119,5 +123,50 @@ export async function getVehicle(id: string): Promise<VehicleDetail | null> {
     ...row,
     status: row.status as VehicleStatus,
     images: (row.vehicle_images ?? []).sort((a, b) => a.sort_order - b.sort_order),
+  };
+}
+
+export interface VehicleSaleInfo {
+  customerName: string;
+  customerNic: string;
+  customerPhone: string;
+  salePrice: number;
+  purchaseDate: string;
+  soldByName: string | null;
+}
+
+/** Who a vehicle was sold to and for how much — the "Sold To" counterpart
+ * of the vehicle's seller_* fields (who it was bought from). */
+export async function getVehicleSaleInfo(vehicleId: string): Promise<VehicleSaleInfo | null> {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from('sales')
+    .select('sale_price, purchase_date, customers(full_name, nic_number, phone_number), profiles(full_name)')
+    .eq('vehicle_id', vehicleId)
+    .order('purchase_date', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  type Row = {
+    sale_price: number;
+    purchase_date: string;
+    customers: { full_name: string; nic_number: string; phone_number: string } | { full_name: string; nic_number: string; phone_number: string }[] | null;
+    profiles: { full_name: string } | { full_name: string }[] | null;
+  };
+  const row = data as unknown as Row;
+  const customer = Array.isArray(row.customers) ? row.customers[0] : row.customers;
+  const soldBy = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
+  if (!customer) return null;
+
+  return {
+    customerName: customer.full_name,
+    customerNic: customer.nic_number,
+    customerPhone: customer.phone_number,
+    salePrice: row.sale_price,
+    purchaseDate: row.purchase_date,
+    soldByName: soldBy?.full_name ?? null,
   };
 }

@@ -4,14 +4,16 @@ import { getPendingRequestForVehicle } from '@/lib/queries/vehicleEditRequests';
 import { VehicleForm } from '@/components/vehicles/VehicleForm';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { getTranslator } from '@/lib/i18n/server';
+import { listVehicleCatalog } from '@/lib/queries/vehicleCatalog';
 
 export default async function EditVehiclePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [employee, vehicle, pendingRequest, t] = await Promise.all([
+  const [employee, vehicle, pendingRequest, t, catalog] = await Promise.all([
     getCurrentEmployee(),
     getVehicle(id),
     getPendingRequestForVehicle(id),
     getTranslator(),
+    listVehicleCatalog(),
   ]);
 
   if (!employee) redirect('/login');
@@ -23,7 +25,7 @@ export default async function EditVehiclePage({ params }: { params: Promise<{ id
       <h1 className="mb-4 text-xl font-bold text-slate-900">
         {t('edit')} {t('vehicle')}
       </h1>
-      <VehicleForm vehicle={vehicle} isAdmin={isAdmin} pendingRequest={pendingRequest} />
+      <VehicleForm vehicle={vehicle} isAdmin={isAdmin} pendingRequest={pendingRequest} catalog={catalog} />
     </div>
   );
 }

@@ -24,6 +24,8 @@ const ALL_TABLES = [
   'reminders',
   'vehicle_edit_requests',
   'shop_reviews',
+  'vehicle_catalog',
+  'vehicle_expenses',
 ];
 
 // Tables where DELETE must be admin-only per the spec (sales employees can
@@ -38,6 +40,8 @@ const ADMIN_ONLY_DELETE_TABLES = [
   'reminders',
   'vehicle_edit_requests',
   'shop_reviews',
+  'vehicle_catalog',
+  'vehicle_expenses',
 ];
 
 let rlsSql: string;
@@ -49,6 +53,8 @@ beforeAll(() => {
   const remindersRlsPath = path.resolve(__dirname, '../../supabase/migrations/0012_reminders.sql');
   const editRequestsRlsPath = path.resolve(__dirname, '../../supabase/migrations/0014_vehicle_edit_requests.sql');
   const reviewsRlsPath = path.resolve(__dirname, '../../supabase/migrations/0016_shop_reviews.sql');
+  const traceabilityRlsPath = path.resolve(__dirname, '../../supabase/migrations/0017_vehicle_traceability.sql');
+  const expensesRlsPath = path.resolve(__dirname, '../../supabase/migrations/0018_vehicle_expenses.sql');
   rlsSql =
     readFileSync(rlsPath, 'utf-8') +
     '\n' +
@@ -56,7 +62,11 @@ beforeAll(() => {
     '\n' +
     readFileSync(editRequestsRlsPath, 'utf-8') +
     '\n' +
-    readFileSync(reviewsRlsPath, 'utf-8');
+    readFileSync(reviewsRlsPath, 'utf-8') +
+    '\n' +
+    readFileSync(traceabilityRlsPath, 'utf-8') +
+    '\n' +
+    readFileSync(expensesRlsPath, 'utf-8');
 });
 
 describe('RLS migration: every table has row-level security enabled', () => {

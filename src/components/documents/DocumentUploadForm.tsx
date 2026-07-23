@@ -8,8 +8,12 @@ import { uploadDocumentAction } from '@/app/documents/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { DocumentType } from '../../../types/database.types';
 
-const DOC_TYPE_OPTIONS: { value: DocumentType; labelKey: 'doc_type_nic' | 'doc_type_electricity_bill' | 'doc_type_shop_letter' | 'doc_type_sale_letter' | 'doc_type_other' }[] = [
+const DOC_TYPE_OPTIONS: {
+  value: DocumentType;
+  labelKey: 'doc_type_nic' | 'doc_type_electricity_bill' | 'doc_type_shop_letter' | 'doc_type_sale_letter' | 'doc_type_photo' | 'doc_type_other';
+}[] = [
   { value: 'nic', labelKey: 'doc_type_nic' },
+  { value: 'photo', labelKey: 'doc_type_photo' },
   { value: 'electricity_bill', labelKey: 'doc_type_electricity_bill' },
   { value: 'shop_letter', labelKey: 'doc_type_shop_letter' },
   { value: 'sale_letter', labelKey: 'doc_type_sale_letter' },

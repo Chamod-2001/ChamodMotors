@@ -1,4 +1,4 @@
-import { FileText, Zap, Paperclip, ExternalLink } from 'lucide-react';
+import { FileText, Zap, Paperclip, ExternalLink, Image as ImageIcon } from 'lucide-react';
 import { getTranslator } from '@/lib/i18n/server';
 import { DeleteDocumentButton } from '@/components/documents/DeleteDocumentButton';
 import type { DocumentItem } from '@/lib/queries/documents';
@@ -10,6 +10,7 @@ const DOC_TYPE_ICON: Record<DocumentType, typeof FileText> = {
   electricity_bill: Zap,
   shop_letter: FileText,
   sale_letter: FileText,
+  photo: ImageIcon,
   other: Paperclip,
 };
 
@@ -18,6 +19,7 @@ const DOC_TYPE_LABEL_KEY: Record<DocumentType, TranslationKey> = {
   electricity_bill: 'doc_type_electricity_bill',
   shop_letter: 'doc_type_shop_letter',
   sale_letter: 'doc_type_sale_letter',
+  photo: 'doc_type_photo',
   other: 'doc_type_other',
 };
 

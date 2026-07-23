@@ -63,6 +63,7 @@ export interface ProfitReportRow {
   purchase_date: string;
   vehicle_label: string;
   buying_price: number;
+  total_expenses: number;
   sale_price: number;
   profit: number;
 }
@@ -73,7 +74,7 @@ export async function getMonthlyProfitReport(month: string) {
 
   const { data } = await supabase
     .from('sales')
-    .select('id, purchase_date, sale_price, vehicles(brand, model, buying_price)')
+    .select('id, purchase_date, sale_price, vehicles(brand, model, buying_price, total_expenses)')
     .gte('purchase_date', start)
     .lt('purchase_date', end)
     .order('purchase_date', { ascending: false });
@@ -83,8 +84,8 @@ export async function getMonthlyProfitReport(month: string) {
     purchase_date: string;
     sale_price: number;
     vehicles:
-      | { brand: string; model: string; buying_price: number }
-      | { brand: string; model: string; buying_price: number }[]
+      | { brand: string; model: string; buying_price: number; total_expenses: number }
+      | { brand: string; model: string; buying_price: number; total_expenses: number }[]
       | null;
   };
   const one = <T,>(v: T | T[] | null): T | null => (Array.isArray(v) ? v[0] ?? null : v);
@@ -92,13 +93,15 @@ export async function getMonthlyProfitReport(month: string) {
   const rows: ProfitReportRow[] = ((data ?? []) as unknown as Row[]).map((r) => {
     const vehicle = one(r.vehicles);
     const buyingPrice = vehicle?.buying_price ?? 0;
+    const totalExpenses = vehicle?.total_expenses ?? 0;
     return {
       id: r.id,
       purchase_date: r.purchase_date,
       vehicle_label: vehicle ? `${vehicle.brand} ${vehicle.model}` : '—',
       buying_price: buyingPrice,
+      total_expenses: totalExpenses,
       sale_price: r.sale_price,
-      profit: calculateGrossProfit(r.sale_price, buyingPrice),
+      profit: calculateGrossProfit(r.sale_price, buyingPrice + totalExpenses),
     };
   });
 
@@ -195,7 +198,7 @@ export async function getEmployeeSalesReport(month: string) {
 
   const { data } = await supabase
     .from('sales')
-    .select('sale_price, sold_by, profiles(id, full_name), vehicles(buying_price)')
+    .select('sale_price, sold_by, profiles(id, full_name), vehicles(buying_price, total_expenses)')
     .gte('purchase_date', start)
     .lt('purchase_date', end);
 
@@ -203,7 +206,7 @@ export async function getEmployeeSalesReport(month: string) {
     sale_price: number;
     sold_by: string | null;
     profiles: { id: string; full_name: string } | { id: string; full_name: string }[] | null;
-    vehicles: { buying_price: number } | { buying_price: number }[] | null;
+    vehicles: { buying_price: number; total_expenses: number } | { buying_price: number; total_expenses: number }[] | null;
   };
   const one = <T,>(v: T | T[] | null): T | null => (Array.isArray(v) ? v[0] ?? null : v);
 
@@ -212,7 +215,8 @@ export async function getEmployeeSalesReport(month: string) {
     if (!row.sold_by) continue;
     const employee = one(row.profiles);
     const vehicle = one(row.vehicles);
-    const profit = calculateGrossProfit(row.sale_price, vehicle?.buying_price ?? 0);
+    const totalCost = (vehicle?.buying_price ?? 0) + (vehicle?.total_expenses ?? 0);
+    const profit = calculateGrossProfit(row.sale_price, totalCost);
 
     const existing = tally.get(row.sold_by);
     if (existing) {

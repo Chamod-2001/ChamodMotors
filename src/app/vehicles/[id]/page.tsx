@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getVehicle } from '@/lib/queries/vehicles';
+import { getVehicle, getVehicleSaleInfo } from '@/lib/queries/vehicles';
 import { getVehicleImagePublicUrl } from '@/lib/storageUrls';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { listDocuments } from '@/lib/queries/documents';
 import { listReminders } from '@/lib/queries/reminders';
+import { listVehicleExpenses } from '@/lib/queries/vehicleExpenses';
 import { getPendingRequestForVehicle } from '@/lib/queries/vehicleEditRequests';
 import { formatLKR } from '@/lib/format';
 import { getTranslator } from '@/lib/i18n/server';
@@ -16,7 +17,10 @@ import { VehicleStatusControls } from '@/components/vehicles/VehicleStatusContro
 import { DeleteVehicleButton } from '@/components/vehicles/DeleteVehicleButton';
 import { DocumentList } from '@/components/documents/DocumentList';
 import { ReminderList } from '@/components/calendar/ReminderList';
-import { Bike, Pencil } from 'lucide-react';
+import { VehicleExpenseList } from '@/components/vehicles/VehicleExpenseList';
+import { VehicleExpenseForm } from '@/components/vehicles/VehicleExpenseForm';
+import { CollapsibleSection } from '@/components/ui/CollapsibleSection';
+import { Bike, Pencil, PlusCircle } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n/translations';
 
 const SPEC_LABEL_KEYS: Record<string, TranslationKey> = {
@@ -34,11 +38,18 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   const [vehicle, employee, t] = await Promise.all([getVehicle(id), getCurrentEmployee(), getTranslator()]);
   if (!vehicle) notFound();
   const isAdmin = employee?.role === 'admin';
-  const [documents, reminders, pendingRequest] = await Promise.all([
+  const [documents, reminders, pendingRequest, saleInfo, expenses] = await Promise.all([
     listDocuments({ vehicleId: vehicle.id }),
     listReminders({ vehicleId: vehicle.id }),
     getPendingRequestForVehicle(vehicle.id),
+    vehicle.status === 'sold' ? getVehicleSaleInfo(vehicle.id) : Promise.resolve(null),
+    listVehicleExpenses(vehicle.id),
   ]);
+
+  const sellerDocs = documents.filter((d) => d.partyRole === 'seller');
+  const buyerDocs = documents.filter((d) => d.partyRole === 'buyer');
+  const otherDocs = documents.filter((d) => !d.partyRole);
+  const hasSellerInfo = vehicle.seller_name || vehicle.seller_nic_number || vehicle.seller_phone_number;
 
   const specs: [string, string][] = [
     ['vehicle_type', vehicle.vehicle_type],
@@ -116,10 +127,14 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       </Card>
 
       {isAdmin ? (
-        <Card className="grid grid-cols-3 gap-2 text-center sm:gap-3">
+        <Card className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
           <div>
             <p className="text-xs text-slate-400">{t('buying_price')}</p>
             <p className="text-sm font-bold text-slate-900 sm:text-base">{formatLKR(vehicle.buying_price)}</p>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400">{t('total_expenses_label')}</p>
+            <p className="text-sm font-bold text-slate-900 sm:text-base">{formatLKR(vehicle.total_expenses)}</p>
           </div>
           <div>
             <p className="text-xs text-slate-400">{t('selling_price')}</p>
@@ -162,6 +177,72 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
         </div>
       </Card>
 
+      {isAdmin && hasSellerInfo && (
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('purchased_from_label')}</h2>
+          <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+            <div>
+              <dt className="text-xs text-slate-400">{t('seller_name_label')}</dt>
+              <dd className="font-medium text-slate-800">{vehicle.seller_name || t('not_provided')}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-slate-400">{t('seller_nic_label')}</dt>
+              <dd className="font-medium text-slate-800">{vehicle.seller_nic_number || t('not_provided')}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-slate-400">{t('seller_phone_label')}</dt>
+              <dd className="font-medium text-slate-800">{vehicle.seller_phone_number || t('not_provided')}</dd>
+            </div>
+          </dl>
+          <p className="mt-2 text-xs text-slate-400">
+            {t('buying_price')}: <span className="font-semibold text-slate-700">{formatLKR(vehicle.buying_price)}</span>
+          </p>
+        </Card>
+      )}
+
+      {isAdmin && saleInfo && (
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('sold_to_label')}</h2>
+          <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+            <div>
+              <dt className="text-xs text-slate-400">{t('customer')}</dt>
+              <dd className="font-medium text-slate-800">{saleInfo.customerName}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-slate-400">{t('nic_label')}</dt>
+              <dd className="font-medium text-slate-800">{saleInfo.customerNic}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-slate-400">{t('phone_number')}</dt>
+              <dd className="font-medium text-slate-800">{saleInfo.customerPhone}</dd>
+            </div>
+          </dl>
+          <p className="mt-2 text-xs text-slate-400">
+            {t('sale_price')}: <span className="font-semibold text-slate-700">{formatLKR(saleInfo.salePrice)}</span>
+            {saleInfo.soldByName && (
+              <>
+                {' '}
+                · {t('sold_by_prefix')} {saleInfo.soldByName}
+              </>
+            )}
+          </p>
+        </Card>
+      )}
+
+      {isAdmin && (
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">
+            {t('reconditioning_expenses_label')}
+          </h2>
+          <VehicleExpenseList items={expenses} vehicleId={vehicle.id} />
+          <div className="mt-4">
+            <CollapsibleSection label={t('add_expense')} icon={<PlusCircle size={16} />}>
+              <VehicleExpenseForm vehicleId={vehicle.id} />
+            </CollapsibleSection>
+          </div>
+        </Card>
+      )}
+
       {vehicle.notes && (
         <Card>
           <p className="mb-1 text-xs text-slate-400">{t('notes')}</p>
@@ -178,7 +259,38 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
       <Card>
         <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('documents_label')}</h2>
-        <DocumentList items={documents} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+        {documents.length === 0 ? (
+          <DocumentList items={[]} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+        ) : (
+          <div className="space-y-4">
+            {sellerDocs.length > 0 && (
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  {t('seller_documents_section')}
+                </p>
+                <DocumentList items={sellerDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+              </div>
+            )}
+            {buyerDocs.length > 0 && (
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  {t('buyer_documents_section')}
+                </p>
+                <DocumentList items={buyerDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+              </div>
+            )}
+            {otherDocs.length > 0 && (
+              <div>
+                {(sellerDocs.length > 0 || buyerDocs.length > 0) && (
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    {t('other_documents_section')}
+                  </p>
+                )}
+                <DocumentList items={otherDocs} isAdmin={false} revalidatePaths={[`/vehicles/${vehicle.id}`]} />
+              </div>
+            )}
+          </div>
+        )}
       </Card>
     </div>
     </AppShell>

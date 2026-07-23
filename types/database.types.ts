@@ -8,10 +8,12 @@ export type UserRole = 'admin' | 'sales';
 export type VehicleStatus = 'available' | 'reserved' | 'sold';
 export type VehicleType = 'motorcycle' | 'three_wheeler' | 'scooter' | 'other';
 export type FuelType = 'petrol' | 'diesel' | 'electric' | 'hybrid';
-export type DocumentType = 'shop_letter' | 'sale_letter' | 'nic' | 'electricity_bill' | 'other';
+export type DocumentType = 'shop_letter' | 'sale_letter' | 'nic' | 'electricity_bill' | 'photo' | 'other';
+export type PartyRole = 'seller' | 'buyer';
 export type ReminderStatus = 'pending' | 'done' | 'dismissed';
 export type EditRequestStatus = 'pending' | 'approved' | 'rejected';
 export type ReviewStatus = 'pending' | 'approved';
+export type VehicleExpenseType = 'paint' | 'upholstery' | 'parts' | 'labor' | 'cleaning' | 'other';
 
 export interface Profile {
   id: string;
@@ -41,15 +43,38 @@ export interface Vehicle {
   color: string | null;
   buying_price: number;
   selling_price: number;
+  total_expenses: number;
   gross_profit: number;
   status: VehicleStatus;
   notes: string | null;
   buying_date: string;
   reserved_at: string | null;
   sold_at: string | null;
+  seller_name: string | null;
+  seller_nic_number: string | null;
+  seller_phone_number: string | null;
   created_by: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface VehicleExpense {
+  id: string;
+  vehicle_id: string;
+  expense_type: VehicleExpenseType;
+  amount: number;
+  description: string | null;
+  receipt_photo_path: string | null;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface VehicleCatalogEntry {
+  id: string;
+  vehicle_type: VehicleType;
+  brand: string;
+  model: string;
+  created_at: string;
 }
 
 export interface VehicleImage {
@@ -115,6 +140,7 @@ export interface Document {
   storage_path: string;
   customer_id: string | null;
   vehicle_id: string | null;
+  party_role: PartyRole | null;
   uploaded_by: string | null;
   created_at: string;
 }
@@ -134,7 +160,8 @@ export type ActivityType =
   | 'vehicle_edit_rejected'
   | 'shop_review_submitted'
   | 'shop_review_approved'
-  | 'shop_review_deleted';
+  | 'shop_review_deleted'
+  | 'vehicle_expense_added';
 
 export interface ActivityLog {
   id: string;
@@ -280,7 +307,7 @@ export interface Database {
       finance_companies: TableDef<Simplify<FinanceCompany>>;
       finance_officers: TableDef<Simplify<FinanceOfficer>>;
       finance_communications: TableDef<Simplify<FinanceCommunication>>;
-      documents: TableDef<WidenEnums<Document, 'document_type'>>;
+      documents: TableDef<WidenEnums<Document, 'document_type' | 'party_role'>>;
       activity_log: TableDef<WidenEnums<ActivityLog, 'activity_type'>>;
       shop_profile: TableDef<Simplify<ShopProfile>>;
       shop_photos: TableDef<Simplify<ShopPhoto>>;
@@ -289,6 +316,8 @@ export interface Database {
       reminders: TableDef<WidenEnums<Reminder, 'status'>>;
       vehicle_edit_requests: TableDef<WidenEnums<VehicleEditRequest, 'status'>>;
       shop_reviews: TableDef<WidenEnums<ShopReview, 'status'>>;
+      vehicle_catalog: TableDef<WidenEnums<VehicleCatalogEntry, 'vehicle_type'>>;
+      vehicle_expenses: TableDef<Simplify<VehicleExpense>>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

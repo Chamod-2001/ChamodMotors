@@ -6,7 +6,10 @@ export const documentsText = {
   doc_type_electricity_bill: { english: 'Electricity Bill', sinhala: 'විදුලි බිල', mixed: 'Electricity Bill' },
   doc_type_shop_letter: { english: 'Shop Letter', sinhala: 'සාප්පු ලිපිය', mixed: 'Shop Letter' },
   doc_type_sale_letter: { english: 'Sale Letter', sinhala: 'වික්‍රය ලිපිය', mixed: 'Sale Letter' },
+  doc_type_photo: { english: 'Photo', sinhala: 'ඡායාරූපය', mixed: 'Photo' },
   doc_type_other: { english: 'Other', sinhala: 'වෙනත්', mixed: 'Other' },
+  party_doc_photo: { english: 'Photo', sinhala: 'ඡායාරූපය', mixed: 'Photo' },
+  party_doc_nic: { english: 'NIC Copy', sinhala: 'ජා.හැ. පිටපත', mixed: 'NIC Copy' },
   no_documents_yet: { english: 'No documents uploaded yet.', sinhala: 'තවම ලේඛන උඩුගත කර නැත.', mixed: 'තවම documents නැත.' },
   view_document: { english: 'View', sinhala: 'බලන්න', mixed: 'View' },
   document_upload_failed: {
