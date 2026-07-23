@@ -5,6 +5,7 @@ export interface CustomerListItem {
   full_name: string;
   nic_number: string;
   phone_number: string;
+  photo_path: string | null;
   vehicles_purchased: number;
 }
 
@@ -13,7 +14,7 @@ export async function listCustomers(query?: string): Promise<CustomerListItem[]>
 
   let request = supabase
     .from('customers')
-    .select('id, full_name, nic_number, phone_number, sales(id)')
+    .select('id, full_name, nic_number, phone_number, photo_path, sales(id)')
     .order('created_at', { ascending: false });
 
   if (query?.trim()) {
@@ -29,6 +30,7 @@ export async function listCustomers(query?: string): Promise<CustomerListItem[]>
     full_name: string;
     nic_number: string;
     phone_number: string;
+    photo_path: string | null;
     sales: { id: string }[] | null;
   };
 
@@ -37,6 +39,7 @@ export async function listCustomers(query?: string): Promise<CustomerListItem[]>
     full_name: row.full_name,
     nic_number: row.nic_number,
     phone_number: row.phone_number,
+    photo_path: row.photo_path,
     vehicles_purchased: row.sales?.length ?? 0,
   }));
 }
@@ -48,13 +51,14 @@ export interface CustomerDetail {
   phone_number: string;
   address: string | null;
   occupation: string | null;
+  photo_path: string | null;
 }
 
 export async function getCustomer(id: string): Promise<CustomerDetail | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('customers')
-    .select('id, full_name, nic_number, phone_number, address, occupation')
+    .select('id, full_name, nic_number, phone_number, address, occupation, photo_path')
     .eq('id', id)
     .single();
 

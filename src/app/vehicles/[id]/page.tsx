@@ -94,13 +94,13 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
               key={img.id}
               src={getVehicleImagePublicUrl(img.storage_path)}
               alt=""
-              className="h-48 w-64 shrink-0 rounded-xl object-cover"
+              className="h-28 w-40 shrink-0 rounded-xl object-cover"
             />
           ))}
         </div>
       ) : (
-        <div className="flex h-48 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
-          <Bike size={40} />
+        <div className="flex h-28 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+          <Bike size={32} />
         </div>
       )}
 
@@ -127,7 +127,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       </Card>
 
       {isAdmin ? (
-        <Card className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
+        <Card className="grid grid-cols-2 gap-3 border-2 border-green-300! text-center dark:border-green-800! sm:grid-cols-4">
           <div>
             <p className="text-xs text-slate-400">{t('buying_price')}</p>
             <p className="text-sm font-bold text-slate-900 sm:text-base">{formatLKR(vehicle.buying_price)}</p>
@@ -146,7 +146,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           </div>
         </Card>
       ) : (
-        <Card className="text-center">
+        <Card className="border-2 border-green-300! text-center dark:border-green-800!">
           <p className="text-xs text-slate-400">{t('selling_price')}</p>
           <p className="text-xl font-bold text-slate-900">{formatLKR(vehicle.selling_price)}</p>
         </Card>
@@ -178,7 +178,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       </Card>
 
       {isAdmin && hasSellerInfo && (
-        <Card>
+        <Card className="border-2 border-amber-300! dark:border-amber-800!">
           <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('purchased_from_label')}</h2>
           <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
             <div>
@@ -212,7 +212,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       )}
 
       {isAdmin && saleInfo && (
-        <Card>
+        <Card className="border-2 border-green-300! dark:border-green-800!">
           <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('sold_to_label')}</h2>
           <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
             <div>

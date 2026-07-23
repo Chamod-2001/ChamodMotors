@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { CustomerPhotoPicker } from './CustomerPhotoPicker';
 import { createCustomerAction, updateCustomerAction } from '@/app/customers/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { CustomerDetail } from '@/lib/queries/customers';
@@ -24,6 +25,7 @@ export function CustomerForm({ customer }: { customer?: CustomerDetail | null })
 
   return (
     <form action={handleSubmit} className="space-y-4">
+      <CustomerPhotoPicker defaultPhotoPath={customer?.photo_path} />
       <Input name="full_name" label={t('full_name')} required defaultValue={customer?.full_name} />
       <Input name="nic_number" label={t('nic_number')} required defaultValue={customer?.nic_number} />
       <Input name="phone_number" label={t('phone_number')} required type="tel" defaultValue={customer?.phone_number} />

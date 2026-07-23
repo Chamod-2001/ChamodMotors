@@ -5,6 +5,7 @@ import { Camera, Check, Loader2 } from 'lucide-react';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { MoneyInput } from '@/components/ui/MoneyInput';
 import { uploadDocumentFile } from '@/lib/uploadDocument';
 import { addVehicleExpenseAction } from '@/app/vehicles/expenses/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -63,7 +64,7 @@ export function VehicleExpenseForm({ vehicleId, onDone }: { vehicleId: string; o
         ))}
       </Select>
 
-      <Input name="amount" label={`${t('expense_amount_label')} (LKR)`} type="number" required />
+      <MoneyInput name="amount" label={`${t('expense_amount_label')} (LKR)`} required />
 
       <Input name="description" label={t('expense_description_label')} />
 

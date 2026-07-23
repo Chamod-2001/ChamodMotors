@@ -5,8 +5,10 @@ import { getCurrentEmployee } from '@/lib/queries/session';
 import { listDocuments } from '@/lib/queries/documents';
 import { listReminders } from '@/lib/queries/reminders';
 import { getTranslator } from '@/lib/i18n/server';
+import { getCustomerPhotoPublicUrl } from '@/lib/storageUrls';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { CollapsibleSection } from '@/components/ui/CollapsibleSection';
 import { AppShell } from '@/components/layout/AppShell';
 import { DeleteCustomerButton } from '@/components/customers/DeleteCustomerButton';
 import { PurchaseHistoryList } from '@/components/customers/PurchaseHistoryList';
@@ -14,7 +16,7 @@ import { RecordSaleSection } from '@/components/customers/RecordSaleSection';
 import { DocumentUploadForm } from '@/components/documents/DocumentUploadForm';
 import { DocumentList } from '@/components/documents/DocumentList';
 import { ReminderList } from '@/components/calendar/ReminderList';
-import { User, Pencil, Phone, MapPin, Briefcase } from 'lucide-react';
+import { User, Pencil, Phone, MapPin, Briefcase, FileText } from 'lucide-react';
 
 export default async function CustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -51,8 +53,13 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
 
       <Card>
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-light text-brand">
-            <User size={28} />
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-light text-brand">
+            {customer.photo_path ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={getCustomerPhotoPublicUrl(customer.photo_path)} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <User size={28} />
+            )}
           </div>
           <div className="min-w-0">
             <h1 className="truncate text-xl font-bold text-slate-900">{customer.full_name}</h1>
@@ -89,15 +96,18 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
       )}
 
       <Card>
-        <h2 className="mb-3 text-sm font-semibold text-slate-800 dark:text-slate-100">{t('documents_label')}</h2>
-        <DocumentUploadForm
-          customerId={customer.id}
-          vehicleOptions={history.map((h) => ({ id: h.vehicleId, label: h.vehicleLabel })).filter((v) => v.id)}
-          revalidatePaths={[`/customers/${customer.id}`]}
-        />
-        <div className="mt-4">
+        <CollapsibleSection
+          label={`${t('documents_label')} (${documents.length})`}
+          collapsedLabel={t('documents_label')}
+          icon={<FileText size={16} />}
+        >
+          <DocumentUploadForm
+            customerId={customer.id}
+            vehicleOptions={history.map((h) => ({ id: h.vehicleId, label: h.vehicleLabel })).filter((v) => v.id)}
+            revalidatePaths={[`/customers/${customer.id}`]}
+          />
           <DocumentList items={documents} isAdmin={isAdmin} revalidatePaths={[`/customers/${customer.id}`]} />
-        </div>
+        </CollapsibleSection>
       </Card>
     </div>
     </AppShell>

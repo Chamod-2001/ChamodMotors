@@ -18,6 +18,7 @@ function parseCustomerInput(formData: FormData) {
     phone_number: String(formData.get('phone_number') || '').trim(),
     address: String(formData.get('address') || '').trim(),
     occupation: String(formData.get('occupation') || '').trim(),
+    photo_path: String(formData.get('photoPath') || '').trim(),
   };
 }
 
@@ -40,6 +41,7 @@ export async function createCustomerAction(formData: FormData): Promise<Customer
       phone_number: input.phone_number,
       address: input.address || null,
       occupation: input.occupation || null,
+      photo_path: input.photo_path || null,
       created_by: user?.id ?? null,
     })
     .select('id')
@@ -73,6 +75,7 @@ export async function updateCustomerAction(customerId: string, formData: FormDat
       phone_number: input.phone_number,
       address: input.address || null,
       occupation: input.occupation || null,
+      photo_path: input.photo_path || null,
     })
     .eq('id', customerId);
 

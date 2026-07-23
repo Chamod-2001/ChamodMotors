@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { MoneyInput } from '@/components/ui/MoneyInput';
 import { VehicleImagePicker, type PickedImage } from './VehicleImagePicker';
 import { BrandModelFields } from './BrandModelFields';
 import { PartyDocumentPicker } from '@/components/documents/PartyDocumentPicker';
@@ -115,21 +116,19 @@ export function VehicleForm({ vehicle, isAdmin, pendingRequest, catalog = [] }: 
       {isAdmin ? (
         <>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Input
+            <MoneyInput
               name="buying_price"
               label={`${t('buying_price')} (LKR)`}
-              type="number"
               required
               value={buyingPrice}
-              onChange={(e) => setBuyingPrice(e.target.value)}
+              onValueChange={setBuyingPrice}
             />
-            <Input
+            <MoneyInput
               name="selling_price"
               label={`${t('selling_price')} (LKR)`}
-              type="number"
               required
               value={sellingPrice}
-              onChange={(e) => setSellingPrice(e.target.value)}
+              onValueChange={setSellingPrice}
             />
             <Input
               name="buying_date"
@@ -181,13 +180,12 @@ export function VehicleForm({ vehicle, isAdmin, pendingRequest, catalog = [] }: 
         </>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          <Input
+          <MoneyInput
             name="selling_price"
             label={`${t('selling_price')} (LKR)`}
-            type="number"
             required
             value={sellingPrice}
-            onChange={(e) => setSellingPrice(e.target.value)}
+            onValueChange={setSellingPrice}
           />
           <Input
             name="buying_date"

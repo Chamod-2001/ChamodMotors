@@ -93,6 +93,7 @@ export interface Customer {
   phone_number: string;
   address: string | null;
   occupation: string | null;
+  photo_path: string | null;
   created_by: string | null;
   created_at: string;
   updated_at: string;

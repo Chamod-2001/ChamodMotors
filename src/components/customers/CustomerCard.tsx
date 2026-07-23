@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { getTranslator } from '@/lib/i18n/server';
+import { getCustomerPhotoPublicUrl } from '@/lib/storageUrls';
 import type { CustomerListItem } from '@/lib/queries/customers';
 import { User } from 'lucide-react';
 
@@ -10,8 +11,13 @@ export async function CustomerCard({ customer }: { customer: CustomerListItem })
   return (
     <Link href={`/customers/${customer.id}`}>
       <Card className="flex items-center gap-4 transition hover:shadow-md active:scale-[0.99]">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-light text-brand">
-          <User size={22} />
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-light text-brand">
+          {customer.photo_path ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={getCustomerPhotoPublicUrl(customer.photo_path)} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <User size={22} />
+          )}
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate font-semibold text-slate-900">{customer.full_name}</p>

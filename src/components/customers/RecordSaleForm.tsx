@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { MoneyInput } from '@/components/ui/MoneyInput';
 import { PartyDocumentPicker } from '@/components/documents/PartyDocumentPicker';
 import { recordSaleAction } from '@/app/customers/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -56,10 +57,9 @@ export function RecordSaleForm({
         ))}
       </Select>
 
-      <Input
+      <MoneyInput
         name="sale_price"
         label={t('sale_price')}
-        type="number"
         required
         defaultValue={selectedVehicle?.selling_price ?? ''}
         key={selectedVehicleId}

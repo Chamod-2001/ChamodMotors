@@ -23,4 +23,6 @@ export const customersText = {
   },
   record_purchase: { english: 'Record Purchase', sinhala: 'මිලදී ගැනීම සටහන් කරන්න', mixed: 'Record Purchase' },
   nic_label: { english: 'NIC', sinhala: 'ජා.හැ.', mixed: 'NIC' },
+  customer_photo_label: { english: 'Customer Photo', sinhala: 'පාරිභෝගික ඡායාරූපය', mixed: 'Customer Photo' },
+  change_photo: { english: 'Change photo', sinhala: 'ඡායාරූපය වෙනස් කරන්න', mixed: 'Photo වෙනස් කරන්න' },
 } as const;

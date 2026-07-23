@@ -20,7 +20,7 @@ export function RecordSaleSection({
 
   if (!open) {
     return (
-      <Button variant="secondary" fullWidth onClick={() => setOpen(true)}>
+      <Button variant="success" fullWidth onClick={() => setOpen(true)}>
         <ShoppingBag size={18} /> {t('record_vehicle_purchase')}
       </Button>
     );
