@@ -1,15 +1,17 @@
 import { createClient } from '@/lib/supabase/server';
-import type { VehicleStatus } from '../../../types/database.types';
+import type { VehicleStatus, VehicleType } from '../../../types/database.types';
 import { currentMonthValue, monthToRange, todayRange, calculateGrossProfit } from '@/lib/calculations';
 
 export interface DashboardStats {
-  availableCount: number;
+  availableBikeCount: number;
+  availableThreeWheelerCount: number;
   reservedCount: number;
   soldCount: number;
   monthlySalesCount: number;
   monthlyProfit: number;
   todaysSalesCount: number;
   todaysProfit: number;
+  totalRevenue: number;
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
@@ -17,16 +19,24 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const { start: monthStart, end: monthEnd } = monthToRange(currentMonthValue());
   const { start: todayStart, end: todayEnd } = todayRange();
 
-  const vehicleCount = async (status: VehicleStatus) => {
-    const { count } = await supabase
-      .from('vehicles')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', status);
+  const vehicleCount = async (status: VehicleStatus, types?: VehicleType[]) => {
+    let query = supabase.from('vehicles').select('*', { count: 'exact', head: true }).eq('status', status);
+    if (types) query = query.in('vehicle_type', types);
+    const { count } = await query;
     return count ?? 0;
   };
 
-  const [availableCount, reservedCount, soldCount, monthlySales, todaysSales] = await Promise.all([
-    vehicleCount('available'),
+  const [
+    availableBikeCount,
+    availableThreeWheelerCount,
+    reservedCount,
+    soldCount,
+    monthlySales,
+    todaysSales,
+    allSales,
+  ] = await Promise.all([
+    vehicleCount('available', ['motorcycle', 'scooter', 'other']),
+    vehicleCount('available', ['three_wheeler']),
     vehicleCount('reserved'),
     vehicleCount('sold'),
     supabase
@@ -39,6 +49,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .select('sale_price, vehicles(buying_price)')
       .gte('purchase_date', todayStart)
       .lt('purchase_date', todayEnd),
+    supabase.from('sales').select('sale_price'),
   ]);
 
   type SaleRow = { sale_price: number; vehicles: { buying_price: number } | { buying_price: number }[] | null };
@@ -51,14 +62,21 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       return sum + calculateGrossProfit(row.sale_price, vehicle?.buying_price ?? 0);
     }, 0);
 
+  const totalRevenue = ((allSales.data ?? []) as { sale_price: number }[]).reduce(
+    (sum, row) => sum + Number(row.sale_price),
+    0
+  );
+
   return {
-    availableCount,
+    availableBikeCount,
+    availableThreeWheelerCount,
     reservedCount,
     soldCount,
     monthlySalesCount: monthlySaleRows.length,
     monthlyProfit: sumProfit(monthlySaleRows),
     todaysSalesCount: todaysSaleRows.length,
     todaysProfit: sumProfit(todaysSaleRows),
+    totalRevenue,
   };
 }
 

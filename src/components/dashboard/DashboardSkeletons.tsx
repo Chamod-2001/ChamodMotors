@@ -1,5 +1,5 @@
 export function StatsGridSkeleton({ isAdmin }: { isAdmin: boolean }) {
-  const count = isAdmin ? 7 : 2;
+  const count = isAdmin ? 9 : 3;
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {Array.from({ length: count }).map((_, i) => (

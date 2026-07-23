@@ -1,6 +1,8 @@
 export const dashboardText = {
   dashboard: { english: 'Dashboard', sinhala: 'ප්‍රධාන පිටුව', mixed: 'Dashboard' },
   available_vehicles: { english: 'Available Vehicles', sinhala: 'තියෙන වාහන', mixed: 'Available වාහන' },
+  available_bikes: { english: 'Available Bikes', sinhala: 'තියෙන බයික්', mixed: 'Available Bikes' },
+  available_three_wheelers: { english: 'Available Three-Wheelers', sinhala: 'තියෙන ත්‍රීවීල්', mixed: 'Available ත්‍රීවීල්' },
   reserved_vehicles: { english: 'Reserved Vehicles', sinhala: 'වෙන් කළ වාහන', mixed: 'Reserved වාහන' },
   sold_vehicles: { english: 'Sold Vehicles', sinhala: 'විකුණූ වාහන', mixed: 'Sold වාහන' },
   monthly_sales: { english: 'Monthly Sales', sinhala: 'මාසික විකුණුම්', mixed: 'Monthly Sales' },
