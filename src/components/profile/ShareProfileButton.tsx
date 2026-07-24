@@ -8,7 +8,7 @@ export function ShareProfileButton({ profile }: { profile: ShopProfile }) {
   const { t } = useLanguage();
 
   async function handleClick() {
-    const url = `${window.location.origin}/p`;
+    const url = `${window.location.origin}/p?src=share`;
     const text = `${profile.business_name}${profile.description ? ` — ${profile.description}` : ''}`;
 
     if (navigator.share) {

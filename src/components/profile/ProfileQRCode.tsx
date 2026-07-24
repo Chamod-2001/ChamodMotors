@@ -11,7 +11,7 @@ export function ProfileQRCode() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    const shareUrl = `${window.location.origin}/p`;
+    const shareUrl = `${window.location.origin}/p?src=qr`;
     QRCode.toDataURL(shareUrl, { width: 320, margin: 1, color: { dark: '#0f172a', light: '#ffffff' } })
       .then((dataUrl) => setState({ dataUrl, url: shareUrl }))
       .catch(() => {});

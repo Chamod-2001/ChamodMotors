@@ -1,6 +1,7 @@
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { getShopProfile } from '@/lib/queries/shop';
 import { listApprovedShopReviews, listPendingShopReviews } from '@/lib/queries/shopReviews';
+import { getShopProfileViewStats } from '@/lib/queries/shopAnalytics';
 import { getTranslator } from '@/lib/i18n/server';
 import { AppShell } from '@/components/layout/AppShell';
 import { Card } from '@/components/ui/Card';
@@ -11,15 +12,17 @@ import { SocialLinksManager } from '@/components/profile/SocialLinksManager';
 import { ShopLocationsManager } from '@/components/profile/ShopLocationsManager';
 import { ReviewModerationList } from '@/components/profile/ReviewModerationList';
 import { ProfileQRCode } from '@/components/profile/ProfileQRCode';
+import { ProfileInsights } from '@/components/profile/ProfileInsights';
 import { AdminEditSection } from '@/components/profile/AdminEditSection';
 
 export default async function ProfilePage() {
   const employee = await getCurrentEmployee();
   const isAdmin = employee?.role === 'admin';
-  const [{ profile, photos, socialLinks, locations }, approvedReviews, pendingReviews, t] = await Promise.all([
+  const [{ profile, photos, socialLinks, locations }, approvedReviews, pendingReviews, viewStats, t] = await Promise.all([
     getShopProfile(),
     listApprovedShopReviews(),
     isAdmin ? listPendingShopReviews() : Promise.resolve([]),
+    isAdmin ? getShopProfileViewStats() : Promise.resolve(null),
     getTranslator(),
   ]);
 
@@ -36,6 +39,8 @@ export default async function ProfilePage() {
         />
 
         <ProfileQRCode />
+
+        {isAdmin && viewStats && <ProfileInsights stats={viewStats} />}
 
         {isAdmin && (
           <Card id="pending-reviews">

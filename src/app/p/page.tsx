@@ -1,5 +1,7 @@
+import { after } from 'next/server';
 import { getShopProfile } from '@/lib/queries/shop';
 import { listApprovedShopReviews } from '@/lib/queries/shopReviews';
+import { logShopProfileView } from '@/lib/queries/shopAnalytics';
 import { ShopProfileView } from '@/components/profile/ShopProfileView';
 import { getTranslator } from '@/lib/i18n/server';
 
@@ -7,12 +9,20 @@ export const metadata = {
   title: 'Chamod Motors',
 };
 
-export default async function PublicShopProfilePage() {
-  const [{ profile, photos, socialLinks, locations }, reviews, t] = await Promise.all([
+export default async function PublicShopProfilePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ src?: string }>;
+}) {
+  const [{ profile, photos, socialLinks, locations }, reviews, t, { src }] = await Promise.all([
     getShopProfile(),
     listApprovedShopReviews(),
     getTranslator(),
+    searchParams,
   ]);
+
+  // Logging a view shouldn't delay the response the visitor is waiting on.
+  after(() => logShopProfileView(src ?? null));
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 dark:bg-slate-950">

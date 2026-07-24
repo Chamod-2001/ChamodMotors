@@ -22,6 +22,7 @@ export interface Profile {
   phone: string | null;
   role: UserRole;
   is_active: boolean;
+  photo_path: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -263,6 +264,14 @@ export interface VehicleEditRequest {
   created_at: string;
 }
 
+export interface ShopProfileViewLog {
+  id: string;
+  viewed_at: string;
+  country: string | null;
+  city: string | null;
+  source: string | null;
+}
+
 export interface ShopReview {
   id: string;
   reviewer_name: string;
@@ -316,6 +325,7 @@ export interface Database {
       shop_photos: TableDef<Simplify<ShopPhoto>>;
       shop_social_links: TableDef<WidenEnums<ShopSocialLink, 'platform'>>;
       shop_locations: TableDef<Simplify<ShopLocation>>;
+      shop_profile_views: TableDef<Simplify<ShopProfileViewLog>>;
       reminders: TableDef<WidenEnums<Reminder, 'status'>>;
       vehicle_edit_requests: TableDef<WidenEnums<VehicleEditRequest, 'status'>>;
       shop_reviews: TableDef<WidenEnums<ShopReview, 'status'>>;

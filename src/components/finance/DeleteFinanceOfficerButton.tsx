@@ -10,9 +10,10 @@ export function DeleteFinanceOfficerButton({ officerId }: { officerId: string })
   const { t } = useLanguage();
 
   function handleDelete() {
-    if (!confirm('මේ officer ව delete කරන්නද?')) return;
-    startTransition(() => {
-      deleteFinanceOfficerAction(officerId);
+    if (!confirm(t('delete_officer_confirm'))) return;
+    startTransition(async () => {
+      const result = await deleteFinanceOfficerAction(officerId);
+      if (result?.error) alert(result.error);
     });
   }
 

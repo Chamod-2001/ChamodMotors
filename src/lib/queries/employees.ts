@@ -7,6 +7,7 @@ export interface EmployeeRow {
   phone: string | null;
   role: 'admin' | 'sales';
   is_active: boolean;
+  photo_path: string | null;
   created_at: string;
 }
 
@@ -14,7 +15,7 @@ export async function listEmployees(): Promise<EmployeeRow[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('profiles')
-    .select('id, full_name, username, phone, role, is_active, created_at')
+    .select('id, full_name, username, phone, role, is_active, photo_path, created_at')
     .order('created_at', { ascending: true });
 
   return (data ?? []) as EmployeeRow[];

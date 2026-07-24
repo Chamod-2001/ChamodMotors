@@ -1,59 +1,103 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { contactFinanceOfficerAction, type ContactKind } from '@/app/finance/actions';
+import { contactFinanceOfficerAction, type DocumentKind } from '@/app/finance/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { MessageCircle, FileText, Zap, Paperclip, Loader2 } from 'lucide-react';
+import { MessageCircle, FileText, Zap, Paperclip, Loader2, Send } from 'lucide-react';
+
+const DOC_OPTIONS: { value: DocumentKind; labelKey: 'doc_type_nic' | 'electricity_bill' | 'other_document'; icon: typeof FileText }[] = [
+  { value: 'nic', labelKey: 'doc_type_nic', icon: FileText },
+  { value: 'electricity_bill', labelKey: 'electricity_bill', icon: Zap },
+  { value: 'other', labelKey: 'other_document', icon: Paperclip },
+];
 
 export function WhatsAppQuickActions({ officerId }: { officerId: string }) {
   const { t } = useLanguage();
   const [error, setError] = useState<string | undefined>();
-  const [pendingKind, setPendingKind] = useState<ContactKind | null>(null);
+  const [selected, setSelected] = useState<DocumentKind[]>([]);
+  const [busy, setBusy] = useState<'chat' | 'documents' | null>(null);
   const [, startTransition] = useTransition();
 
-  function handleContact(kind: ContactKind) {
+  function toggle(value: DocumentKind) {
+    setSelected((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]));
+  }
+
+  function openUrl(url: string) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  function handleOpenChat() {
     setError(undefined);
-    setPendingKind(kind);
+    setBusy('chat');
     startTransition(async () => {
-      const result = await contactFinanceOfficerAction(officerId, kind);
-      setPendingKind(null);
+      const result = await contactFinanceOfficerAction(officerId, 'whatsapp_chat');
+      setBusy(null);
       if (result.error) setError(result.error);
-      else if (result.url) window.open(result.url, '_blank', 'noopener,noreferrer');
+      else if (result.url) openUrl(result.url);
     });
   }
 
-  const actions: { kind: ContactKind; label: string; icon: typeof MessageCircle; tone: string }[] = [
-    { kind: 'whatsapp_chat', label: t('open_chat'), icon: MessageCircle, tone: 'bg-emerald-600 text-white' },
-    { kind: 'whatsapp_nic', label: t('send_nic'), icon: FileText, tone: 'bg-white border-2 border-emerald-200 text-emerald-700' },
-    {
-      kind: 'whatsapp_electricity_bill',
-      label: t('electricity_bill'),
-      icon: Zap,
-      tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
-    },
-    {
-      kind: 'whatsapp_other',
-      label: t('other_document'),
-      icon: Paperclip,
-      tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
-    },
-  ];
+  function handleSendDocuments() {
+    setError(undefined);
+    setBusy('documents');
+    startTransition(async () => {
+      const result = await contactFinanceOfficerAction(officerId, 'whatsapp_documents', selected);
+      setBusy(null);
+      if (result.error) {
+        setError(result.error);
+      } else if (result.url) {
+        openUrl(result.url);
+        setSelected([]);
+      }
+    });
+  }
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-2">
-        {actions.map(({ kind, label, icon: Icon, tone }) => (
-          <button
-            key={kind}
-            type="button"
-            disabled={pendingKind !== null}
-            onClick={() => handleContact(kind)}
-            className={`flex min-h-14 items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-semibold disabled:opacity-50 ${tone}`}
-          >
-            {pendingKind === kind ? <Loader2 size={18} className="animate-spin" /> : <Icon size={18} />} {label}
-          </button>
-        ))}
+      <button
+        type="button"
+        disabled={busy !== null}
+        onClick={handleOpenChat}
+        className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 py-3 text-sm font-semibold text-white disabled:opacity-50"
+      >
+        {busy === 'chat' ? <Loader2 size={18} className="animate-spin" /> : <MessageCircle size={18} />} {t('open_chat')}
+      </button>
+
+      <p className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+        {t('select_documents_to_send')}
+      </p>
+      <div className="grid grid-cols-3 gap-2">
+        {DOC_OPTIONS.map(({ value, labelKey, icon: Icon }) => {
+          const isSelected = selected.includes(value);
+          return (
+            <button
+              key={value}
+              type="button"
+              disabled={busy !== null}
+              onClick={() => toggle(value)}
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border-2 px-2 py-2 text-xs font-semibold disabled:opacity-50 ${
+                isSelected
+                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
+                  : 'border-slate-200 text-slate-500 dark:border-slate-700'
+              }`}
+            >
+              <Icon size={16} /> {t(labelKey)}
+            </button>
+          );
+        })}
       </div>
+
+      <button
+        type="button"
+        disabled={selected.length === 0 || busy !== null}
+        onClick={handleSendDocuments}
+        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white border-2 border-emerald-200 px-3 py-2.5 text-sm font-semibold text-emerald-700 disabled:opacity-40"
+      >
+        {busy === 'documents' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+        {t('send_selected_documents')}
+        {selected.length > 0 && ` (${selected.length})`}
+      </button>
+
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );

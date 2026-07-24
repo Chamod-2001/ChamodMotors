@@ -46,5 +46,26 @@ export const financeText = {
     mixed: 'මුලින්ම Finance පිටුවෙන් Finance Company එකක් add කරන්න.',
   },
   officer_photo_label: { english: 'Officer Photo', sinhala: 'නිලධාරියාගේ ඡායාරූපය', mixed: 'Officer Photo' },
+  select_documents_to_send: {
+    english: 'Select documents to send',
+    sinhala: 'යැවීමට ලේඛන තෝරන්න',
+    mixed: 'Send කරන්න documents තෝරන්න',
+  },
+  send_selected_documents: { english: 'Send Selected', sinhala: 'තෝරාගත් ඒවා යවන්න', mixed: 'Selected ඒවා Send කරන්න' },
   company_logo_label: { english: 'Company Logo', sinhala: 'සමාගමේ ලාංඡනය', mixed: 'Company Logo' },
+  delete_officer_confirm: {
+    english: 'Delete this officer? This cannot be undone.',
+    sinhala: 'මේ නිලධාරියා delete කරන්නද? මේක undo කරන්න බෑ.',
+    mixed: 'මේ officer ව delete කරන්නද? මේක undo කරන්න බෑ.',
+  },
+  delete_company_confirm: {
+    english: 'Delete this finance company? This cannot be undone.',
+    sinhala: 'මේ මූල්‍ය සමාගම delete කරන්නද? මේක undo කරන්න බෑ.',
+    mixed: 'මේ finance company එක delete කරන්නද? මේක undo කරන්න බෑ.',
+  },
+  delete_company_confirm_with_officers: {
+    english: 'Delete this finance company? This will also delete its {count} officer(s) and cannot be undone.',
+    sinhala: 'මේ මූල්‍ය සමාගම delete කරන්නද? එයාගේ නිලධාරීන් {count} දෙනාත් delete වේවි. මේක undo කරන්න බෑ.',
+    mixed: 'මේ finance company එක delete කරන්නද? එයාගේ officers {count} දෙනාත් delete වේවි. මේක undo කරන්න බෑ.',
+  },
 } as const;

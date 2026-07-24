@@ -2,14 +2,13 @@ import Link from 'next/link';
 import { listFinanceCompaniesWithOfficers } from '@/lib/queries/finance';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { getTranslator } from '@/lib/i18n/server';
-import { getFinancePhotoPublicUrl } from '@/lib/storageUrls';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { ZoomableImage } from '@/components/ui/ZoomableImage';
 import { AppShell } from '@/components/layout/AppShell';
 import { AddCompanyForm } from '@/components/finance/AddCompanyForm';
 import { FinanceOfficerCard } from '@/components/finance/FinanceOfficerCard';
-import { UserPlus, Building2 } from 'lucide-react';
+import { CompanyHeader } from '@/components/finance/CompanyHeader';
+import { UserPlus } from 'lucide-react';
 
 export default async function FinancePage() {
   const [companies, employee, t] = await Promise.all([
@@ -44,16 +43,7 @@ export default async function FinancePage() {
         ) : (
           companies.map((company) => (
             <div key={company.id}>
-              <div className="mb-2 flex items-center gap-2">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100 text-slate-400 dark:bg-slate-800">
-                  <ZoomableImage
-                    src={company.logo_path ? getFinancePhotoPublicUrl(company.logo_path) : null}
-                    className="h-full w-full object-contain"
-                    fallback={<Building2 size={14} />}
-                  />
-                </div>
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">{company.name}</h2>
-              </div>
+              <CompanyHeader company={company} isAdmin={isAdmin} officerCount={company.officers.length} />
               {company.officers.length === 0 ? (
                 <p className="mb-4 text-sm text-slate-400">{t('no_officers_yet')}</p>
               ) : (

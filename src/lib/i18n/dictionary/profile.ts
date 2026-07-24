@@ -90,4 +90,17 @@ export const profileText = {
     sinhala: 'මේ review එක delete කරන්නද? මේක undo කරන්න බෑ.',
     mixed: 'මේ review එක delete කරන්නද? මේක undo කරන්න බෑ.',
   },
+  profile_insights_label: { english: 'Profile Insights', sinhala: 'පැතිකඩ Insights', mixed: 'Profile Insights' },
+  views_today: { english: 'Today', sinhala: 'අද', mixed: 'Today' },
+  views_7_days: { english: 'Last 7 Days', sinhala: 'අවසන් දින 7', mixed: 'Last 7 Days' },
+  views_30_days: { english: 'Last 30 Days', sinhala: 'අවසන් දින 30', mixed: 'Last 30 Days' },
+  views_all_time: { english: 'All-Time', sinhala: 'සියලු කාලය', mixed: 'All-Time' },
+  views_last_14_days: { english: 'Views — Last 14 Days', sinhala: 'Views — අවසන් දින 14', mixed: 'Views — Last 14 Days' },
+  top_locations_label: { english: 'Top Locations', sinhala: 'ප්‍රධාන ස්ථාන', mixed: 'Top Locations' },
+  top_sources_label: { english: 'Top Sources', sinhala: 'ප්‍රධාන මූලාශ්‍ර', mixed: 'Top Sources' },
+  no_views_yet: {
+    english: 'No profile views recorded yet.',
+    sinhala: 'තවම profile views සටහන් වී නැත.',
+    mixed: 'තවම profile views නැත.',
+  },
 } as const;

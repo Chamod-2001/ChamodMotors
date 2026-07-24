@@ -59,9 +59,6 @@ export function FinanceOfficerCard({
         </div>
         <div className="min-w-0">
           <p className="truncate font-semibold text-slate-900">{officer.officer_name}</p>
-          {isAdmin && (
-            <p className="truncate text-sm text-slate-500">{officer.phone_number ?? officer.whatsapp_number ?? '—'}</p>
-          )}
         </div>
       </Link>
       <div className="ml-auto flex shrink-0 items-center gap-3 pl-4 pr-1">

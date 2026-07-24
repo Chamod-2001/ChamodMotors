@@ -67,3 +67,15 @@ export async function setEmployeeActiveAction(employeeId: string, isActive: bool
 
   revalidatePath('/employees');
 }
+
+export async function updateEmployeePhotoAction(employeeId: string, photoPath: string): Promise<EmployeeActionResult> {
+  await requireAdmin();
+
+  const admin = createAdminClient();
+  const { error } = await admin.from('profiles').update({ photo_path: photoPath || null }).eq('id', employeeId);
+
+  if (error) return { error: 'Photo save කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
+
+  revalidatePath('/employees');
+  return {};
+}

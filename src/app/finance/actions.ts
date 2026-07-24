@@ -31,11 +31,31 @@ export async function createFinanceCompanyAction(formData: FormData): Promise<Fi
   return {};
 }
 
-export async function deleteFinanceCompanyAction(companyId: string) {
+export async function updateFinanceCompanyAction(companyId: string, formData: FormData): Promise<FinanceActionResult> {
+  await requireAdmin();
+  const name = String(formData.get('name') || '').trim();
+  const logoPath = String(formData.get('logoPath') || '').trim();
+  if (!name) return { error: 'සමාගමේ නම ඕන / Company name is required' };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('finance_companies')
+    .update({ name, logo_path: logoPath || null })
+    .eq('id', companyId);
+
+  if (error) return { error: 'Company update කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
+
+  revalidatePath('/finance');
+  return {};
+}
+
+export async function deleteFinanceCompanyAction(companyId: string): Promise<FinanceActionResult> {
   await requireAdmin();
   const supabase = await createClient();
-  await supabase.from('finance_companies').delete().eq('id', companyId);
+  const { error } = await supabase.from('finance_companies').delete().eq('id', companyId);
+  if (error) return { error: 'Company delete කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
   revalidatePath('/finance');
+  return {};
 }
 
 // ------------------------------------------------------------
@@ -98,10 +118,11 @@ export async function updateFinanceOfficerAction(officerId: string, formData: Fo
   redirect(`/finance/${officerId}`);
 }
 
-export async function deleteFinanceOfficerAction(officerId: string) {
+export async function deleteFinanceOfficerAction(officerId: string): Promise<FinanceActionResult> {
   await requireAdmin();
   const supabase = await createClient();
-  await supabase.from('finance_officers').delete().eq('id', officerId);
+  const { error } = await supabase.from('finance_officers').delete().eq('id', officerId);
+  if (error) return { error: 'Officer delete කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
   revalidatePath('/finance');
   redirect('/finance');
 }
@@ -153,19 +174,39 @@ export async function logFinanceCommunicationAction(
 // in a rendered link. Each action also auto-logs what was done, so staff
 // don't have to manually type a note every time they message or call.
 // ------------------------------------------------------------
-export type ContactKind = 'whatsapp_chat' | 'whatsapp_nic' | 'whatsapp_electricity_bill' | 'whatsapp_other' | 'call';
+export type ContactKind = 'whatsapp_chat' | 'whatsapp_documents' | 'call';
+export type DocumentKind = 'nic' | 'electricity_bill' | 'other';
 
 export interface ContactOfficerResult {
   error?: string;
   url?: string;
 }
 
+const DOCUMENT_LABELS: Record<DocumentKind, string> = {
+  nic: 'NIC copy',
+  electricity_bill: 'Electricity bill',
+  other: 'Document',
+};
+
 function buildDocumentMessage(officerName: string, documentLabel: string, businessName: string) {
-  return `Hi ${officerName},\n\nසුභ දවසක්!\n\n${documentLabel} එක attach කර ඇත. කරුණාකර එය check කරලා update එකක් ලබා දෙන්න.\n\nThank you.\n\n${businessName}`;
+  return `Hi ${officerName},\n\nසුභ දවසක්!\n\n${documentLabel} attach කර ඇත. කරුණාකර check කරලා update එකක් ලබා දෙන්න.\n\nThank you.\n\n${businessName}`;
 }
 
-export async function contactFinanceOfficerAction(officerId: string, kind: ContactKind): Promise<ContactOfficerResult> {
+/** Joins document labels the way a sentence would: "A", "A and B", "A, B and C". */
+function joinLabels(labels: string[]) {
+  if (labels.length <= 1) return labels.join('');
+  return `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`;
+}
+
+export async function contactFinanceOfficerAction(
+  officerId: string,
+  kind: ContactKind,
+  documentKinds?: DocumentKind[]
+): Promise<ContactOfficerResult> {
   if (kind === 'call') await requireAdmin();
+  if (kind === 'whatsapp_documents' && (!documentKinds || documentKinds.length === 0)) {
+    return { error: 'අඩුම තරමින් document එකක් තෝරන්න.' };
+  }
 
   const supabase = await createClient();
   const { data: officer } = await supabase
@@ -185,25 +226,15 @@ export async function contactFinanceOfficerAction(officerId: string, kind: Conta
   if (kind === 'call') {
     url = `tel:${officer.phone_number || contactNumber}`;
     logNote = `Called ${officer.officer_name}`;
-  } else {
+  } else if (kind === 'whatsapp_documents') {
     const businessName = await getShopBusinessName();
-    switch (kind) {
-      case 'whatsapp_nic':
-        url = buildWhatsAppLink(contactNumber, buildDocumentMessage(officer.officer_name, 'NIC copy', businessName));
-        logNote = `Sent NIC copy to ${officer.officer_name} via WhatsApp`;
-        break;
-      case 'whatsapp_electricity_bill':
-        url = buildWhatsAppLink(contactNumber, buildDocumentMessage(officer.officer_name, 'Electricity bill', businessName));
-        logNote = `Sent Electricity bill to ${officer.officer_name} via WhatsApp`;
-        break;
-      case 'whatsapp_other':
-        url = buildWhatsAppLink(contactNumber, buildDocumentMessage(officer.officer_name, 'Document', businessName));
-        logNote = `Sent a document to ${officer.officer_name} via WhatsApp`;
-        break;
-      default:
-        url = buildWhatsAppLink(contactNumber);
-        logNote = `Opened WhatsApp chat with ${officer.officer_name}`;
-    }
+    const labels = (documentKinds ?? []).map((k) => DOCUMENT_LABELS[k]);
+    const labelText = joinLabels(labels);
+    url = buildWhatsAppLink(contactNumber, buildDocumentMessage(officer.officer_name, labelText, businessName));
+    logNote = `Sent ${labelText} to ${officer.officer_name} via WhatsApp`;
+  } else {
+    url = buildWhatsAppLink(contactNumber);
+    logNote = `Opened WhatsApp chat with ${officer.officer_name}`;
   }
 
   const {
