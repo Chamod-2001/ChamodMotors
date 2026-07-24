@@ -13,7 +13,7 @@ import { ReviewFormLauncher } from './ReviewFormLauncher';
 import { ImageLightboxProvider } from '@/components/ui/ImageLightbox';
 import { CoverImageThumbnail } from './CoverImageThumbnail';
 import logo from '@/assets/ChamodMotors.png';
-import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation } from '../../../types/database.types';
+import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation, ShopPhoneNumber } from '../../../types/database.types';
 import type { ShopReviewItem } from '@/lib/queries/shopReviews';
 
 function locationHref(location: ShopLocation) {
@@ -25,6 +25,7 @@ export async function ShopProfileView({
   photos,
   socialLinks = [],
   locations = [],
+  phoneNumbers = [],
   reviews = [],
   showShare = false,
 }: {
@@ -32,6 +33,7 @@ export async function ShopProfileView({
   photos: ShopPhoto[];
   socialLinks?: ShopSocialLink[];
   locations?: ShopLocation[];
+  phoneNumbers?: ShopPhoneNumber[];
   reviews?: ShopReviewItem[];
   showShare?: boolean;
 }) {
@@ -86,9 +88,26 @@ export async function ShopProfileView({
               <span className="text-xs font-semibold">{t('call')}</span>
             </a>
           )}
-          <SaveContactButton profile={profile} />
+          <SaveContactButton profile={profile} phoneNumbers={phoneNumbers} />
         </div>
       </Card>
+
+      {phoneNumbers.length > 0 && (
+        <div className="space-y-2">
+          {phoneNumbers.map((p) => (
+            <a
+              key={p.id}
+              href={`tel:${p.phone_number}`}
+              className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
+            >
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{p.label || t('phone_number')}</span>
+              <span className="flex items-center gap-1.5 text-sm font-semibold text-brand-dark dark:text-brand">
+                <Phone size={16} /> {p.phone_number}
+              </span>
+            </a>
+          ))}
+        </div>
+      )}
 
       {locations.length > 0 && (
         <div className="space-y-2">

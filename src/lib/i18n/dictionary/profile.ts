@@ -103,4 +103,10 @@ export const profileText = {
     sinhala: 'තවම profile views සටහන් වී නැත.',
     mixed: 'තවම profile views නැත.',
   },
+  additional_phone_numbers_label: {
+    english: 'Additional Phone Numbers',
+    sinhala: 'අමතර දුරකථන අංක',
+    mixed: 'Additional Phone Numbers',
+  },
+  phone_label_placeholder: { english: 'Label (e.g. Service)', sinhala: 'ලේබලය (උදා: Service)', mixed: 'Label (e.g. Service)' },
 } as const;

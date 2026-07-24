@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
-import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation } from '../../../types/database.types';
+import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation, ShopPhoneNumber } from '../../../types/database.types';
 
 export interface ShopProfileData {
   profile: ShopProfile;
   photos: ShopPhoto[];
   socialLinks: ShopSocialLink[];
   locations: ShopLocation[];
+  phoneNumbers: ShopPhoneNumber[];
 }
 
 // Public data (RLS allows anyone to read these tables), used by both the
@@ -13,12 +14,14 @@ export interface ShopProfileData {
 export async function getShopProfile(): Promise<ShopProfileData> {
   const supabase = await createClient();
 
-  const [{ data: profile }, { data: photos }, { data: socialLinks }, { data: locations }] = await Promise.all([
-    supabase.from('shop_profile').select('*').eq('id', true).single(),
-    supabase.from('shop_photos').select('*').order('sort_order', { ascending: true }),
-    supabase.from('shop_social_links').select('*').order('sort_order', { ascending: true }),
-    supabase.from('shop_locations').select('*').order('sort_order', { ascending: true }),
-  ]);
+  const [{ data: profile }, { data: photos }, { data: socialLinks }, { data: locations }, { data: phoneNumbers }] =
+    await Promise.all([
+      supabase.from('shop_profile').select('*').eq('id', true).single(),
+      supabase.from('shop_photos').select('*').order('sort_order', { ascending: true }),
+      supabase.from('shop_social_links').select('*').order('sort_order', { ascending: true }),
+      supabase.from('shop_locations').select('*').order('sort_order', { ascending: true }),
+      supabase.from('shop_phone_numbers').select('*').order('sort_order', { ascending: true }),
+    ]);
 
   return {
     profile: (profile as ShopProfile) ?? {
@@ -35,6 +38,7 @@ export async function getShopProfile(): Promise<ShopProfileData> {
     photos: (photos as ShopPhoto[]) ?? [],
     socialLinks: (socialLinks as ShopSocialLink[]) ?? [],
     locations: (locations as ShopLocation[]) ?? [],
+    phoneNumbers: (phoneNumbers as ShopPhoneNumber[]) ?? [],
   };
 }
 

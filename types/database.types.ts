@@ -199,6 +199,14 @@ export interface ShopPhoto {
   created_at: string;
 }
 
+export interface ShopPhoneNumber {
+  id: string;
+  label: string | null;
+  phone_number: string;
+  sort_order: number;
+  created_at: string;
+}
+
 export type SocialPlatform = 'facebook' | 'instagram' | 'tiktok' | 'youtube' | 'website' | 'other';
 
 export interface ShopSocialLink {
@@ -329,6 +337,7 @@ export interface Database {
       shop_photos: TableDef<Simplify<ShopPhoto>>;
       shop_social_links: TableDef<WidenEnums<ShopSocialLink, 'platform'>>;
       shop_locations: TableDef<Simplify<ShopLocation>>;
+      shop_phone_numbers: TableDef<Simplify<ShopPhoneNumber>>;
       shop_profile_views: TableDef<Simplify<ShopProfileViewLog>>;
       reminders: TableDef<WidenEnums<Reminder, 'status'>>;
       vehicle_edit_requests: TableDef<WidenEnums<VehicleEditRequest, 'status'>>;

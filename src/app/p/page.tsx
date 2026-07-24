@@ -14,7 +14,7 @@ export default async function PublicShopProfilePage({
 }: {
   searchParams: Promise<{ src?: string }>;
 }) {
-  const [{ profile, photos, socialLinks, locations }, reviews, t, { src }] = await Promise.all([
+  const [{ profile, photos, socialLinks, locations, phoneNumbers }, reviews, t, { src }] = await Promise.all([
     getShopProfile(),
     listApprovedShopReviews(),
     getTranslator(),
@@ -27,7 +27,14 @@ export default async function PublicShopProfilePage({
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 dark:bg-slate-950">
       <div className="mx-auto max-w-md">
-        <ShopProfileView profile={profile} photos={photos} socialLinks={socialLinks} locations={locations} reviews={reviews} />
+        <ShopProfileView
+          profile={profile}
+          photos={photos}
+          socialLinks={socialLinks}
+          locations={locations}
+          phoneNumbers={phoneNumbers}
+          reviews={reviews}
+        />
         <p className="mt-6 text-center text-xs text-slate-400">
           {t('powered_by')} {profile.business_name}
         </p>

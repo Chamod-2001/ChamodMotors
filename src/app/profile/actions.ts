@@ -156,3 +156,35 @@ export async function deleteShopLocationAction(locationId: string) {
   revalidatePath('/profile');
   revalidatePath('/p');
 }
+
+export async function addShopPhoneNumberAction(label: string, phoneNumber: string): Promise<ProfileActionResult> {
+  await requireAdmin();
+
+  const trimmed = phoneNumber.trim();
+  if (!trimmed) return { error: 'Phone number is required' };
+
+  const supabase = await createClient();
+  const { count } = await supabase.from('shop_phone_numbers').select('*', { count: 'exact', head: true });
+
+  const { error } = await supabase
+    .from('shop_phone_numbers')
+    .insert({ label: label.trim() || null, phone_number: trimmed, sort_order: count ?? 0 });
+
+  if (error) {
+    return { error: 'Phone number save කරන්න බැරි වුණා.' };
+  }
+
+  revalidatePath('/profile');
+  revalidatePath('/p');
+  return {};
+}
+
+export async function deleteShopPhoneNumberAction(id: string) {
+  await requireAdmin();
+
+  const supabase = await createClient();
+  await supabase.from('shop_phone_numbers').delete().eq('id', id);
+
+  revalidatePath('/profile');
+  revalidatePath('/p');
+}
