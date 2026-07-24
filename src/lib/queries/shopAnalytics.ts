@@ -7,13 +7,22 @@ import { formatLocalDate } from '@/lib/calculations';
  * outside Vercel, e.g. local dev, in which case they're just null). Called
  * via after() from the page so it never delays the response. */
 export async function logShopProfileView(source: string | null): Promise<void> {
-  const supabase = await createClient();
-  const h = await headers();
-  const country = h.get('x-vercel-ip-country');
-  const cityRaw = h.get('x-vercel-ip-city');
-  const city = cityRaw ? decodeURIComponent(cityRaw) : null;
+  try {
+    const supabase = await createClient();
+    const h = await headers();
+    const country = h.get('x-vercel-ip-country');
+    const cityRaw = h.get('x-vercel-ip-city');
+    const city = cityRaw ? decodeURIComponent(cityRaw) : null;
 
-  await supabase.from('shop_profile_views').insert({ country, city, source: source || null });
+    const { error } = await supabase.from('shop_profile_views').insert({ country, city, source: source || null });
+    // Runs after the response via after() — nothing downstream is waiting on
+    // this, so swallow failures (e.g. migration not applied yet) rather than
+    // letting an unhandled rejection surface as a server log error for every
+    // single page view.
+    if (error) console.error('[shop_profile_views] insert failed:', error.message);
+  } catch (err) {
+    console.error('[shop_profile_views] logging failed:', err);
+  }
 }
 
 export interface ShopProfileViewStats {

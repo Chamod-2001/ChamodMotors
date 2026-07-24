@@ -9,6 +9,7 @@ export interface FinanceOfficerRow {
   photo_path: string | null;
   finance_company_id: string;
   finance_company_name: string;
+  finance_company_logo_path: string | null;
 }
 
 export interface FinanceCompanyGroup {
@@ -24,11 +25,13 @@ export async function listFinanceCompaniesWithOfficers(): Promise<FinanceCompany
   const { data: companies } = await supabase
     .from('finance_companies')
     .select('id, name, logo_path')
+    .eq('is_active', true)
     .order('name', { ascending: true });
 
   const { data: officers } = await supabase
     .from('finance_officers')
     .select('id, officer_name, phone_number, whatsapp_number, notes, photo_path, finance_company_id')
+    .eq('is_active', true)
     .order('officer_name', { ascending: true });
 
   const companyList = companies ?? [];
@@ -40,7 +43,7 @@ export async function listFinanceCompaniesWithOfficers(): Promise<FinanceCompany
     logo_path: company.logo_path,
     officers: officerList
       .filter((o) => o.finance_company_id === company.id)
-      .map((o) => ({ ...o, finance_company_name: company.name })),
+      .map((o) => ({ ...o, finance_company_name: company.name, finance_company_logo_path: company.logo_path })),
   }));
 }
 
@@ -48,7 +51,9 @@ export async function getFinanceOfficer(id: string): Promise<FinanceOfficerRow |
   const supabase = await createClient();
   const { data } = await supabase
     .from('finance_officers')
-    .select('id, officer_name, phone_number, whatsapp_number, notes, photo_path, finance_company_id, finance_companies(name)')
+    .select(
+      'id, officer_name, phone_number, whatsapp_number, notes, photo_path, finance_company_id, finance_companies(name, logo_path)'
+    )
     .eq('id', id)
     .single();
 
@@ -62,7 +67,10 @@ export async function getFinanceOfficer(id: string): Promise<FinanceOfficerRow |
     notes: string | null;
     photo_path: string | null;
     finance_company_id: string;
-    finance_companies: { name: string } | { name: string }[] | null;
+    finance_companies:
+      | { name: string; logo_path: string | null }
+      | { name: string; logo_path: string | null }[]
+      | null;
   };
   const row = data as unknown as Row;
   const company = Array.isArray(row.finance_companies) ? row.finance_companies[0] : row.finance_companies;
@@ -76,6 +84,7 @@ export async function getFinanceOfficer(id: string): Promise<FinanceOfficerRow |
     photo_path: row.photo_path,
     finance_company_id: row.finance_company_id,
     finance_company_name: company?.name ?? '—',
+    finance_company_logo_path: company?.logo_path ?? null,
   };
 }
 
@@ -154,6 +163,7 @@ export async function listCustomersForFinancePicker(): Promise<SimpleCustomer[]>
   const { data } = await supabase
     .from('customers')
     .select('id, full_name, nic_number, photo_path')
+    .eq('is_active', true)
     .order('full_name', { ascending: true });
   return data ?? [];
 }
@@ -168,6 +178,7 @@ export async function listVehiclesForFinancePicker(): Promise<SimpleVehicle[]> {
   const { data } = await supabase
     .from('vehicles')
     .select('id, brand, model, registration_number')
+    .eq('is_active', true)
     .order('brand', { ascending: true });
 
   return (data ?? []).map((v) => ({
@@ -186,6 +197,7 @@ export async function listFinanceOfficersForPicker(): Promise<SimpleFinanceOffic
   const { data } = await supabase
     .from('finance_officers')
     .select('id, officer_name, finance_companies(name)')
+    .eq('is_active', true)
     .order('officer_name', { ascending: true });
 
   type Row = { id: string; officer_name: string; finance_companies: { name: string } | { name: string }[] | null };

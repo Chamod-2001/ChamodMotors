@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Bike, Users, Landmark, CalendarDays, Building2, BarChart3, UserCog, History, ClipboardCheck, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Bike, Users, Landmark, CalendarDays, Building2, BarChart3, UserCog, History, ClipboardCheck, DatabaseBackup, Menu, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { TranslationKey } from '@/lib/i18n/translations';
@@ -25,18 +25,48 @@ const MORE_ADMIN_TABS: { href: string; labelKey: TranslationKey; icon: typeof La
   { href: '/employees', labelKey: 'employees', icon: UserCog },
   { href: '/activity', labelKey: 'activity', icon: History },
   { href: '/vehicles/approvals', labelKey: 'pending_approvals', icon: ClipboardCheck },
+  { href: '/backup', labelKey: 'backup_label', icon: DatabaseBackup },
 ];
+
+function NotificationDot({ count }: { count: number }) {
+  if (count <= 0) return null;
+  return (
+    <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold leading-none text-white">
+      {count > 99 ? '99+' : count}
+    </span>
+  );
+}
 
 // Mobile only — tablet/desktop use Sidebar instead (see AppShell). A bottom
 // bar realistically fits ~5 icons before it's cramped, so only the most-used
 // sections get a direct tab; everything else lives behind "More".
-export function BottomNav({ isAdmin }: { isAdmin: boolean }) {
+export function BottomNav({
+  isAdmin,
+  dueReminderCount = 0,
+  pendingApprovalCount = 0,
+  pendingReviewCount = 0,
+  unreadActivityCount = 0,
+}: {
+  isAdmin: boolean;
+  dueReminderCount?: number;
+  pendingApprovalCount?: number;
+  pendingReviewCount?: number;
+  unreadActivityCount?: number;
+}) {
   const pathname = usePathname();
   const { t } = useLanguage();
   const [moreOpen, setMoreOpen] = useState(false);
 
+  const countsByHref: Record<string, number> = {
+    '/calendar': dueReminderCount,
+    '/profile': pendingReviewCount,
+    '/activity': unreadActivityCount,
+    '/vehicles/approvals': pendingApprovalCount,
+  };
+
   const moreTabs = isAdmin ? [...MORE_TABS, ...MORE_ADMIN_TABS] : MORE_TABS;
   const isMoreActive = moreTabs.some((tab) => pathname === tab.href || pathname?.startsWith(`${tab.href}/`));
+  const moreBadgeTotal = moreTabs.reduce((sum, tab) => sum + (countsByHref[tab.href] ?? 0), 0);
 
   return (
     <div className="md:hidden">
@@ -49,6 +79,7 @@ export function BottomNav({ isAdmin }: { isAdmin: boolean }) {
           {moreTabs.map(({ href, labelKey, icon: Icon }) => {
             const label = t(labelKey);
             const isActive = pathname === href || pathname?.startsWith(`${href}/`);
+            const count = countsByHref[href] ?? 0;
             return (
               <Link
                 key={href}
@@ -61,7 +92,10 @@ export function BottomNav({ isAdmin }: { isAdmin: boolean }) {
                     : 'text-slate-600 dark:text-slate-300'
                 )}
               >
-                <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                <span className="relative inline-flex">
+                  <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                  <NotificationDot count={count} />
+                </span>
                 {label}
               </Link>
             );
@@ -100,7 +134,10 @@ export function BottomNav({ isAdmin }: { isAdmin: boolean }) {
             moreOpen || isMoreActive ? 'text-brand' : 'text-slate-500 dark:text-slate-400'
           )}
         >
-          {moreOpen ? <X size={20} /> : <Menu size={20} strokeWidth={isMoreActive ? 2.5 : 2} />}
+          <span className="relative inline-flex">
+            {moreOpen ? <X size={20} /> : <Menu size={20} strokeWidth={isMoreActive ? 2.5 : 2} />}
+            {!moreOpen && <NotificationDot count={moreBadgeTotal} />}
+          </span>
           <span>{t('more_label')}</span>
         </button>
       </nav>

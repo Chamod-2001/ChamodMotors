@@ -49,10 +49,16 @@ export async function updateFinanceCompanyAction(companyId: string, formData: Fo
   return {};
 }
 
+// Soft delete — keeps the officers' communication history correctly
+// attributed instead of detaching it. Officers under this company are
+// archived along with it so they also drop out of the active list.
 export async function deleteFinanceCompanyAction(companyId: string): Promise<FinanceActionResult> {
   await requireAdmin();
   const supabase = await createClient();
-  const { error } = await supabase.from('finance_companies').delete().eq('id', companyId);
+
+  await supabase.from('finance_officers').update({ is_active: false }).eq('finance_company_id', companyId);
+  const { error } = await supabase.from('finance_companies').update({ is_active: false }).eq('id', companyId);
+
   if (error) return { error: 'Company delete කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
   revalidatePath('/finance');
   return {};
@@ -118,10 +124,11 @@ export async function updateFinanceOfficerAction(officerId: string, formData: Fo
   redirect(`/finance/${officerId}`);
 }
 
+// Soft delete — keeps their communication history correctly attributed.
 export async function deleteFinanceOfficerAction(officerId: string): Promise<FinanceActionResult> {
   await requireAdmin();
   const supabase = await createClient();
-  const { error } = await supabase.from('finance_officers').delete().eq('id', officerId);
+  const { error } = await supabase.from('finance_officers').update({ is_active: false }).eq('id', officerId);
   if (error) return { error: 'Officer delete කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.' };
   revalidatePath('/finance');
   redirect('/finance');
@@ -203,7 +210,6 @@ export async function contactFinanceOfficerAction(
   kind: ContactKind,
   documentKinds?: DocumentKind[]
 ): Promise<ContactOfficerResult> {
-  if (kind === 'call') await requireAdmin();
   if (kind === 'whatsapp_documents' && (!documentKinds || documentKinds.length === 0)) {
     return { error: 'අඩුම තරමින් document එකක් තෝරන්න.' };
   }

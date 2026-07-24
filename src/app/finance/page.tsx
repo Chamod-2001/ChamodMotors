@@ -58,6 +58,7 @@ export default async function FinancePage() {
                       }
                       isAdmin={isAdmin}
                       hasContact={Boolean(officer.phone_number || officer.whatsapp_number)}
+                      hasPhone={Boolean(officer.phone_number)}
                     />
                   ))}
                 </div>

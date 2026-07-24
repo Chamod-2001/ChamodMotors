@@ -24,6 +24,7 @@ import { searchText } from './dictionary/search';
 import { calendarText } from './dictionary/calendar';
 import { navText } from './dictionary/nav';
 import { commonText } from './dictionary/common';
+import { backupText } from './dictionary/backup';
 
 export type LanguageMode = 'english' | 'sinhala' | 'mixed';
 
@@ -42,6 +43,7 @@ export const translations = {
   ...calendarText,
   ...navText,
   ...commonText,
+  ...backupText,
 } as const;
 
 export type TranslationKey = keyof typeof translations;

@@ -10,16 +10,20 @@ import { MessageCircle, Phone, User, Loader2 } from 'lucide-react';
 
 /** `officer.phone_number`/`whatsapp_number` are redacted to null by the
  * server page before this ever reaches a non-admin viewer's browser — see
- * finance/page.tsx. `hasContact` still tells this card whether to show the
- * WhatsApp button even when the raw numbers aren't present in props. */
+ * finance/page.tsx. `hasContact`/`hasPhone` still tell this card whether to
+ * show the WhatsApp/Call buttons even when the raw numbers aren't present
+ * in props (per-employee request: employees get a working Call button, they
+ * just never see the number as text). */
 export function FinanceOfficerCard({
   officer,
   isAdmin,
   hasContact,
+  hasPhone,
 }: {
   officer: FinanceOfficerRow;
   isAdmin: boolean;
   hasContact: boolean;
+  hasPhone: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [pendingAction, setPendingAction] = useState<'call' | 'whatsapp' | null>(null);
@@ -59,10 +63,13 @@ export function FinanceOfficerCard({
         </div>
         <div className="min-w-0">
           <p className="truncate font-semibold text-slate-900">{officer.officer_name}</p>
+          {isAdmin && (
+            <p className="truncate text-sm text-slate-500">{officer.phone_number ?? officer.whatsapp_number ?? '—'}</p>
+          )}
         </div>
       </Link>
       <div className="ml-auto flex shrink-0 items-center gap-3 pl-4 pr-1">
-        {isAdmin && officer.phone_number && (
+        {hasPhone && (
           <button
             onClick={handleCall}
             disabled={isPending}

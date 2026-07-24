@@ -254,21 +254,15 @@ export async function deleteVehicleImageAction(imageId: string, storagePath: str
   revalidatePath(`/vehicles/${vehicleId}/edit`);
 }
 
+// Soft delete — a vehicle can already have sales/documents/expenses attached
+// by the time someone wants it gone, and erasing the row would erase that
+// history too. "Delete" just hides it from active lists; photos and records
+// stay intact and the row can be reactivated later if needed.
 export async function deleteVehicleAction(vehicleId: string) {
   await requireAdmin();
   const supabase = await createClient();
 
-  // Clean up storage files first (admin-only per RLS policy)
-  const { data: images } = await supabase
-    .from('vehicle_images')
-    .select('storage_path')
-    .eq('vehicle_id', vehicleId);
-
-  if (images && images.length > 0) {
-    await supabase.storage.from('vehicle-images').remove(images.map((img) => img.storage_path));
-  }
-
-  const { error } = await supabase.from('vehicles').delete().eq('id', vehicleId);
+  const { error } = await supabase.from('vehicles').update({ is_active: false }).eq('id', vehicleId);
   if (error) {
     return { error: 'වාහනය delete කරන්න බැරි වුණා. ඔබට admin අවසර ඕන.' };
   }

@@ -4,6 +4,7 @@ import { BottomNav } from './BottomNav';
 import { SidebarContent } from './SidebarContent';
 import { SidebarProvider } from './SidebarContext';
 import { OfflineSyncManager } from './OfflineSyncManager';
+import { NotificationBadgeSync } from './NotificationBadgeSync';
 import { ImageLightboxProvider } from '@/components/ui/ImageLightbox';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { getUnreadActivityCount } from '@/lib/queries/activity';
@@ -40,8 +41,17 @@ export async function AppShell({ title, children }: { title: string; children: R
             {children}
           </SidebarContent>
         </div>
-        <BottomNav isAdmin={isAdmin} />
+        <BottomNav
+          isAdmin={isAdmin}
+          dueReminderCount={dueReminderCount}
+          pendingApprovalCount={pendingApprovalCount}
+          pendingReviewCount={pendingReviewCount}
+          unreadActivityCount={unreadActivityCount}
+        />
         <OfflineSyncManager />
+        <NotificationBadgeSync
+          count={dueReminderCount + pendingApprovalCount + pendingReviewCount + unreadActivityCount}
+        />
       </SidebarProvider>
     </ImageLightboxProvider>
   );

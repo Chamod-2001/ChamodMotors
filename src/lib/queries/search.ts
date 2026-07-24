@@ -28,6 +28,7 @@ export async function searchAll(query: string): Promise<{
     supabase
       .from('vehicles')
       .select('id, brand, model, registration_number, status')
+      .eq('is_active', true)
       .or(
         `brand.ilike.%${q}%,model.ilike.%${q}%,registration_number_normalized.ilike.%${normalized}%,engine_number_normalized.ilike.%${normalized}%,chassis_number_normalized.ilike.%${normalized}%`
       )
@@ -35,6 +36,7 @@ export async function searchAll(query: string): Promise<{
     supabase
       .from('customers')
       .select('id, full_name, phone_number')
+      .eq('is_active', true)
       .or(`full_name.ilike.%${q}%,phone_number.ilike.%${q}%`)
       .limit(20),
   ]);

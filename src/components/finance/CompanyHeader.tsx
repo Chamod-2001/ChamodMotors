@@ -69,11 +69,11 @@ export function CompanyHeader({
 
   return (
     <div className="mb-2 flex items-center gap-2">
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100 text-slate-400 dark:bg-slate-800">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100 text-slate-400 dark:bg-slate-800">
         <ZoomableImage
           src={company.logo_path ? getFinancePhotoPublicUrl(company.logo_path) : null}
           className="h-full w-full object-contain"
-          fallback={<Building2 size={14} />}
+          fallback={<Building2 size={18} />}
         />
       </div>
       <h2 className="min-w-0 flex-1 truncate text-sm font-semibold uppercase tracking-wide text-slate-500">{company.name}</h2>

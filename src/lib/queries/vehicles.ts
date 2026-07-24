@@ -24,6 +24,7 @@ export async function listVehicles(filters?: { status?: VehicleStatus; query?: s
     .select(
       'id, brand, model, manufacturing_year, registration_number, selling_price, status, buying_date, reserved_at, sold_at, vehicle_images(storage_path, is_primary)'
     )
+    .eq('is_active', true)
     .order('created_at', { ascending: false });
 
   if (filters?.status) {

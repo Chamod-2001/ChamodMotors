@@ -5,9 +5,10 @@ import { contactFinanceOfficerAction } from '@/app/finance/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Phone, Loader2 } from 'lucide-react';
 
-/** Admin-only: a real phone call can't be masked (the number always ends up
- * in the caller's own phone dialer/call log), so unlike WhatsApp this isn't
- * offered to employees at all — see contactFinanceOfficerAction. */
+/** Note: a real phone call can't be masked — the number always ends up in
+ * the caller's own phone dialer/call log regardless of who places it. This
+ * is offered to employees too (by request), same as WhatsApp — the number
+ * just never appears as text anywhere in this app's own UI for them. */
 export function CallOfficerButton({ officerId }: { officerId: string }) {
   const { t } = useLanguage();
   const [error, setError] = useState<string | undefined>();

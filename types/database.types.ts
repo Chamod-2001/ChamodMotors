@@ -54,6 +54,7 @@ export interface Vehicle {
   seller_name: string | null;
   seller_nic_number: string | null;
   seller_phone_number: string | null;
+  is_active: boolean;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -95,6 +96,7 @@ export interface Customer {
   address: string | null;
   occupation: string | null;
   photo_path: string | null;
+  is_active: boolean;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -114,6 +116,7 @@ export interface FinanceCompany {
   id: string;
   name: string;
   logo_path: string | null;
+  is_active: boolean;
   created_at: string;
 }
 
@@ -125,6 +128,7 @@ export interface FinanceOfficer {
   whatsapp_number: string | null;
   notes: string | null;
   photo_path: string | null;
+  is_active: boolean;
   created_at: string;
 }
 

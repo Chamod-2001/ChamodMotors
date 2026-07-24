@@ -121,7 +121,7 @@ export interface InventoryReportSummary {
 
 export async function getInventoryReport() {
   const supabase = await createClient();
-  const { data } = await supabase.from('vehicles').select('status, buying_price, selling_price');
+  const { data } = await supabase.from('vehicles').select('status, buying_price, selling_price').eq('is_active', true);
 
   type Row = { status: string; buying_price: number; selling_price: number };
   const rows = (data ?? []) as Row[];

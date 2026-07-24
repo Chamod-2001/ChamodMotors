@@ -91,10 +91,11 @@ export async function updateCustomerAction(customerId: string, formData: FormDat
   redirect(`/customers/${customerId}`);
 }
 
+// Soft delete — preserves purchase history/documents tied to this customer.
 export async function deleteCustomerAction(customerId: string) {
   await requireAdmin();
   const supabase = await createClient();
-  const { error } = await supabase.from('customers').delete().eq('id', customerId);
+  const { error } = await supabase.from('customers').update({ is_active: false }).eq('id', customerId);
   if (error) {
     return { error: 'Customer delete කරන්න බැරි වුණා. ඔබට admin අවසර ඕන.' };
   }

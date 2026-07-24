@@ -15,6 +15,7 @@ export async function listCustomers(query?: string): Promise<CustomerListItem[]>
   let request = supabase
     .from('customers')
     .select('id, full_name, nic_number, phone_number, photo_path, sales(id)')
+    .eq('is_active', true)
     .order('created_at', { ascending: false });
 
   if (query?.trim()) {
@@ -117,6 +118,7 @@ export async function listSellableVehicles(): Promise<SellableVehicle[]> {
     .from('vehicles')
     .select('id, brand, model, registration_number, selling_price')
     .in('status', ['available', 'reserved'])
+    .eq('is_active', true)
     .order('brand', { ascending: true });
 
   type Row = { id: string; brand: string; model: string; registration_number: string | null; selling_price: number };

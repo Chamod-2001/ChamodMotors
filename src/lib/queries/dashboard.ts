@@ -21,7 +21,11 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const { start: todayStart, end: todayEnd } = todayRange();
 
   const vehicleCount = async (status: VehicleStatus, types?: VehicleType[]) => {
-    let query = supabase.from('vehicles').select('*', { count: 'exact', head: true }).eq('status', status);
+    let query = supabase
+      .from('vehicles')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', status)
+      .eq('is_active', true);
     if (types) query = query.in('vehicle_type', types);
     const { count } = await query;
     return count ?? 0;

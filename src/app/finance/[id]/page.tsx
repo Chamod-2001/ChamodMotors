@@ -67,8 +67,15 @@ export default async function FinanceOfficerDetailPage({ params }: { params: Pro
             />
           </div>
           <div className="min-w-0">
-            <div className="mb-1 flex items-center gap-2 text-sm text-slate-500">
-              <Building2 size={16} /> {officer.finance_company_name}
+            <div className="mb-1 flex items-center gap-1.5 text-sm text-slate-500">
+              <div className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded bg-slate-100 text-slate-400 dark:bg-slate-800">
+                <ZoomableImage
+                  src={officer.finance_company_logo_path ? getFinancePhotoPublicUrl(officer.finance_company_logo_path) : null}
+                  className="h-full w-full object-contain"
+                  fallback={<Building2 size={12} />}
+                />
+              </div>
+              {officer.finance_company_name}
             </div>
             <h1 className="truncate text-xl font-bold text-slate-900">{officer.officer_name}</h1>
             {isAdmin && <p className="text-sm text-slate-500">{officer.phone_number ?? '—'}</p>}
@@ -81,7 +88,7 @@ export default async function FinanceOfficerDetailPage({ params }: { params: Pro
         <Card>
           <h2 className="mb-3 text-lg font-semibold text-slate-900">WhatsApp</h2>
           <WhatsAppQuickActions officerId={officer.id} />
-          {isAdmin && officer.phone_number && (
+          {officer.phone_number && (
             <div className="mt-2">
               <CallOfficerButton officerId={officer.id} />
             </div>
