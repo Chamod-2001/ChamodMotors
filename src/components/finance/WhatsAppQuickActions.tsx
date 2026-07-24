@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { Select } from '@/components/ui/Select';
+import { CustomerPickerDropdown } from './CustomerPickerDropdown';
 import { contactFinanceOfficerAction, type DocumentKind } from '@/app/finance/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { MessageCircle, FileText, Zap, Paperclip, Loader2, Send } from 'lucide-react';
+import type { SimpleCustomer, SimpleVehicle } from '@/lib/queries/finance';
 
 const DOC_OPTIONS: { value: DocumentKind; labelKey: 'doc_type_nic' | 'electricity_bill' | 'other_document'; icon: typeof FileText }[] = [
   { value: 'nic', labelKey: 'doc_type_nic', icon: FileText },
@@ -11,10 +14,20 @@ const DOC_OPTIONS: { value: DocumentKind; labelKey: 'doc_type_nic' | 'electricit
   { value: 'other', labelKey: 'other_document', icon: Paperclip },
 ];
 
-export function WhatsAppQuickActions({ officerId }: { officerId: string }) {
+export function WhatsAppQuickActions({
+  officerId,
+  customers,
+  vehicles,
+}: {
+  officerId: string;
+  customers: SimpleCustomer[];
+  vehicles: SimpleVehicle[];
+}) {
   const { t } = useLanguage();
   const [error, setError] = useState<string | undefined>();
   const [selected, setSelected] = useState<DocumentKind[]>([]);
+  const [customerId, setCustomerId] = useState('');
+  const [vehicleId, setVehicleId] = useState('');
   const [busy, setBusy] = useState<'chat' | 'documents' | null>(null);
   const [, startTransition] = useTransition();
 
@@ -30,7 +43,7 @@ export function WhatsAppQuickActions({ officerId }: { officerId: string }) {
     setError(undefined);
     setBusy('chat');
     startTransition(async () => {
-      const result = await contactFinanceOfficerAction(officerId, 'whatsapp_chat');
+      const result = await contactFinanceOfficerAction(officerId, 'whatsapp_chat', undefined, customerId, vehicleId);
       setBusy(null);
       if (result.error) setError(result.error);
       else if (result.url) openUrl(result.url);
@@ -41,7 +54,7 @@ export function WhatsAppQuickActions({ officerId }: { officerId: string }) {
     setError(undefined);
     setBusy('documents');
     startTransition(async () => {
-      const result = await contactFinanceOfficerAction(officerId, 'whatsapp_documents', selected);
+      const result = await contactFinanceOfficerAction(officerId, 'whatsapp_documents', selected, customerId, vehicleId);
       setBusy(null);
       if (result.error) {
         setError(result.error);
@@ -54,6 +67,23 @@ export function WhatsAppQuickActions({ officerId }: { officerId: string }) {
 
   return (
     <div>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">{t('regarding_label')}</p>
+      <div className="mb-4 grid grid-cols-2 gap-2">
+        <CustomerPickerDropdown customers={customers} name="customer_id_display" onValueChange={setCustomerId} />
+        <Select
+          value={vehicleId}
+          onChange={(e) => setVehicleId(e.target.value)}
+          className="py-2.5! text-sm! min-h-0!"
+        >
+          <option value="">{t('vehicle_optional')}</option>
+          {vehicles.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.label}
+            </option>
+          ))}
+        </Select>
+      </div>
+
       <button
         type="button"
         disabled={busy !== null}

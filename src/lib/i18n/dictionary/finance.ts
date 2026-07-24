@@ -52,6 +52,7 @@ export const financeText = {
     mixed: 'Send කරන්න documents තෝරන්න',
   },
   send_selected_documents: { english: 'Send Selected', sinhala: 'තෝරාගත් ඒවා යවන්න', mixed: 'Selected ඒවා Send කරන්න' },
+  regarding_label: { english: 'Regarding (optional)', sinhala: 'සම්බන්ධ වන්නේ (විකල්ප)', mixed: 'Regarding (optional)' },
   company_logo_label: { english: 'Company Logo', sinhala: 'සමාගමේ ලාංඡනය', mixed: 'Company Logo' },
   delete_officer_confirm: {
     english: 'Delete this officer? This cannot be undone.',

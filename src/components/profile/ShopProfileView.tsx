@@ -151,8 +151,11 @@ export async function ShopProfileView({
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition hover:brightness-110 ${meta.className}`}
+                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition hover:brightness-95 ${meta.className}`}
               >
+                <svg viewBox="0 0 24 24" width={16} height={16} fill="currentColor" aria-hidden="true">
+                  <path d={meta.iconPath} />
+                </svg>
                 {meta.label}
               </a>
             );

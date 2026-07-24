@@ -1,24 +1,36 @@
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createBareClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { formatLocalDate } from '@/lib/calculations';
+import type { Database } from '../../../types/database.types';
 
 /** Logs one visit to the public /p share page — approximate city/country
  * come from Vercel's edge geo headers (free, no external service; absent
  * outside Vercel, e.g. local dev, in which case they're just null). Called
- * via after() from the page so it never delays the response. */
+ * via after() from the page so it never delays the response.
+ *
+ * Deliberately uses a bare, cookie-free Supabase client (not the shared
+ * @/lib/supabase/server one) — that one is wired through @supabase/ssr's
+ * cookie handling, which expects to run inside a Server Action/Route
+ * Handler. This call happens from a plain page's Server Component (and via
+ * after(), after the response has already gone out), where Next.js forbids
+ * writing cookies — the shared client would silently swallow that failure
+ * via its `setAll` catch block, which turned out to be masking why every
+ * single insert here was failing. This insert needs no session/cookies at
+ * all (RLS allows anonymous insert), so it skips that entire code path.
+ */
 export async function logShopProfileView(source: string | null): Promise<void> {
   try {
-    const supabase = await createClient();
+    const supabase = createBareClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     const h = await headers();
     const country = h.get('x-vercel-ip-country');
     const cityRaw = h.get('x-vercel-ip-city');
     const city = cityRaw ? decodeURIComponent(cityRaw) : null;
 
     const { error } = await supabase.from('shop_profile_views').insert({ country, city, source: source || null });
-    // Runs after the response via after() — nothing downstream is waiting on
-    // this, so swallow failures (e.g. migration not applied yet) rather than
-    // letting an unhandled rejection surface as a server log error for every
-    // single page view.
     if (error) console.error('[shop_profile_views] insert failed:', error.message);
   } catch (err) {
     console.error('[shop_profile_views] logging failed:', err);

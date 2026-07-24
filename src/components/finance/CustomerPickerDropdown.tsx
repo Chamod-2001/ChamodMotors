@@ -9,7 +9,17 @@ import type { SimpleCustomer } from '@/lib/queries/finance';
 /** A native <select> can't show a photo per option, and when several
  * customers share a name that's exactly when mix-ups happen — this shows
  * a photo + NIC alongside each name, both in the closed state and the list. */
-export function CustomerPickerDropdown({ customers, name = 'customer_id' }: { customers: SimpleCustomer[]; name?: string }) {
+export function CustomerPickerDropdown({
+  customers,
+  name = 'customer_id',
+  onValueChange,
+}: {
+  customers: SimpleCustomer[];
+  name?: string;
+  /** Optional — for use outside a <form> (e.g. triggering a server action
+   * directly on click) where a hidden form field alone isn't enough. */
+  onValueChange?: (id: string) => void;
+}) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -27,6 +37,7 @@ export function CustomerPickerDropdown({ customers, name = 'customer_id' }: { cu
     setSelectedId(id);
     setOpen(false);
     setQuery('');
+    onValueChange?.(id);
   }
 
   return (

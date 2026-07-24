@@ -208,7 +208,9 @@ function joinLabels(labels: string[]) {
 export async function contactFinanceOfficerAction(
   officerId: string,
   kind: ContactKind,
-  documentKinds?: DocumentKind[]
+  documentKinds?: DocumentKind[],
+  customerId?: string,
+  vehicleId?: string
 ): Promise<ContactOfficerResult> {
   if (kind === 'whatsapp_documents' && (!documentKinds || documentKinds.length === 0)) {
     return { error: 'අඩුම තරමින් document එකක් තෝරන්න.' };
@@ -249,6 +251,8 @@ export async function contactFinanceOfficerAction(
 
   await supabase.from('finance_communications').insert({
     finance_officer_id: officerId,
+    customer_id: customerId || null,
+    vehicle_id: vehicleId || null,
     note: logNote,
     created_by: user?.id ?? null,
   });

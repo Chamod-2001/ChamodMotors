@@ -87,7 +87,7 @@ export default async function FinanceOfficerDetailPage({ params }: { params: Pro
       {hasContact ? (
         <Card>
           <h2 className="mb-3 text-lg font-semibold text-slate-900">WhatsApp</h2>
-          <WhatsAppQuickActions officerId={officer.id} />
+          <WhatsAppQuickActions officerId={officer.id} customers={customers} vehicles={vehicles} />
           {officer.phone_number && (
             <div className="mt-2">
               <CallOfficerButton officerId={officer.id} />
