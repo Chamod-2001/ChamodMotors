@@ -8,34 +8,35 @@ import {
 } from '@/lib/queries/finance';
 import { getCurrentEmployee } from '@/lib/queries/session';
 import { listReminders } from '@/lib/queries/reminders';
-import { getShopBusinessName } from '@/lib/queries/shop';
+import { getFinancePhotoPublicUrl } from '@/lib/storageUrls';
 import { getTranslator } from '@/lib/i18n/server';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { ZoomableImage } from '@/components/ui/ZoomableImage';
 import { AppShell } from '@/components/layout/AppShell';
 import { WhatsAppQuickActions } from '@/components/finance/WhatsAppQuickActions';
+import { CallOfficerButton } from '@/components/finance/CallOfficerButton';
 import { CommunicationLogForm } from '@/components/finance/CommunicationLogForm';
 import { CommunicationLogList } from '@/components/finance/CommunicationLogList';
 import { DeleteFinanceOfficerButton } from '@/components/finance/DeleteFinanceOfficerButton';
 import { ReminderList } from '@/components/calendar/ReminderList';
-import { Pencil, Building2 } from 'lucide-react';
+import { Pencil, Building2, User } from 'lucide-react';
 
 export default async function FinanceOfficerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [officer, communications, customers, vehicles, reminders, employee, businessName, t] = await Promise.all([
+  const [officer, communications, customers, vehicles, reminders, employee, t] = await Promise.all([
     getFinanceOfficer(id),
     listFinanceCommunications(id),
     listCustomersForFinancePicker(),
     listVehiclesForFinancePicker(),
     listReminders({ financeOfficerId: id }),
     getCurrentEmployee(),
-    getShopBusinessName(),
     getTranslator(),
   ]);
   if (!officer) notFound();
   const isAdmin = employee?.role === 'admin';
 
-  const contactNumber = officer.whatsapp_number || officer.phone_number;
+  const hasContact = Boolean(officer.whatsapp_number || officer.phone_number);
 
   return (
     <AppShell title={t('finance_officer')}>
@@ -57,18 +58,34 @@ export default async function FinanceOfficerDetailPage({ params }: { params: Pro
       </div>
 
       <Card>
-        <div className="mb-1 flex items-center gap-2 text-sm text-slate-500">
-          <Building2 size={16} /> {officer.finance_company_name}
+        <div className="flex items-center gap-3">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-slate-400 dark:bg-slate-800">
+            <ZoomableImage
+              src={officer.photo_path ? getFinancePhotoPublicUrl(officer.photo_path) : null}
+              className="h-full w-full object-cover"
+              fallback={<User size={26} />}
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="mb-1 flex items-center gap-2 text-sm text-slate-500">
+              <Building2 size={16} /> {officer.finance_company_name}
+            </div>
+            <h1 className="truncate text-xl font-bold text-slate-900">{officer.officer_name}</h1>
+            {isAdmin && <p className="text-sm text-slate-500">{officer.phone_number ?? '—'}</p>}
+          </div>
         </div>
-        <h1 className="text-xl font-bold text-slate-900">{officer.officer_name}</h1>
-        <p className="text-sm text-slate-500">{officer.phone_number ?? '—'}</p>
         {officer.notes && <p className="mt-2 text-sm text-slate-600">{officer.notes}</p>}
       </Card>
 
-      {contactNumber ? (
+      {hasContact ? (
         <Card>
           <h2 className="mb-3 text-lg font-semibold text-slate-900">WhatsApp</h2>
-          <WhatsAppQuickActions phone={contactNumber} officerName={officer.officer_name} businessName={businessName} />
+          <WhatsAppQuickActions officerId={officer.id} />
+          {isAdmin && officer.phone_number && (
+            <div className="mt-2">
+              <CallOfficerButton officerId={officer.id} />
+            </div>
+          )}
         </Card>
       ) : (
         <Card>

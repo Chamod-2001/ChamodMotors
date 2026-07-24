@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { OfficerPhotoPicker } from './OfficerPhotoPicker';
 import { createFinanceOfficerAction, updateFinanceOfficerAction } from '@/app/finance/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { FinanceOfficerRow } from '@/lib/queries/finance';
@@ -30,6 +31,7 @@ export function FinanceOfficerForm({ companies, officer }: FinanceOfficerFormPro
 
   return (
     <form action={handleSubmit} className="space-y-4">
+      <OfficerPhotoPicker defaultPhotoPath={officer?.photo_path} />
       {!officer && (
         <Select name="finance_company_id" label={t('finance_company')} required defaultValue="">
           <option value="" disabled>

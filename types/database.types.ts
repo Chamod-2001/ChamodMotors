@@ -112,6 +112,7 @@ export interface Sale {
 export interface FinanceCompany {
   id: string;
   name: string;
+  logo_path: string | null;
   created_at: string;
 }
 
@@ -122,6 +123,7 @@ export interface FinanceOfficer {
   phone_number: string | null;
   whatsapp_number: string | null;
   notes: string | null;
+  photo_path: string | null;
   created_at: string;
 }
 

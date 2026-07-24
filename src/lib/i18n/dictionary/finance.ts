@@ -45,4 +45,6 @@ export const financeText = {
     sinhala: 'මුලින්ම Finance පිටුවෙන් මූල්‍ය සමාගමක් එකතු කරන්න.',
     mixed: 'මුලින්ම Finance පිටුවෙන් Finance Company එකක් add කරන්න.',
   },
+  officer_photo_label: { english: 'Officer Photo', sinhala: 'නිලධාරියාගේ ඡායාරූපය', mixed: 'Officer Photo' },
+  company_logo_label: { english: 'Company Logo', sinhala: 'සමාගමේ ලාංඡනය', mixed: 'Company Logo' },
 } as const;

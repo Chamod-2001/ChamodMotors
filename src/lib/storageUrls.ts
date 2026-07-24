@@ -17,3 +17,8 @@ export function getCustomerPhotoPublicUrl(storagePath: string): string {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   return `${supabaseUrl}/storage/v1/object/public/customer-photos/${storagePath}`;
 }
+
+export function getFinancePhotoPublicUrl(storagePath: string): string {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return `${supabaseUrl}/storage/v1/object/public/finance-photos/${storagePath}`;
+}

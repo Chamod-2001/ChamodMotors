@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { CompanyLogoPicker } from './CompanyLogoPicker';
 import { createFinanceCompanyAction } from '@/app/finance/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Plus, X } from 'lucide-react';
@@ -34,23 +35,24 @@ export function AddCompanyForm() {
           else setOpen(false);
         });
       }}
-      className="flex items-start gap-2"
+      className="space-y-3 rounded-xl border-2 border-slate-100 p-4 dark:border-slate-800"
     >
-      <div className="flex-1">
-        <Input name="name" placeholder="e.g. LB Finance" required autoFocus />
-        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      <Input name="name" placeholder="e.g. LB Finance" required autoFocus />
+      <CompanyLogoPicker />
+      {error && <p className="text-sm text-red-600">{error}</p>}
+      <div className="flex gap-2">
+        <Button type="submit" fullWidth disabled={isPending}>
+          {isPending ? '...' : t('save')}
+        </Button>
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border-2 border-slate-200 text-slate-500 dark:border-slate-700"
+          aria-label="Cancel"
+        >
+          <X size={20} />
+        </button>
       </div>
-      <Button type="submit" className="!min-h-[56px] !py-0 !px-4" disabled={isPending}>
-        {isPending ? '...' : t('save')}
-      </Button>
-      <button
-        type="button"
-        onClick={() => setOpen(false)}
-        className="flex h-[56px] w-[56px] items-center justify-center rounded-xl border-2 border-slate-200 text-slate-500"
-        aria-label="Cancel"
-      >
-        <X size={20} />
-      </button>
     </form>
   );
 }

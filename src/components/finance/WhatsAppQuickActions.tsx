@@ -1,57 +1,60 @@
 'use client';
 
-import { buildWhatsAppLink } from '@/lib/whatsapp';
+import { useState, useTransition } from 'react';
+import { contactFinanceOfficerAction, type ContactKind } from '@/app/finance/actions';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { MessageCircle, FileText, Zap, Paperclip } from 'lucide-react';
+import { MessageCircle, FileText, Zap, Paperclip, Loader2 } from 'lucide-react';
 
-interface WhatsAppQuickActionsProps {
-  phone: string;
-  officerName: string;
-  businessName: string;
-}
-
-function buildDocumentMessage(officerName: string, documentLabel: string, businessName: string) {
-  return `Hi ${officerName},\n\nසුභ දවසක්!\n\n${documentLabel} එක attach කර ඇත. කරුණාකර එය check කරලා update එකක් ලබා දෙන්න.\n\nThank you.\n\n${businessName}`;
-}
-
-export function WhatsAppQuickActions({ phone, officerName, businessName }: WhatsAppQuickActionsProps) {
+export function WhatsAppQuickActions({ officerId }: { officerId: string }) {
   const { t } = useLanguage();
+  const [error, setError] = useState<string | undefined>();
+  const [pendingKind, setPendingKind] = useState<ContactKind | null>(null);
+  const [, startTransition] = useTransition();
 
-  const actions = [
-    { label: t('open_chat'), icon: MessageCircle, message: undefined, tone: 'bg-emerald-600 text-white' },
+  function handleContact(kind: ContactKind) {
+    setError(undefined);
+    setPendingKind(kind);
+    startTransition(async () => {
+      const result = await contactFinanceOfficerAction(officerId, kind);
+      setPendingKind(null);
+      if (result.error) setError(result.error);
+      else if (result.url) window.open(result.url, '_blank', 'noopener,noreferrer');
+    });
+  }
+
+  const actions: { kind: ContactKind; label: string; icon: typeof MessageCircle; tone: string }[] = [
+    { kind: 'whatsapp_chat', label: t('open_chat'), icon: MessageCircle, tone: 'bg-emerald-600 text-white' },
+    { kind: 'whatsapp_nic', label: t('send_nic'), icon: FileText, tone: 'bg-white border-2 border-emerald-200 text-emerald-700' },
     {
-      label: t('send_nic'),
-      icon: FileText,
-      message: buildDocumentMessage(officerName, 'NIC copy', businessName),
-      tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
-    },
-    {
+      kind: 'whatsapp_electricity_bill',
       label: t('electricity_bill'),
       icon: Zap,
-      message: buildDocumentMessage(officerName, 'Electricity bill', businessName),
       tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
     },
     {
+      kind: 'whatsapp_other',
       label: t('other_document'),
       icon: Paperclip,
-      message: buildDocumentMessage(officerName, 'Document', businessName),
       tone: 'bg-white border-2 border-emerald-200 text-emerald-700',
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-2">
-      {actions.map(({ label, icon: Icon, message, tone }) => (
-        <a
-          key={label}
-          href={buildWhatsAppLink(phone, message)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`flex min-h-[56px] items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-semibold ${tone}`}
-        >
-          <Icon size={18} /> {label}
-        </a>
-      ))}
+    <div>
+      <div className="grid grid-cols-2 gap-2">
+        {actions.map(({ kind, label, icon: Icon, tone }) => (
+          <button
+            key={kind}
+            type="button"
+            disabled={pendingKind !== null}
+            onClick={() => handleContact(kind)}
+            className={`flex min-h-14 items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-semibold disabled:opacity-50 ${tone}`}
+          >
+            {pendingKind === kind ? <Loader2 size={18} className="animate-spin" /> : <Icon size={18} />} {label}
+          </button>
+        ))}
+      </div>
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

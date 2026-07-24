@@ -1,6 +1,6 @@
 'use client';
 
-import { useImageLightbox } from './ImageLightbox';
+import { useImageLightbox } from '@/components/ui/ImageLightbox';
 
 export function ReviewPhotoThumbnail({ url }: { url: string }) {
   const { openImage } = useImageLightbox();

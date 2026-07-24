@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from 'react';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { CustomerPickerDropdown } from './CustomerPickerDropdown';
 import { logFinanceCommunicationAction } from '@/app/finance/actions';
 import { enqueueOfflineAction } from '@/lib/offlineQueue';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -20,6 +21,10 @@ export function CommunicationLogForm({
   const [error, setError] = useState<string | undefined>();
   const [offlineSaved, setOfflineSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
+  // Bumped after every successful submit to remount CustomerPickerDropdown —
+  // it holds its own React state, so form.reset() alone won't clear its
+  // selection the way it does for plain <input>/<select> fields.
+  const [resetKey, setResetKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const { t } = useLanguage();
 
@@ -37,13 +42,18 @@ export function CommunicationLogForm({
       });
       setOfflineSaved(true);
       formRef.current?.reset();
+      setResetKey((k) => k + 1);
       return;
     }
 
     startTransition(async () => {
       const result = await logFinanceCommunicationAction(officerId, formData);
-      if (result?.error) setError(result.error);
-      else formRef.current?.reset();
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        formRef.current?.reset();
+        setResetKey((k) => k + 1);
+      }
     });
   }
 
@@ -58,14 +68,7 @@ export function CommunicationLogForm({
       />
 
       <div className="grid grid-cols-2 gap-2">
-        <Select name="customer_id" defaultValue="" className="!py-3 !text-sm !min-h-0">
-          <option value="">{t('customer_optional')}</option>
-          {customers.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.full_name}
-            </option>
-          ))}
-        </Select>
+        <CustomerPickerDropdown key={resetKey} customers={customers} />
         <Select name="vehicle_id" defaultValue="" className="!py-3 !text-sm !min-h-0">
           <option value="">{t('vehicle_optional')}</option>
           {vehicles.map((v) => (

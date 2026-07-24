@@ -6,6 +6,7 @@ export interface FinanceOfficerRow {
   phone_number: string | null;
   whatsapp_number: string | null;
   notes: string | null;
+  photo_path: string | null;
   finance_company_id: string;
   finance_company_name: string;
 }
@@ -13,6 +14,7 @@ export interface FinanceOfficerRow {
 export interface FinanceCompanyGroup {
   id: string;
   name: string;
+  logo_path: string | null;
   officers: FinanceOfficerRow[];
 }
 
@@ -21,12 +23,12 @@ export async function listFinanceCompaniesWithOfficers(): Promise<FinanceCompany
 
   const { data: companies } = await supabase
     .from('finance_companies')
-    .select('id, name')
+    .select('id, name, logo_path')
     .order('name', { ascending: true });
 
   const { data: officers } = await supabase
     .from('finance_officers')
-    .select('id, officer_name, phone_number, whatsapp_number, notes, finance_company_id')
+    .select('id, officer_name, phone_number, whatsapp_number, notes, photo_path, finance_company_id')
     .order('officer_name', { ascending: true });
 
   const companyList = companies ?? [];
@@ -35,6 +37,7 @@ export async function listFinanceCompaniesWithOfficers(): Promise<FinanceCompany
   return companyList.map((company) => ({
     id: company.id,
     name: company.name,
+    logo_path: company.logo_path,
     officers: officerList
       .filter((o) => o.finance_company_id === company.id)
       .map((o) => ({ ...o, finance_company_name: company.name })),
@@ -45,7 +48,7 @@ export async function getFinanceOfficer(id: string): Promise<FinanceOfficerRow |
   const supabase = await createClient();
   const { data } = await supabase
     .from('finance_officers')
-    .select('id, officer_name, phone_number, whatsapp_number, notes, finance_company_id, finance_companies(name)')
+    .select('id, officer_name, phone_number, whatsapp_number, notes, photo_path, finance_company_id, finance_companies(name)')
     .eq('id', id)
     .single();
 
@@ -57,6 +60,7 @@ export async function getFinanceOfficer(id: string): Promise<FinanceOfficerRow |
     phone_number: string | null;
     whatsapp_number: string | null;
     notes: string | null;
+    photo_path: string | null;
     finance_company_id: string;
     finance_companies: { name: string } | { name: string }[] | null;
   };
@@ -69,6 +73,7 @@ export async function getFinanceOfficer(id: string): Promise<FinanceOfficerRow |
     phone_number: row.phone_number,
     whatsapp_number: row.whatsapp_number,
     notes: row.notes,
+    photo_path: row.photo_path,
     finance_company_id: row.finance_company_id,
     finance_company_name: company?.name ?? '—',
   };
@@ -140,13 +145,15 @@ export async function listFinanceCommunications(officerId?: string, limit = 30):
 export interface SimpleCustomer {
   id: string;
   full_name: string;
+  nic_number: string;
+  photo_path: string | null;
 }
 
 export async function listCustomersForFinancePicker(): Promise<SimpleCustomer[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('customers')
-    .select('id, full_name')
+    .select('id, full_name, nic_number, photo_path')
     .order('full_name', { ascending: true });
   return data ?? [];
 }

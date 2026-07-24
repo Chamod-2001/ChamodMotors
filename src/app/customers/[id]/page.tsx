@@ -9,6 +9,7 @@ import { getCustomerPhotoPublicUrl } from '@/lib/storageUrls';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { CollapsibleSection } from '@/components/ui/CollapsibleSection';
+import { ZoomableImage } from '@/components/ui/ZoomableImage';
 import { AppShell } from '@/components/layout/AppShell';
 import { DeleteCustomerButton } from '@/components/customers/DeleteCustomerButton';
 import { PurchaseHistoryList } from '@/components/customers/PurchaseHistoryList';
@@ -54,12 +55,11 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
       <Card>
         <div className="flex items-center gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-light text-brand">
-            {customer.photo_path ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={getCustomerPhotoPublicUrl(customer.photo_path)} alt="" className="h-full w-full object-cover" />
-            ) : (
-              <User size={28} />
-            )}
+            <ZoomableImage
+              src={customer.photo_path ? getCustomerPhotoPublicUrl(customer.photo_path) : null}
+              className="h-full w-full object-cover"
+              fallback={<User size={28} />}
+            />
           </div>
           <div className="min-w-0">
             <h1 className="truncate text-xl font-bold text-slate-900">{customer.full_name}</h1>

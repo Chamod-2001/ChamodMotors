@@ -17,7 +17,8 @@ export function useImageLightbox(): ImageLightboxContextValue {
 }
 
 // One shared full-screen zoom+close overlay for a whole tree (cover photo,
-// gallery photos, review photos, ...) instead of duplicating the modal per image type.
+// gallery photos, review photos, avatars, logos, ...) instead of duplicating
+// the modal per image type. Mounted once, app-wide, in AppShell.
 export function ImageLightboxProvider({ children }: { children: ReactNode }) {
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [entered, setEntered] = useState(false);

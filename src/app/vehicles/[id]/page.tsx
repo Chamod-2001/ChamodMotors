@@ -12,6 +12,7 @@ import { getTranslator } from '@/lib/i18n/server';
 import { VehicleStatusBadge } from '@/components/vehicles/VehicleStatusBadge';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { ZoomableImage } from '@/components/ui/ZoomableImage';
 import { AppShell } from '@/components/layout/AppShell';
 import { VehicleStatusControls } from '@/components/vehicles/VehicleStatusControls';
 import { DeleteVehicleButton } from '@/components/vehicles/DeleteVehicleButton';
@@ -89,13 +90,9 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       {vehicle.images.length > 0 ? (
         <div className="flex w-full min-w-0 gap-2 overflow-x-auto">
           {vehicle.images.map((img) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={img.id}
-              src={getVehicleImagePublicUrl(img.storage_path)}
-              alt=""
-              className="h-28 w-40 shrink-0 rounded-xl object-cover"
-            />
+            <div key={img.id} className="h-28 w-40 shrink-0 overflow-hidden rounded-xl">
+              <ZoomableImage src={getVehicleImagePublicUrl(img.storage_path)} className="h-full w-full object-cover" />
+            </div>
           ))}
         </div>
       ) : (

@@ -10,7 +10,7 @@ import { ShareProfileButton } from './ShareProfileButton';
 import { PhotoGallery } from './PhotoGallery';
 import { ReviewList } from './ReviewList';
 import { ReviewFormLauncher } from './ReviewFormLauncher';
-import { ImageLightboxProvider } from './ImageLightbox';
+import { ImageLightboxProvider } from '@/components/ui/ImageLightbox';
 import { CoverImageThumbnail } from './CoverImageThumbnail';
 import logo from '@/assets/ChamodMotors.png';
 import type { ShopProfile, ShopPhoto, ShopSocialLink, ShopLocation } from '../../../types/database.types';

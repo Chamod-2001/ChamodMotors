@@ -1,7 +1,7 @@
 'use client';
 
 import { getShopImagePublicUrl } from '@/lib/storageUrls';
-import { useImageLightbox } from './ImageLightbox';
+import { useImageLightbox } from '@/components/ui/ImageLightbox';
 import type { ShopPhoto } from '../../../types/database.types';
 
 export function PhotoGallery({ photos, title }: { photos: ShopPhoto[]; title: string }) {

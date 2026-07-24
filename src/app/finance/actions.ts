@@ -6,6 +6,8 @@ import { revalidatePath } from 'next/cache';
 import { validateFinanceOfficerInput } from '@/lib/validation';
 import { logActivity } from '@/lib/activity';
 import { requireAdmin } from '@/lib/queries/session';
+import { buildWhatsAppLink } from '@/lib/whatsapp';
+import { getShopBusinessName } from '@/lib/queries/shop';
 
 export interface FinanceActionResult {
   error?: string;
@@ -17,10 +19,11 @@ export interface FinanceActionResult {
 export async function createFinanceCompanyAction(formData: FormData): Promise<FinanceActionResult> {
   await requireAdmin();
   const name = String(formData.get('name') || '').trim();
+  const logoPath = String(formData.get('logoPath') || '').trim();
   if (!name) return { error: 'සමාගමේ නම ඕන / Company name is required' };
 
   const supabase = await createClient();
-  const { error } = await supabase.from('finance_companies').insert({ name });
+  const { error } = await supabase.from('finance_companies').insert({ name, logo_path: logoPath || null });
 
   if (error) return { error: 'Company save කරන්න බැරි වුණා. ඔබට admin අවසර ඕන.' };
 
@@ -45,6 +48,7 @@ export async function createFinanceOfficerAction(formData: FormData): Promise<Fi
   const phone_number = String(formData.get('phone_number') || '').trim();
   const whatsapp_number = String(formData.get('whatsapp_number') || '').trim();
   const notes = String(formData.get('notes') || '').trim();
+  const photoPath = String(formData.get('photoPath') || '').trim();
 
   const validationError = validateFinanceOfficerInput({ finance_company_id, officer_name });
   if (validationError) return { error: validationError };
@@ -56,6 +60,7 @@ export async function createFinanceOfficerAction(formData: FormData): Promise<Fi
     phone_number: phone_number || null,
     whatsapp_number: whatsapp_number || null,
     notes: notes || null,
+    photo_path: photoPath || null,
   });
 
   if (error) return { error: 'Officer save කරන්න බැරි වුණා. ඔබට admin අවසර ඕන.' };
@@ -70,6 +75,7 @@ export async function updateFinanceOfficerAction(officerId: string, formData: Fo
   const phone_number = String(formData.get('phone_number') || '').trim();
   const whatsapp_number = String(formData.get('whatsapp_number') || '').trim();
   const notes = String(formData.get('notes') || '').trim();
+  const photoPath = String(formData.get('photoPath') || '').trim();
 
   if (!officer_name) return { error: 'Officer නම ඕන / Officer name is required' };
 
@@ -81,6 +87,7 @@ export async function updateFinanceOfficerAction(officerId: string, formData: Fo
       phone_number: phone_number || null,
       whatsapp_number: whatsapp_number || null,
       notes: notes || null,
+      photo_path: photoPath || null,
     })
     .eq('id', officerId);
 
@@ -137,4 +144,80 @@ export async function logFinanceCommunicationAction(
 
   revalidatePath(`/finance/${officerId}`);
   return {};
+}
+
+// ------------------------------------------------------------
+// Quick-action contact (WhatsApp / Call): the officer's number is looked
+// up server-side and never sent to the client — the browser only ever
+// receives the final wa.me/tel URL to open, not the number itself sitting
+// in a rendered link. Each action also auto-logs what was done, so staff
+// don't have to manually type a note every time they message or call.
+// ------------------------------------------------------------
+export type ContactKind = 'whatsapp_chat' | 'whatsapp_nic' | 'whatsapp_electricity_bill' | 'whatsapp_other' | 'call';
+
+export interface ContactOfficerResult {
+  error?: string;
+  url?: string;
+}
+
+function buildDocumentMessage(officerName: string, documentLabel: string, businessName: string) {
+  return `Hi ${officerName},\n\nසුභ දවසක්!\n\n${documentLabel} එක attach කර ඇත. කරුණාකර එය check කරලා update එකක් ලබා දෙන්න.\n\nThank you.\n\n${businessName}`;
+}
+
+export async function contactFinanceOfficerAction(officerId: string, kind: ContactKind): Promise<ContactOfficerResult> {
+  if (kind === 'call') await requireAdmin();
+
+  const supabase = await createClient();
+  const { data: officer } = await supabase
+    .from('finance_officers')
+    .select('officer_name, phone_number, whatsapp_number')
+    .eq('id', officerId)
+    .single();
+
+  if (!officer) return { error: 'Officer හමු නොවීය.' };
+
+  const contactNumber = officer.whatsapp_number || officer.phone_number;
+  if (!contactNumber) return { error: 'මේ officer ට phone හෝ WhatsApp number නැත.' };
+
+  let url: string;
+  let logNote: string;
+
+  if (kind === 'call') {
+    url = `tel:${officer.phone_number || contactNumber}`;
+    logNote = `Called ${officer.officer_name}`;
+  } else {
+    const businessName = await getShopBusinessName();
+    switch (kind) {
+      case 'whatsapp_nic':
+        url = buildWhatsAppLink(contactNumber, buildDocumentMessage(officer.officer_name, 'NIC copy', businessName));
+        logNote = `Sent NIC copy to ${officer.officer_name} via WhatsApp`;
+        break;
+      case 'whatsapp_electricity_bill':
+        url = buildWhatsAppLink(contactNumber, buildDocumentMessage(officer.officer_name, 'Electricity bill', businessName));
+        logNote = `Sent Electricity bill to ${officer.officer_name} via WhatsApp`;
+        break;
+      case 'whatsapp_other':
+        url = buildWhatsAppLink(contactNumber, buildDocumentMessage(officer.officer_name, 'Document', businessName));
+        logNote = `Sent a document to ${officer.officer_name} via WhatsApp`;
+        break;
+      default:
+        url = buildWhatsAppLink(contactNumber);
+        logNote = `Opened WhatsApp chat with ${officer.officer_name}`;
+    }
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  await supabase.from('finance_communications').insert({
+    finance_officer_id: officerId,
+    note: logNote,
+    created_by: user?.id ?? null,
+  });
+
+  await logActivity(user?.id ?? null, 'finance_contact', officer.officer_name);
+
+  revalidatePath(`/finance/${officerId}`);
+  return { url };
 }

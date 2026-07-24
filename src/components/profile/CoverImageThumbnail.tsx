@@ -1,6 +1,6 @@
 'use client';
 
-import { useImageLightbox } from './ImageLightbox';
+import { useImageLightbox } from '@/components/ui/ImageLightbox';
 
 export function CoverImageThumbnail({ url, alt }: { url: string; alt: string }) {
   const { openImage } = useImageLightbox();
